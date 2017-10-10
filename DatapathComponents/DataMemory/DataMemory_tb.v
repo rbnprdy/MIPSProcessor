@@ -15,7 +15,8 @@ module DataMemory_tb();
     reg             MemWrite;
     reg             MemRead;
     
-    reg    [2:0]   passed;
+    integer passed;
+    integer tests;
 
     wire    [31:0]  ReadData;
 
@@ -34,67 +35,87 @@ module DataMemory_tb();
 	end
 
 	initial begin
-	
-        Address <= 32'b0;
-        WriteData <= 32'b0;
-        MemWrite <= 0;
-        MemRead <= 0;
-        passed <= 3'd0;
-        #10;
-        Address <= 32'd5;
-        WriteData <= 32'd15;
-        #10;
-        MemWrite <= 1;
-        #20;
-        MemRead <= 1;
-        #10;
-        if (ReadData == WriteData)
-            passed <= passed + 1;
-        else
-            $display("Memory read/write error; WriteDate: %d; ReadData: %d", WriteData, ReadData);
-        #10;
-        MemRead <= 0;
-        @(posedge Clk);
-        Address <= 32'd6;
-        WriteData <= 32'd16;
-        @(posedge Clk);
-        Address <= 32'd7;
-        @(posedge Clk);
-        WriteData <= 32'd15;
-        Address <= 32'd6;
-        @(posedge Clk);
-        MemRead <= 1;
-        #10;
-        if(WriteData == ReadData)
-            passed = passed + 1;
-        else
-            $display("Memory overwrite error.");
-        @(posedge Clk);
-        MemRead <= 0;
-        #5;
-        if(ReadData == 32'b0)
-            passed = passed + 1;
-        else
-            $display("ReadData update error, should be 0, instead is %d", ReadData);
-         #20;
-         Address <= 32'd8;
-         WriteData <= 32'd17;
-         @(posedge Clk);
-         Address <= 32'd9;
-         WriteData <= 32'd18;
-         @(posedge Clk);
-         Address <= 32'd10;
-         WriteData <= 32'd19;
-         @(posedge Clk);
-         MemWrite <= 0;
-         @(posedge Clk);
-         Address <= 32'd6;
-         MemRead <= 1;
-         #10;
-         if(ReadData == 32'd15)
-            passed = passed + 1;
-         else
-            $display("Memory Read error after multiple writes.");
+	   $display("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+       $display("Starting Unit Tests.");
+       Address <= 32'b0;
+       WriteData <= 32'b0;
+       MemWrite <= 0;
+       MemRead <= 0;
+       passed <= 0;
+       tests <= 0;
+       #10;
+       // Test Writing and then Reading next clock
+       tests <= tests + 1;
+       Address <= 32'd5;
+       WriteData <= 32'd15;
+       MemWrite <= 1;
+       MemRead <= 1;
+       @(posedge Clk);
+       #5 if (ReadData == WriteData)
+           passed <= passed + 1;
+       else
+           $display("%t: Test Writing and then Reading Failed. Expected ReadData: %d; ReadData: %d", $time, WriteData, ReadData);
+       #10;
+       // Test Overwriting data
+       tests <= tests + 1;
+       Address <= 32'd5;
+       WriteData <= 32'd20;
+       MemWrite <= 1;
+       MemRead <= 1;
+       @(posedge Clk);
+       MemWrite <= 0;
+       #5 if (ReadData == WriteData)
+           passed <= passed + 1;
+       else
+           $display("%t: Test Overwritting Data Failed. Expected ReadData: %d; ReadData: %d", $time, WriteData, ReadData);
+       #10;
+       // Test MemRead = 0
+       tests <= tests + 1;
+       MemRead <= 0;
+       #5 if(ReadData == 32'b0)
+           passed = passed + 1;
+       else
+           $display("%t: Test MemRead = 0 Failed. Expected ReadData: 0, ReadData: %d", $time, ReadData);
+       #20;
+       // Test MemWrite = 0
+       tests <= tests + 1;
+       MemRead <= 1;
+       MemWrite <= 0;
+       WriteData <= 32'd5;
+       @(posedge Clk);
+       #5 if(ReadData == 32'd20)
+           passed = passed + 1;
+       else
+           $display("%t: Test MemWrite = 0 Failed. Expected ReadData: 20; ReadData: %d", $time, ReadData);
+       // Test writing to different memory address
+       #10;
+       tests <= tests + 1;
+       Address <= 32'd24;
+       WriteData <= 32'd7;
+       MemWrite <= 1;
+       @(posedge Clk);
+       #5 if(ReadData == 32'd7)
+           passed = passed + 1;
+       else
+           $display("%t: Test Writting to Different Address Failed. Expected ReadData: %d; ReadData: %d", $time, WriteData, ReadData);
+       // Test reading from original memory address
+       #10;
+       tests <= tests + 1;
+       Address <= 32'd5;
+       WriteData <= 32'd7;
+       MemWrite <= 0;
+       #5 if(ReadData == 32'd20)
+           passed = passed + 1;
+       else
+           $display("%t: Test Reading from Original Address Failed. Expected ReadData: %d; ReadData: %d", $time, WriteData, ReadData);
+	   
+	   // Report results
+       if (passed == tests)
+           $display("All tests passed.");
+       else
+           $display("%2d out of %2d test passed.", passed, tests);
+       $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n");
+
 	end
 
 endmodule

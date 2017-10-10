@@ -52,7 +52,7 @@ module DataMemory(Address, WriteData, Clk, MemWrite, MemRead, ReadData);
             memory[Address[11:2]] <= WriteData;
     end
     
-    always @(Address, MemRead) begin
+    always @(memory, Address, MemRead) begin
         if (MemRead == 1)
             ReadData <= memory[Address[11:2]];
         else
