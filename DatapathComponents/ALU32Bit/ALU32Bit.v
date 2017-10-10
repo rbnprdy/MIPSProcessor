@@ -34,40 +34,50 @@
 // 
 ////////////////////////////////////////////////////////////////////////////////
 
-module ALU32Bit(ALUControl, A, B, ALUResult, Zero);
+module ALU32Bit(ALUControl, A, B, ALUResult, HiResult, Zero);
 
-	input [3:0] ALUControl; // control bits for ALU operation
+	input [4:0] ALUControl; // control bits for ALU operation
 	input [31:0] A, B;	    // inputs
 
-	output reg [63:0] ALUResult;	// answer
+	output reg signed [31:0] ALUResult, HiResult;	// answer
 	output reg Zero;	    // Zero=1 if ALUResult == 0
 	
+	reg signed [63:0] TempResult;
 	integer i;
 
     /* Please fill in the implementation here... */
     always@(ALUControl, A, B) begin
         case(ALUControl)
-            4'b0000 : ALUResult <= A + B; // Add
-            4'b0001 : ALUResult <= A - B; // Subtract
-            4'b0010 : ALUResult <= A * B; // Multiply
-            4'b0011 : ALUResult <= A & B; // And
-            4'b0100 : ALUResult <= A | B; // Or
-            4'b0101 : ALUResult <= A ^ B; // Xor
-            4'b0110 : ALUResult <= ~(A | B); // Nor
-            4'b0111 : ALUResult <= A << B; // Sll
-            4'b1000 : ALUResult <= A >> B; // Srl
-            4'b1001 : begin // Rotate Right
-                ALUResult <= A;
+            5'b00000 : ALUResult <= $signed(A) + $signed(B); // Add
+            5'b00001 : ALUResult <= $signed(A) - $signed(B); // Subtract
+            5'b00010 : begin // Multiply
+                TempResult = $signed(A) * $signed(B);
+                ALUResult <= TempResult[31:0];
+                HiResult <= TempResult[63:32];
+            end
+            5'b00011 : ALUResult <= A & B; // And
+            5'b00100 : ALUResult <= A | B; // Or
+            5'b00101 : ALUResult <= A ^ B; // Xor
+            5'b00110 : ALUResult <= ~(A | B); // Nor
+            5'b00111 : ALUResult <= A << B; // Sll
+            5'b01000 : ALUResult <= A >> B; // Srl
+            5'b01001 : begin // Rotate Right
+                ALUResult = A;
                 for (i = 0; i < B; i = i + 1) begin // Rotate Right once B times
-                    ALUResult <= { ALUResult[0], ALUResult[31:1] };
+                    ALUResult = { ALUResult[0], ALUResult[31:1] };
                 end  
             end
-            4'b1010 : ALUResult <= A >>> B; // Sra
-            4'b1011 : ALUResult <= { {16{A[15]}}, A[15:0] }; // FIXME: Sign-extend half word
-            4'b1100 : ALUResult <= 1; // FIXME: Madd
-            4'b1101 : ALUResult <= 1; // FIXME: Msub
-            4'b1110 : ALUResult <= A < B; // Slt
-            4'b1111 : ALUResult <= { {24{A[7]}}, A[7:0] }; // Sign-extend byte
+            5'b01010 : ALUResult <= $signed(A) >>> B; // Sra
+            5'b01011 : ALUResult <= { {16{A[15]}}, A[15:0] }; // Sign-extend half word
+            5'b01100 : ALUResult <= A + B; // Add Unsigned
+            5'b01101 : begin // Multiply Unsigned
+                TempResult = A * B;
+                ALUResult <= TempResult[31:0];
+                HiResult <= TempResult[63:32];
+            end
+            5'b01110 : ALUResult <= $signed(A) < $signed(B); // Slt
+            5'b01111 : ALUResult <= { {24{A[7]}}, A[7:0] }; // Sign-extend byte
+            5'b10000 : ALUResult <= A < B; // Slt Unsigned
             default : ALUResult <= 1; // Default
         endcase
     end
