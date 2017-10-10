@@ -42,9 +42,21 @@ module DataMemory(Address, WriteData, Clk, MemWrite, MemRead, ReadData);
     input Clk;
     input MemWrite; 		// Control signal for memory write 
     input MemRead; 			// Control signal for memory read 
-
+    
+    reg[31:0] memory[0:1024]; //memory array
+    
     output reg[31:0] ReadData; // Contents of memory location at Address
 
-    /* Please fill in the implementation here */
+    always @(posedge Clk) begin
+        if (MemWrite == 1)
+            memory[Address[11:2]] <= WriteData;
+    end
+    
+    always @(Address, MemRead) begin
+        if (MemRead == 1)
+            ReadData <= memory[Address[11:2]];
+        else
+            ReadData <= 32'b0;
+    end
 
 endmodule
