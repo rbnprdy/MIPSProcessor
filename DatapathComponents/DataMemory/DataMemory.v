@@ -43,7 +43,7 @@ module DataMemory(Address, WriteData, Clk, MemWrite, MemRead, ReadData);
     input MemWrite; 		// Control signal for memory write 
     input MemRead; 			// Control signal for memory read 
     
-    reg[31:0] memory[0:1024]; //memory array
+    reg [31:0] memory [0:1024]; //memory array
     
     output reg[31:0] ReadData; // Contents of memory location at Address
 
