@@ -34,10 +34,11 @@
 // 
 ////////////////////////////////////////////////////////////////////////////////
 
-module ALU32Bit(ALUControl, A, B, ALUResult, HiResult, Zero);
+module ALU32Bit(ALUControl, A, B, ShiftAmount, ALUResult, HiResult, Zero);
 
 	input [4:0] ALUControl; // control bits for ALU operation
 	input [31:0] A, B;	    // inputs
+	input [3:0] ShiftAmount;
 
 	output reg signed [31:0] ALUResult, HiResult;	// answer
 	output reg Zero;	    // Zero=1 if ALUResult == 0
@@ -59,16 +60,16 @@ module ALU32Bit(ALUControl, A, B, ALUResult, HiResult, Zero);
             5'b00100 : ALUResult <= A | B; // Or
             5'b00101 : ALUResult <= A ^ B; // Xor
             5'b00110 : ALUResult <= ~(A | B); // Nor
-            5'b00111 : ALUResult <= A << B; // Sll
-            5'b01000 : ALUResult <= A >> B; // Srl
+            5'b00111 : ALUResult <= B << ShiftAmount; // Sll
+            5'b01000 : ALUResult <= B >> ShiftAmount; // Srl
             5'b01001 : begin // Rotate Right
-                ALUResult = A;
-                for (i = 0; i < B; i = i + 1) begin // Rotate Right once B times
+                ALUResult = B;
+                for (i = 0; i < ShiftAmount; i = i + 1) begin // Rotate Right once ShiftAmount times
                     ALUResult = { ALUResult[0], ALUResult[31:1] };
                 end  
             end
-            5'b01010 : ALUResult <= $signed(A) >>> B; // Sra
-            5'b01011 : ALUResult <= { {16{A[15]}}, A[15:0] }; // Sign-extend half word
+            5'b01010 : ALUResult <= $signed(B) >>> ShiftAmount; // Sra
+            5'b01011 : ALUResult <= { {16{B[15]}}, B[15:0] }; // Sign-extend half word
             5'b01100 : ALUResult <= A + B; // Add Unsigned
             5'b01101 : begin // Multiply Unsigned
                 TempResult = A * B;
@@ -78,6 +79,16 @@ module ALU32Bit(ALUControl, A, B, ALUResult, HiResult, Zero);
             5'b01110 : ALUResult <= $signed(A) < $signed(B); // Slt
             5'b01111 : ALUResult <= { {24{A[7]}}, A[7:0] }; // Sign-extend byte
             5'b10000 : ALUResult <= A < B; // Slt Unsigned
+            5'b10001 : ALUResult <= B << A; //Shift Left logical variable
+            5'b10010 : ALUResult <= B >> A; //Shift Right Logical variable
+            5'b10011 : ALUResult <= $signed(B) >>> A; //Shift Right Arithmetic Variable
+            5'b10100 : begin //Rotate Right logical Variable
+                ALUResult = B;
+                for (i = 0; i < A; i = i + 1) begin // Rotate Right once A times
+                    ALUResult = { ALUResult[0], ALUResult[31:1] };
+                end 
+            end
+            5'b10101 : ALUResult <= B; //Move
             default : ALUResult <= 1; // Default
         endcase
     end

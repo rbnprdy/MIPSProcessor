@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 10/11/2017 03:46:38 PM
+// Create Date: 10/12/2017 12:57:46 PM
 // Design Name: 
-// Module Name: HiLoRegisterFile
+// Module Name: HiLoRegisterFile_tb
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,13 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ShiftLeft2(in, out);
-    input [31:0] in;
-    
-    output reg [31:0] out;
-    
-    always @(in) begin
-        out <= in << 2;
-    end
+module HiLoRegisterFile_tb(
 
+    );
 endmodule

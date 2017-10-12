@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 10/11/2017 03:46:38 PM
+// Create Date: 10/12/2017 12:57:46 PM
 // Design Name: 
-// Module Name: HiLoRegisterFile
+// Module Name: ShiftLeft2_tb
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,13 +20,26 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ShiftLeft2(in, out);
-    input [31:0] in;
+module ShiftLeft2_tb();
     
-    output reg [31:0] out;
+    reg [31:0] in;
     
-    always @(in) begin
-        out <= in << 2;
+    wire [31:0] out;
+    
+    ShiftLeft2 u0(
+        .in(in),
+        .out(out)
+    );
+    
+    initial begin
+        in <= 32'b0;
+        #5;
+        in <= 32'd1;
+        #5;
+        in <= 32'd2;
+        #5;
+        in <= 32'd4;
+        #5;  
     end
 
 endmodule

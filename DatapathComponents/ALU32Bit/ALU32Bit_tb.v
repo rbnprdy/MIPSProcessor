@@ -11,6 +11,7 @@ module ALU32Bit_tb();
 
 	reg [4:0] ALUControl;   // control bits for ALU operation
 	reg [31:0] A, B;	        // inputs
+	reg [3:0] ShiftAmount;
 
 	wire [31:0] ALUResult;	// answer
 	wire Zero;	        // Zero=1 if ALUResult == 0
@@ -22,6 +23,7 @@ module ALU32Bit_tb();
         .ALUControl(ALUControl), 
         .A(A), 
         .B(B), 
+        .ShiftAmount(ShiftAmount),
         .ALUResult(ALUResult), 
         .Zero(Zero)
     );
@@ -195,8 +197,8 @@ module ALU32Bit_tb();
         #5; // Test Shift Left Logical #1
         ALUControl <= 5'b00111;
         tests = tests + 1;       
-        A <= 32'b001010;
-        B <= 32'd2;
+        B <= 32'b001010;
+        ShiftAmount <= 32'd2;
         #5 if(ALUResult == 32'b101000)
             passed = passed + 1;
         else
@@ -205,8 +207,8 @@ module ALU32Bit_tb();
         #5; // Test Shift Right Logical #1
         ALUControl <= 5'b01000;
         tests = tests + 1;       
-        A <= 32'b11010;
-        B <= 32'd2;
+        B <= 32'b11010;
+        ShiftAmount <= 32'd2;
         #5 if(ALUResult == 32'b00110)
             passed = passed + 1;
         else
@@ -215,8 +217,8 @@ module ALU32Bit_tb();
         #5; // Test Rotate Right #1
         ALUControl <= 5'b01001;
         tests = tests + 1;       
-        A <= 32'b10110100000000000000000000000010;
-        B <= 32'd2;
+        B <= 32'b10110100000000000000000000000010;
+        ShiftAmount <= 32'd2;
         #5 if(ALUResult == 32'b10101101000000000000000000000000)
             passed = passed + 1;
         else
@@ -225,8 +227,8 @@ module ALU32Bit_tb();
         #5; // Test Shift Right Arithmetic #1
         ALUControl <= 5'b01010;
         tests = tests + 1;       
-        A <= 32'b10110100000000000000000000000010;
-        B <= 32'd2;
+        B <= 32'b10110100000000000000000000000010;
+        ShiftAmount <= 32'd2;
         #5 if(ALUResult == 32'b11101101000000000000000000000000)
             passed = passed + 1;
         else
@@ -234,8 +236,8 @@ module ALU32Bit_tb();
         
         #5; // Test Shift Right Arithmetic #2
         tests = tests + 1;       
-        A <= 32'b00110100000000000000000000000010;
-        B <= 32'd2;
+        B <= 32'b00110100000000000000000000000010;
+        ShiftAmount <= 32'd2;
         #5 if(ALUResult == 32'b00001101000000000000000000000000)
             passed = passed + 1;
         else
@@ -244,14 +246,14 @@ module ALU32Bit_tb();
         #5; // Test Sign-Extend Half-Word #1
         ALUControl <= 5'b01011;
         tests = tests + 1;       
-        A <= 32'b0110001111000100;
+        B <= 32'b0110001111000100;
         #5 if(ALUResult == 32'b00000000000000000110001111000100)
             passed = passed + 1;
         else
             $display("Sign-Extend Half-Word #1 Test Failed. Expected: 00000000000000000110001111000100. Actual: %b", ALUResult);
         #5; //testing Sign-Extend Half-Word #2
         tests = tests + 1;       
-        A <= 32'b1110001111000100;
+        B <= 32'b1110001111000100;
         #5 if(ALUResult == 32'b11111111111111111110001111000100)
             passed = passed + 1;
         else
@@ -344,6 +346,73 @@ module ALU32Bit_tb();
             passed = passed + 1;
         else
             $display("Set Less Than unsigned #2 Test Failed. Expected: 1. Actual: %d", ALUResult);
+        
+        #5; //Test Shift Left Logical Variable #1
+        ALUControl <= 5'b10001;
+        tests = tests + 1;
+        A <= 32'd1;
+        B <= 32'd2;
+        #5 if(ALUResult == 32'd4)
+            passed = passed + 1;
+        else
+            $display("Shift Left Logical Variable #1 Test Failed. Expected: 4. Actual: %d", ALUResult);
+        
+        #5; //Test Shift Right Logical Variable #1
+        ALUControl <= 5'b10010;
+        tests = tests + 1;
+        A <= 32'd2;
+        B <= 32'd4;
+        #5 if(ALUResult == 32'd1)
+            passed = passed + 1;
+        else
+            $display("Shift Right Logical Variable #1 Test Failed. Expected: 1. Actual: %d", ALUResult);
+        
+        #5; // Test Shift Right Arithmetic Variable #1
+        ALUControl <= 5'b10011;
+        tests = tests + 1;       
+        B <= 32'b10110100000000000000000000000010;
+        A <= 32'd2;
+        #5 if(ALUResult == 32'b11101101000000000000000000000000)
+            passed = passed + 1;
+        else
+            $display("Shift Right Arithmetic Variable #1 Test Failed. Expected: 11101101000000000000000000000000. Actual: %b", ALUResult);
+        
+        #5; // Test Shift Right Arithmetic Variable #2
+        tests = tests + 1;       
+        B <= 32'b00110100000000000000000000000010;
+        A <= 32'd2;
+        #5 if(ALUResult == 32'b00001101000000000000000000000000)
+            passed = passed + 1;
+        else
+            $display("Shift Right Arithmetic Variable #2 Test Failed. Expected: 00001101000000000000000000000000. Actual: %b", ALUResult);
+        
+        #5; // Test Rotate Right #1
+        ALUControl <= 5'b10100;
+        tests = tests + 1;       
+        B <= 32'b10110100000000000000000000000010;
+        A <= 32'd2;
+        #5 if(ALUResult == 32'b10101101000000000000000000000000)
+            passed = passed + 1;
+        else
+            $display("Rotate Right Logical Variable #1 Test Failed. Expected: 10101101000000000000000000000000. Actual: %b", ALUResult);
+            
+        #5; // Test Move #1
+        ALUControl <= 5'b10101;
+        tests = tests + 1;       
+        B <= 32'd0;
+        #5 if(ALUResult == 32'd0)
+            passed = passed + 1;
+        else
+            $display("Move #1 Test Failed. Expected: 00000000000000000000000000000000. Actual: %b", ALUResult);
+
+        #5; // Test Move #2
+        ALUControl <= 5'b10101;
+        tests = tests + 1;       
+        B <= 32'd1;
+        #5 if(ALUResult == 32'd1)
+            passed = passed + 1;
+        else
+            $display("Move #2 Test Failed. Expected: 00000000000000000000000000000001. Actual: %b", ALUResult);
 
         // Report results
         if (passed == tests)
