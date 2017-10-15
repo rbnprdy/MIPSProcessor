@@ -50,7 +50,6 @@
 
 module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegWrite, Clk, ReadData1, ReadData2);
 
-	/* Please fill in the implementation here... */
 	input [4:0] ReadRegister1, ReadRegister2, WriteRegister;
 	input [31:0] WriteData;
 	input RegWrite;
@@ -58,9 +57,16 @@ module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegW
 	
 	output reg [31:0] ReadData1, ReadData2;
 	
+	integer i;
+	
 	reg [31:0] registers [31:0]; // Array of 32 32-bit registers.
 	
-	// FIXME: Do we need to initialize the registers?
+	// itialize the registers to zero
+	initial begin
+	   for(i = 0; i < 32; i = i + 1) begin
+	       registers[i] <= 32'd0;
+	   end
+	end
 	
 	// Write on the posedge of the Clk
 	always@(posedge Clk) begin
