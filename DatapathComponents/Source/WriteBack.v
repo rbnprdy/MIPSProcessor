@@ -85,7 +85,7 @@ module WriteBack(
         .O(MoveOnNotZeroOut)
     );
     
-    Mux32Bit2To1 MoveMux(
+    Mux1Bit2To1 MoveMux(
         .out(Move),
         .inA(MoveOnZeroOut),
         .inB(MoveOnNotZeroOut),
