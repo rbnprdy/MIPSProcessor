@@ -40,7 +40,8 @@
 module InstructionFetchUnit(Instruction, PCAddResult, Branch, BranchAddress, Reset, Clk);
     
     input Reset, Clk, Branch; // Inputs to ProgramCounter
-    output [31:0] Instruction, PCAddResult, BranchAddress; // Output of InstructionMemory
+    input [31:0] BranchAddress;
+    output [31:0] Instruction, PCAddResult; // Output of InstructionMemory
     
     wire [31:0] BranchMuxOut, PCResult; // Output by ProgramCounter and input to PCAdder and InstructionMemory
     
