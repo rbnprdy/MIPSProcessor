@@ -26,7 +26,7 @@ module MEM_WB(Clk, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, 
     input Clk, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn;
     
     output reg [31:0] RHiOut, RLoOut, ZeroOut, ALUResultOut, ReadDataOut;
-    output reg WriteAddressOut;
+    output reg [3:0] WriteAddressOut;
     output reg RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut;
     
     always @(negedge Clk) begin
