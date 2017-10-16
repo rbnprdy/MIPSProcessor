@@ -49,7 +49,11 @@ module Controller(
 
         if (Instruction == 32'd0) begin // This is a nop
             PCSrc <= 1;
-            // FIXME
+            RegWrite <= 0;
+            Msub <= 0;
+            Madd <= 0;
+            HiLoWrite <= 0;
+            MemWrite <= 0;
         end
         
         else begin
