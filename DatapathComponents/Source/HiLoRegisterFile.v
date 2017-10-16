@@ -38,7 +38,7 @@ module HiLoRegisterFile(Clk, WriteHiData, WriteLoData, ReadHi, ReadLo, Madd, Msu
         LoReg <= 32'd0;
     end
     
-    always @(posedge Clk, WriteEn) begin
+    always @(posedge Clk) begin
         if (WriteEn) begin
             HiReg <= WriteHiData;
             LoReg <= WriteLoData;

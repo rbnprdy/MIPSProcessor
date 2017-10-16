@@ -64,9 +64,9 @@ module ALU32Bit(ALUControl, A, B, ShiftAmount, ALUResult, HiResult, Zero);
             5'b01000 : ALUResult <= B >> ShiftAmount; // Srl
             5'b01001 : begin // Rotate Right
                 ALUResult = B;
-                for (i = 0; i < ShiftAmount; i = i + 1) begin // Rotate Right once ShiftAmount times
-                    ALUResult = { ALUResult[0], ALUResult[31:1] };
-                end  
+//                for (i = 0; i < ShiftAmount; i = i + 1) begin // Rotate Right once ShiftAmount times
+//                    ALUResult = { ALUResult[temp:0], ALUResult[31:1] };
+//                end  
             end
             5'b01010 : ALUResult <= $signed(B) >>> ShiftAmount; // Sra
             5'b01011 : ALUResult <= { {16{B[15]}}, B[15:0] }; // Sign-extend half word
@@ -84,9 +84,9 @@ module ALU32Bit(ALUControl, A, B, ShiftAmount, ALUResult, HiResult, Zero);
             5'b10011 : ALUResult <= $signed(B) >>> A; //Shift Right Arithmetic Variable
             5'b10100 : begin //Rotate Right logical Variable
                 ALUResult = B;
-                for (i = 0; i < A; i = i + 1) begin // Rotate Right once A times
-                    ALUResult = { ALUResult[0], ALUResult[31:1] };
-                end 
+//                for (i = 0; i < A; i = i + 1) begin // Rotate Right once A times
+//                    ALUResult = { ALUResult[0], ALUResult[31:1] };
+//                end 
             end
             5'b10101 : ALUResult <= B; //Move
             default : ALUResult <= 1; // Default

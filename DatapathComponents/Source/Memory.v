@@ -48,7 +48,7 @@ module Memory(
         .ReadData(MemoryReadData)
     );
     
-    AndGate1Bit(
+    AndGate1Bit AndGateBranch(
         .A(Branch),
         .B(Zero),
         .O(BranchOut)

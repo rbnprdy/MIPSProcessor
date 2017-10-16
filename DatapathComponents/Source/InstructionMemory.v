@@ -42,9 +42,8 @@ module InstructionMemory(Address, Instruction);
 
     output reg [31:0] Instruction;    // Instruction at memory location Address
     
-    reg [31:0] memory [0:127]; // memory is an array with 9 32 bit numbers ([lsb:msb] is convention for words)
+    reg [31:0] memory [0:395]; // memory is an array with 9 32 bit numbers ([lsb:msb] is convention for words)
     
-    integer i;
     initial begin
         memory[0] = 32'b00100000000100000000000000000001;
         memory[1] = 32'b00000000000000000000000000000000;

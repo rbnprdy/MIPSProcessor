@@ -42,7 +42,8 @@ module InstructionFetchUnit_tb();
     end
     
     initial begin
-        
+        Reset <= 1'b1;
+        #5 Reset <= 1'b0;
     end
     
 endmodule
