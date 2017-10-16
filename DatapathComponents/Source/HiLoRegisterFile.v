@@ -28,8 +28,15 @@ module HiLoRegisterFile(Clk, WriteHiData, WriteLoData, ReadHi, ReadLo, Madd, Msu
     reg [31:0] HiReg;
     reg [31:0] LoReg;
     
+    reg [63:0] TempReg;
+    
     output reg [31:0] ReadHi;
     output reg [31:0] ReadLo;
+    
+    initial begin
+        HiReg <= 32'd0;
+        LoReg <= 32'd0;
+    end
     
     always @(posedge Clk, WriteEn) begin
         if (WriteEn) begin
@@ -44,6 +51,22 @@ module HiLoRegisterFile(Clk, WriteHiData, WriteLoData, ReadHi, ReadLo, Madd, Msu
             LoReg <= LoReg - WriteLoData;
         end
     end
+
+//    always @(posedge Clk, WriteEn) begin
+//        if (WriteEn) begin
+//            HiReg <= WriteHiData;
+//            LoReg <= WriteLoData;
+//        end
+//        if(Madd) begin
+//            TempReg = {HiReg, LoReg} + {WriteHiData, WriteLoData};
+//            HiReg <= TempReg[63:33];
+//            LoReg <= TempReg[32:0];
+//        end else if(Msub) begin
+//            TempReg = {HiReg, LoReg} - {WriteHiData, WriteLoData};
+//            HiReg <= TempReg[63:33];
+//            LoReg <= TempReg[32:0];
+//        end
+//    end
     
     always @(negedge Clk) begin
         ReadHi <= HiReg;
