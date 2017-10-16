@@ -41,7 +41,7 @@ module TopLevel(Clk, Rst);
     wire [31:0] InstructionToALU_ID;
     
     // ID_EX Outputs
-    wire RegWrite_EX, MoveNotZero_EX, DontMove_EX, HiOrLo_EX, MemToReg_EX, MemWrite_EX, MemRead_EX, HiLoToReg_EX, Branch_EX; 
+    wire RegWrite_EX, MoveOnNotZero_EX, DontMove_EX, HiOrLo_EX, MemToReg_EX, MemWrite_EX, MemRead_EX, HiToReg_EX, Branch_EX; 
     
     // Execute Inputs
     wire [31:0] ReadData1_EX, ReadData2_EX, PCAddResult_In_EX, Instruction_15_0_Extended_EX;
@@ -136,11 +136,11 @@ module TopLevel(Clk, Rst);
         .MaddOut(Madd_EX),
         .HiLoWriteOut(HiLoWrite_EX),
         .RegWriteOut(RegWrite_EX),
-        .MoveNotZeroOut(MoveNotZero_EX),
+        .MoveNotZeroOut(MoveOnNotZero_EX),
         .DontMoveOut(DontMove_EX),
         .HiOrLoOut(HiOrLo_EX),
         .MemToRegOut(MemToReg_EX),
-        .HiLoToRegOut(HiLoToReg_EX),
+        .HiLoToRegOut(HiToReg_EX),
         .MemWriteOut(MemWrite_EX),
         .BranchOut(Branch_EX),
         .MemReadOut(MemRead_EX),
@@ -173,6 +173,43 @@ module TopLevel(Clk, Rst);
         .ALUResult(ALUResult_EX),
         .Zero(Zero_EX),
         .WriteRegister(WriteRegister_EX)
+    );
+    
+    EX_MEM EX_MEM_Reg(
+        .Clk(Clk),
+        .RegWriteIn(RegWrite_EX),
+        .MoveNotZeroIn(MoveOnNotZero_EX),
+        .DontMoveIn(DontMove_EX),
+        .HiOrLoIn(HiOrLo_EX),
+        .MemToRegIn(MemToReg_EX),
+        .HiLoToRegIn(HiToReg_EX),
+        .MemWriteIn(MemWrite_EX),
+        .BranchIn(Branch_EX),
+        .MemReadIn(MemRead_EX),
+        .RHiIn(ReadDataHi_EX),
+        .RLoIn(ReadDataLo_EX),
+        .AddResultIn(PCAddResult_Out_EX),
+        .ZeroIn(Zero_EX),
+        .ALUResultIn(ALUResult_EX),
+        .RD2In(ReadData2_EX),
+        .WriteAddressIn(WriteRegister_EX),
+        // START FROM HERE
+        .RegWriteOut(RegWrite_MEM),
+        .MoveNotZeroOut(MoveOnNotZero_MEM),
+        .DontMoveOut(DontMove_MEM),
+        .HiOrLoOut(HiOrLo_MEM),
+        .MemToRegOut(MemToReg_MEM),
+        .HiLoToRegOut(HiLoToReg_MEM),
+        .MemWriteOut(MemWrite_MEM),
+        .BranchOut(Branch_MEM),
+        .MemReadOut(MemRead_MEM),
+        .RHiOut(ReadHi_MEM),
+        .RLoOut(ReadLo_MEM),
+        .AddResultOut(AddResult_MEM),
+        .ZeroOut(Zero_MEM),
+        .ALUResultOut(ALUResult_MEM),
+        .RD2Out(ReadRegister2_MEM),
+        .WriteAddressOut(WriteAddress_MEM)
     );
         
 endmodule
