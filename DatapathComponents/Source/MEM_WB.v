@@ -20,7 +20,37 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module MEM_WB(Clk, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, RHiIn, RLoIn, ZeroIn, ALUResultIn, WriteAddressIn, ReadDataIn, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, RHiOut, RLoOut, ZeroOut, ALUResultOut, WriteAddressOut, ReadDataOut);
+module MEM_WB(
+    //inputs
+    Clk,
+    RegWriteIn,
+    MoveNotZeroIn,
+    DontMoveIn,
+    HiOrLoIn,
+    MemToRegIn,
+    HiLoToRegIn,
+    RHiIn,
+    RLoIn,
+    ZeroIn,
+    ALUResultIn,
+    WriteAddressIn,
+    ReadDataIn,
+    //outputs
+    RegWriteOut,
+    MoveNotZeroOut,
+    DontMoveOut,
+    HiOrLoOut,
+    MemToRegOut,
+    HiLoToRegOut,
+    RHiOut,
+    RLoOut,
+    ZeroOut,
+    ALUResultOut,
+    WriteAddressOut,
+    ReadDataOut
+);
+    
+    
     input [31:0] RHiIn, RLoIn, ZeroIn, ALUResultIn, ReadDataIn;
     input [3:0] WriteAddressIn;
     input Clk, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn;

@@ -38,7 +38,7 @@ module MEM_WB_tb();
         .RegWriteIn(RegWriteIn),
         .MoveNotZeroIn(MoveNotZeroIn),
         .DontMoveIn(DontMoveIn),
-        .HiOrLoIn(DontMoveIn),
+        .HiOrLoIn(HiOrLoIn),
         .MemToRegIn(MemToRegIn),
         .HiLoToRegIn(HiLoToRegIn),
         .RHiIn(RHiIn),
