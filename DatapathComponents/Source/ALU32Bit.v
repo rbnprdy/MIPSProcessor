@@ -38,7 +38,7 @@ module ALU32Bit(ALUControl, A, B, ShiftAmount, ALUResult, HiResult, Zero);
 
 	input [4:0] ALUControl; // control bits for ALU operation
 	input [31:0] A, B;	    // inputs
-	input [3:0] ShiftAmount;
+	input [4:0] ShiftAmount;
 
 	output reg signed [31:0] ALUResult, HiResult;	// answer
 	output reg Zero;	    // Zero=1 if ALUResult == 0
