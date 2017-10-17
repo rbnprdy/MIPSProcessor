@@ -47,17 +47,17 @@ module TopLevel(Clk, Rst, WriteData, PCValue);
     
     // Execute Inputs
     wire [31:0] ReadData1_EX, ReadData2_EX, PCAddResult_In_EX, Instruction_15_0_Extended_EX;
-    wire [3:0] Instruction_10_6_EX, Instruction_20_16_EX, Instruction_15_11_EX;
+    wire [4:0] Instruction_10_6_EX, Instruction_20_16_EX, Instruction_15_11_EX;
     wire ALUSrc_EX, RegDst_EX, HiLoWrite_EX, Madd_EX, Msub_EX;
     wire [31:0] InstructionToALU_EX;
     // Execute Outputs
     wire [31:0] ReadDataHi_EX, ReadDataLo_EX, PCAddResult_Out_EX, ALUResult_EX;
     wire Zero_EX;
-    wire [3:0] WriteRegister_EX;
+    wire [4:0] WriteRegister_EX;
     
     //EX_MEM Outputs
     wire [31:0] ReadHi_MEM, ReadLo_MEM, AddResult_MEM, Zero_MEM, ALUResult_MEM, ReadRegister2_MEM;
-    wire [3:0] WriteAddress_MEM;
+    wire [4:0] WriteAddress_MEM;
     wire RegWrite_MEM, MoveOnNotZero_MEM, DontMove_MEM, HiOrLo_MEM, MemToReg_MEM, HiLoToReg_MEM, MemWrite_MEM, Branch_MEM, MemRead_MEM;
     
     //MEM Outputs
@@ -65,7 +65,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue);
     
     //MEM_WB Outputs
     wire [31:0] ReadHi_WB, ReadLo_WB, Zero_WB, ALUResult_WB, ReadData_WB;
-    wire [3:0] WriteAddress_WB;
+    wire [4:0] WriteAddress_WB;
     wire RegWrite_WB, MoveOnNotZero_WB, HiOrLo_WB, DontMove_WB, MemToReg_WB, HiLoToReg_WB;
     
     InstructionFetchUnit IF(
@@ -254,7 +254,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue);
         .ALUResultIn(ALUResult_MEM),
         .WriteAddressIn(WriteAddress_MEM),
         .ReadDataIn(ReadData_MEM),
-        .RegWriteOut(RegWrite_WB),
+        .RegWriteOut(RegWrite_In_ID),
         .MoveNotZeroOut(MoveOnNotZero_WB),
         .DontMoveOut(DontMove_WB),
         .HiOrLoOut(HiOrLo_WB),
@@ -264,7 +264,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue);
         .RLoOut(ReadLo_WB),
         .ZeroOut(Zero_WB),
         .ALUResultOut(ALUResult_WB),
-        .WriteAddressOut(WriteAddress_WB),
+        .WriteAddressOut(WriteRegister_ID),
         .ReadDataOut(ReadData_WB)
     );
     

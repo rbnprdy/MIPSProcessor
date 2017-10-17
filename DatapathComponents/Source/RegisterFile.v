@@ -75,7 +75,7 @@ module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegW
 	end
 	
 	// Read on the negedge of the Clk
-	always@(negedge Clk) begin
+	always@(*) begin
 	   ReadData1 <= registers[ReadRegister1];
 	   ReadData2 <= registers[ReadRegister2];
 	end

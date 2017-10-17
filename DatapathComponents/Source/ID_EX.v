@@ -22,11 +22,11 @@
 
 module ID_EX(Clk, PCAddIn, RD1In, RD2In, SignExtendIn, Instr106In, Instr2016In, Instr1511In, MsubIn, MaddIn, HiLoWriteIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RegDestIn, ALUSrcIn, ALUOpIn, PCAddOut, RD1Out, RD2Out, SignExtendOut, Instr106Out, Instr2016Out, Instr1511Out, MsubOut, MaddOut, HiLoWriteOut, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RegDestOut, ALUSrcOut, ALUOpOut);
     input [31:0] PCAddIn, RD1In, RD2In, SignExtendIn, ALUOpIn;
-    input [3:0] Instr106In, Instr2016In, Instr1511In;
+    input [4:0] Instr106In, Instr2016In, Instr1511In;
     input MsubIn, MaddIn, HiLoWriteIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RegDestIn, ALUSrcIn, Clk;
     
     output reg [31:0] PCAddOut, RD1Out, RD2Out, SignExtendOut, ALUOpOut;
-    output reg [3:0] Instr106Out, Instr2016Out, Instr1511Out;
+    output reg [4:0] Instr106Out, Instr2016Out, Instr1511Out;
     output reg MsubOut, MaddOut, HiLoWriteOut, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RegDestOut, ALUSrcOut;
 
     always @(negedge Clk) begin

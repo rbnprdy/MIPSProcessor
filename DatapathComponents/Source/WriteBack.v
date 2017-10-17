@@ -63,8 +63,8 @@ module WriteBack(
     
     Mux32Bit2To1 HiToRegMux(
         .out(WriteData),
-        .inA(HiOrLoOut),
-        .inB(MemToRegOut),
+        .inA(MemToRegOut),
+        .inB(HiOrLoOut),
         .sel(HiToReg)
     );
     

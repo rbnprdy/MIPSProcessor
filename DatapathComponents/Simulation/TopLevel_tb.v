@@ -40,7 +40,7 @@ module TopLevel_tb();
     
     initial begin
         Rst <= 1;
-        #15 Rst <= 0;
+        #25 Rst <= 0;
     end
     
 endmodule

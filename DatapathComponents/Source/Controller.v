@@ -50,10 +50,19 @@ module Controller(
         if (Instruction == 32'd0) begin // This is a nop
             PCSrc <= 1;
             RegWrite <= 0;
+            ALUSrc <= 0;
+            RegDst <= 0;
             Msub <= 0;
             Madd <= 0;
             HiLoWrite <= 0;
             MemWrite <= 0;
+            MemRead <= 0;
+            Branch <= 0;
+            MemToReg <= 0;
+            HiOrLo <= 0;
+            HiToReg <= 0;
+            DontMove <= 1;
+            MoveOnNotZero <= 0;
         end
         
         else begin

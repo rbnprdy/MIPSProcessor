@@ -46,12 +46,12 @@ module Execute(
         WriteRegister
 );
     input [31:0] ReadData1, ReadData2, PCAddResult, Instruction_15_0_Extended;
-    input [3:0] Instruction_10_6, Instruction_20_16, Instruction_15_11;
+    input [4:0] Instruction_10_6, Instruction_20_16, Instruction_15_11;
     input Clk, ALUSrc, RegDst, HiLoWrite, Madd, Msub;
     input [31:0] InstructionToALU;
     
     output [31:0] ReadDataHi, ReadDataLo, PCAddResultOut, ALUResult;
-    output [3:0] WriteRegister;
+    output [4:0] WriteRegister;
     output Zero;
     
     wire [31:0] ALUInputB;
@@ -59,7 +59,7 @@ module Execute(
     wire [31:0] ALUHiResult;
     wire [31:0] Instruction_15_0_Shifted;
     
-    Mux4Bit2To1 RegDstMux(
+    Mux5Bit2To1 RegDstMux(
         .out(WriteRegister),
         .inA(Instruction_20_16),
         .inB(Instruction_15_11),

@@ -444,7 +444,7 @@ module InstructionMemory(Address, Instruction);
     end
     
     always @(Address) begin
-        Instruction <= memory[Address[8:2]]; // Assign the instruction at the byte address of Address.
+        Instruction <= memory[Address[10:2]]; // Assign the instruction at the byte address of Address.
     end   
 
 endmodule
