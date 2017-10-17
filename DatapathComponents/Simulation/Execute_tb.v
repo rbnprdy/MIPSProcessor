@@ -127,7 +127,7 @@ module Execute_tb();
         #5 if (ReadDataHi == 32'b11111111111111111111111111111111 && ReadDataLo == 32'b11101110011010110010100010100000)
             passed = passed + 1;
         else
-            $display("Test Madd Failed. Expected ReadDataHi: 11111111111111111111111111111111. Actual ReadDataHi: %b. Expected ReadDataLo: 11101110011010110010100010100000. Actual ReadDataLo: %b", ReadDataHi, ReadDataLo);
+            $display("Test Msub Failed. Expected ReadDataHi: 11111111111111111111111111111111. Actual ReadDataHi: %b. Expected ReadDataLo: 11101110011010110010100010100000. Actual ReadDataLo: %b", ReadDataHi, ReadDataLo);
 
         #5 // Test RegDestMux #1
         tests = tests + 1;
