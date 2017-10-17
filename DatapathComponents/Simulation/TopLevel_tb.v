@@ -820,16 +820,10 @@ module TopLevel_tb();
             $display("mflo $s5 failed. Exp WD: -1. Act WD: %d", WriteData);
             
         @(negedge Clk);
-        $display($time);
-        $display("ALUA: %d ALUB: %d ALUOut: %d", m0.EX.ALU.A, m0.EX.ALU.B, m0.EX.ALU.ALUResult);
         @(negedge Clk);
-        $display("ALUA: %d ALUB: %d ALUOut: %d", m0.EX.ALU.A, m0.EX.ALU.B, m0.EX.ALU.ALUResult);
         @(negedge Clk);
-        $display("ALUA: %d ALUB: %d ALUOut: %d", m0.EX.ALU.A, m0.EX.ALU.B, m0.EX.ALU.ALUResult);
         @(negedge Clk);
-        $display("ALUA: %d ALUB: %d ALUOut: %d", m0.EX.ALU.A, m0.EX.ALU.B, m0.EX.ALU.ALUResult);
         @(negedge Clk);
-        $display("ALUA: %d ALUB: %d ALUOut: %d", m0.EX.ALU.A, m0.EX.ALU.B, m0.EX.ALU.ALUResult);
         @(negedge Clk);
         
         // andi $s1, $s1, 65535
@@ -910,6 +904,36 @@ module TopLevel_tb();
             $display("rotr $s1, $s2, 31 failed. Exp WD: 2. Act WD: %d", WriteData);
             
         @(negedge Clk);
+        $display($time);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        
+        // addi $s4, $zero, 31
+        tests = tests + 1;
+        #5 if (WriteData == 32'd31)
+            passed = passed + 1;
+        else
+            $display("andi $s4, $zero, 31 failed. Exp WD: 31. Act WD: %d", WriteData);
+            
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        
+        // rotrv $s1, $s1, $s4
+        tests = tests + 1;
+        #5 if (WriteData == 32'd4)
+            passed = passed + 1;
+        else
+            $display("rotrv $s1, $s1, $s4 failed. Exp WD: 4. Act WD: %d", WriteData);
+            
+        @(negedge Clk);
+        $display($time);
         @(negedge Clk);
         @(negedge Clk);
         @(negedge Clk);

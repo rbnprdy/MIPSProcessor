@@ -77,7 +77,7 @@ module ALU32Bit(ALUControl, A, B, ShiftAmount, ALUResult, HiResult, Zero);
                 HiResult <= TempResult[63:32];
             end
             5'b01110 : ALUResult <= $signed(A) < $signed(B); // Slt
-            5'b01111 : ALUResult <= { {24{A[7]}}, A[7:0] }; // Sign-extend byte
+            5'b01111 : ALUResult <= { {24{B[7]}}, B[7:0] }; // Sign-extend byte
             5'b10000 : ALUResult <= A < B; // Slt Unsigned
             5'b10001 : ALUResult <= B << A; //Shift Left logical variable
             5'b10010 : ALUResult <= B >> A; //Shift Right Logical variable
