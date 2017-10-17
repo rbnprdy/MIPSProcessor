@@ -727,7 +727,7 @@ module TopLevel_tb();
         @(negedge Clk);
         @(negedge Clk);
         @(negedge Clk);
-            
+        $display($time);
         // madd $s1, $s2
         tests = tests + 1;
         #5 if (m0.EX.HiLoReg.ReadHi == 31 && m0.EX.HiLoReg.ReadLo == -64)
@@ -977,7 +977,7 @@ module TopLevel_tb();
         if (passed == tests)
             $display("All tests passed.");
         else
-            $display("%2d out of %2d test passed.", passed, tests);
+            $display("%2d out of %2d tests passed.", passed, tests);
         $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n");
     end
     

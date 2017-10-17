@@ -47,35 +47,35 @@ module HiLoRegisterFile(
         LoReg <= 32'd0;
     end
     
+//    always @(posedge Clk) begin
+//        if (WriteEn) begin
+//            HiReg <= WriteHiData;
+//            LoReg <= WriteLoData;
+//        end
+//        if(Madd) begin
+//            HiReg <= HiReg + WriteHiData;
+//            LoReg <= LoReg + WriteLoData;
+//        end else if(Msub) begin
+//            HiReg <= HiReg - WriteHiData;
+//            LoReg <= LoReg - WriteLoData;
+//        end
+//    end
+
     always @(posedge Clk) begin
         if (WriteEn) begin
             HiReg <= WriteHiData;
             LoReg <= WriteLoData;
         end
         if(Madd) begin
-            HiReg <= HiReg + WriteHiData;
-            LoReg <= LoReg + WriteLoData;
+            TempReg = {HiReg, LoReg} + {WriteHiData, WriteLoData};
+            HiReg <= TempReg[63:33];
+            LoReg <= TempReg[32:0];
         end else if(Msub) begin
-            HiReg <= HiReg - WriteHiData;
-            LoReg <= LoReg - WriteLoData;
+            TempReg = {HiReg, LoReg} - {WriteHiData, WriteLoData};
+            HiReg <= TempReg[63:33];
+            LoReg <= TempReg[32:0];
         end
     end
-
-//    always @(posedge Clk, WriteEn) begin
-//        if (WriteEn) begin
-//            HiReg <= WriteHiData;
-//            LoReg <= WriteLoData;
-//        end
-//        if(Madd) begin
-//            TempReg = {HiReg, LoReg} + {WriteHiData, WriteLoData};
-//            HiReg <= TempReg[63:33];
-//            LoReg <= TempReg[32:0];
-//        end else if(Msub) begin
-//            TempReg = {HiReg, LoReg} - {WriteHiData, WriteLoData};
-//            HiReg <= TempReg[63:33];
-//            LoReg <= TempReg[32:0];
-//        end
-//    end
     
     always @(negedge Clk) begin
         ReadHi <= HiReg;
