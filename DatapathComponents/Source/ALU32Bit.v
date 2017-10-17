@@ -88,7 +88,7 @@ module ALU32Bit(ALUControl, A, B, ShiftAmount, ALUResult, HiResult, Zero);
 //                    ALUResult = { ALUResult[0], ALUResult[31:1] };
 //                end 
             end
-            5'b10101 : ALUResult <= B; //Move
+            5'b10101 : ALUResult <= A; //Move
             default : ALUResult <= 1; // Default
         endcase
     end
