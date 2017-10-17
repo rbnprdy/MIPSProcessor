@@ -316,14 +316,14 @@ module ALU32Bit_tb();
         #5; // Test Sign-Extend Byte #1
         ALUControl <= 5'b01111;
         tests = tests + 1;       
-        A <= 32'b11000100;
+        B <= 32'b11000100;
         #5 if(ALUResult == 32'b11111111111111111111111111000100)
             passed = passed + 1;
         else
             $display("Sign-Extend Byte #1 Test Failed. Expected: 11111111111111111111111111000100. Actual: %b", ALUResult);
         #5; //testing Sign-Extend Byte #2
         tests = tests + 1;       
-        A <= 32'b01000100;
+        B <= 32'b01000100;
         #5 if(ALUResult == 32'b00000000000000000000000001000100)
             passed = passed + 1;
         else
