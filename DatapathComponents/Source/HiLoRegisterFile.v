@@ -31,16 +31,16 @@ module HiLoRegisterFile(
     WriteEn
 );
     input Clk, Madd, Msub, WriteEn;
-    input [31:0] WriteHiData;
-    input [31:0] WriteLoData;
+    input signed [31:0] WriteHiData;
+    input signed [31:0] WriteLoData;
     
     reg [31:0] HiReg;
     reg [31:0] LoReg;
     
     reg [63:0] TempReg;
     
-    output reg [31:0] ReadHi;
-    output reg [31:0] ReadLo;
+    output reg signed [31:0] ReadHi;
+    output reg signed [31:0] ReadLo;
     
     initial begin
         HiReg <= 32'd0;
