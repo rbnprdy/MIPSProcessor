@@ -904,7 +904,6 @@ module TopLevel_tb();
             $display("rotr $s1, $s2, 31 failed. Exp WD: 2. Act WD: %d", WriteData);
             
         @(negedge Clk);
-        $display($time);
         @(negedge Clk);
         @(negedge Clk);
         @(negedge Clk);
@@ -933,7 +932,6 @@ module TopLevel_tb();
             $display("rotrv $s1, $s1, $s4 failed. Exp WD: 4. Act WD: %d", WriteData);
             
         @(negedge Clk);
-        $display($time);
         @(negedge Clk);
         @(negedge Clk);
         @(negedge Clk);

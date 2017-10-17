@@ -80,6 +80,7 @@ module InstructionDecode(
     
     SignExtension SignExtend(
         .in(Instruction[15:0]),
+        .opcode(Instruction[31:26]),
         .out(Instruction_15_0_Extended)
     );
     
