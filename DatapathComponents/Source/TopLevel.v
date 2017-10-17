@@ -20,20 +20,22 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module TopLevel(Clk, Rst);
+module TopLevel(Clk, Rst, WriteData, PCValue);
     input Clk, Rst;
+    
+    output [31:0] WriteData, PCValue;
     
     // InstructionFetch Inputs
     wire Branch_IF, BranchAddress_IF;
     // Instruction Fetch Outputs
-    wire [31:0] PCAddResult_IF, Instruction_IF;
+    wire [31:0] Instruction_IF;
     
     // IF_ID Outputs
     wire [31:0] PCAdd_IF_ID;
     
     // InstructionDecode Inputs
     wire RegWrite_In_ID, Move_ID;
-    wire [31:0] Instruction_ID, WriteData_ID;
+    wire [31:0] Instruction_ID;
     wire [4:0] WriteRegister_ID;
     // InstructionDecode Outputs
     wire [31:0] ReadData1_ID, ReadData2_ID, Instruction_15_0_Extended_ID;
@@ -68,7 +70,7 @@ module TopLevel(Clk, Rst);
     
     InstructionFetchUnit IF(
         .Instruction(Instruction_IF), 
-        .PCAddResult(PCAddResult_IF),
+        .PCAddResult(PCValue),
         .Branch(Branch_IF),
         .BranchAddress(BranchAddress_IF),
         .Reset(Rst),
@@ -77,7 +79,7 @@ module TopLevel(Clk, Rst);
     
     IF_ID IF_ID_Reg(
         .Clk(Clk),
-        .PCAddIn(PCAddResult_IF),
+        .PCAddIn(PCValue),
         .InstructionIn(Instruction_IF),
         .PCAddOut(PCAdd_IF_ID),
         .InstructionOut(Instruction_ID)
@@ -88,7 +90,7 @@ module TopLevel(Clk, Rst);
         .Clk(Clk),
         .Instruction(Instruction_ID),
         .WriteRegister(WriteRegister_ID),
-        .WriteData(WriteData_ID),
+        .WriteData(WriteData),
         .RegWriteIn(RegWrite_In_ID),
         .Move(Move_ID),
         // Outputs
@@ -280,7 +282,7 @@ module TopLevel(Clk, Rst);
         .DontMove(DontMove_WB), 
         .MoveOnNotZero(MoveOnNotZero_WB),
         // Outputs
-        .WriteData(WriteData_ID),
+        .WriteData(WriteData),
         .Move(Move_ID)
     );
     

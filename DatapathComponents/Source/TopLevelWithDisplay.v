@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 10/16/2017 03:32:01 PM
+// Create Date: 10/16/2017 07:37:29 PM
 // Design Name: 
-// Module Name: TopLevel_tb
+// Module Name: TopLevelWithDisplay
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,27 +20,27 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module TopLevel_tb();
-
-    reg Clk, Rst;
+module TopLevelWithDisplay(Clk, Rst, out7, en_out);
+    
+    input Clk, Rst;
+    output [6:0] out7;
+    output [7:0] en_out;
     
     wire [31:0] WriteData, PCValue;
     
-    TopLevel m0(
+    TopLevel tl(
         .Clk(Clk),
         .Rst(Rst),
         .WriteData(WriteData),
         .PCValue(PCValue)
     );
     
-   initial begin
-        Clk <= 1'b0;
-        forever #10 Clk <= ~Clk;
-    end
-    
-    initial begin
-        Rst <= 1;
-        #15 Rst <= 0;
-    end
+    Two4DigitDisplay display(
+        .Clk(Clk),
+        .NumberA(PCValue[7:0]),
+        .NumberB(WriteData[7:0]),
+        .out7(out7),
+        .en_out(en_out)
+    );
     
 endmodule
