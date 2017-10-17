@@ -68,12 +68,12 @@ module HiLoRegisterFile(
         end
         if(Madd) begin
             TempReg = {HiReg, LoReg} + {WriteHiData, WriteLoData};
-            HiReg <= TempReg[63:33];
-            LoReg <= TempReg[32:0];
+            HiReg <= TempReg[63:32];
+            LoReg <= TempReg[31:0];
         end else if(Msub) begin
             TempReg = {HiReg, LoReg} - {WriteHiData, WriteLoData};
-            HiReg <= TempReg[63:33];
-            LoReg <= TempReg[32:0];
+            HiReg <= TempReg[63:32];
+            LoReg <= TempReg[31:0];
         end
     end
     
