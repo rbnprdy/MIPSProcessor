@@ -45,21 +45,8 @@ module HiLoRegisterFile(
     initial begin
         HiReg <= 32'd0;
         LoReg <= 32'd0;
+        TempReg <= 64'd0;
     end
-    
-//    always @(posedge Clk) begin
-//        if (WriteEn) begin
-//            HiReg <= WriteHiData;
-//            LoReg <= WriteLoData;
-//        end
-//        if(Madd) begin
-//            HiReg <= HiReg + WriteHiData;
-//            LoReg <= LoReg + WriteLoData;
-//        end else if(Msub) begin
-//            HiReg <= HiReg - WriteHiData;
-//            LoReg <= LoReg - WriteLoData;
-//        end
-//    end
 
     always @(posedge Clk) begin
         if (WriteEn) begin

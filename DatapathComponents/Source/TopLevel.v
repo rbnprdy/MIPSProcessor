@@ -26,7 +26,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue);
     output [31:0] WriteData, PCValue;
     
     // InstructionFetch Inputs
-    wire Branch_IF, BranchAddress_IF;
+    wire Branch_IF;
+    wire [31:0] BranchAddress_IF;
     // Instruction Fetch Outputs
     wire [31:0] Instruction_IF;
     
@@ -56,17 +57,17 @@ module TopLevel(Clk, Rst, WriteData, PCValue);
     wire [4:0] WriteRegister_EX;
     
     //EX_MEM Outputs
-    wire [31:0] ReadHi_MEM, ReadLo_MEM, AddResult_MEM, Zero_MEM, ALUResult_MEM, ReadRegister2_MEM;
+    wire [31:0] ReadHi_MEM, ReadLo_MEM, AddResult_MEM, ALUResult_MEM, ReadRegister2_MEM;
     wire [4:0] WriteAddress_MEM;
-    wire RegWrite_MEM, MoveOnNotZero_MEM, DontMove_MEM, HiOrLo_MEM, MemToReg_MEM, HiLoToReg_MEM, MemWrite_MEM, Branch_MEM, MemRead_MEM;
+    wire Zero_MEM, RegWrite_MEM, MoveOnNotZero_MEM, DontMove_MEM, HiOrLo_MEM, MemToReg_MEM, HiLoToReg_MEM, MemWrite_MEM, Branch_MEM, MemRead_MEM;
     
     //MEM Outputs
     wire [31:0] ReadData_MEM;
     
     //MEM_WB Outputs
-    wire [31:0] ReadHi_WB, ReadLo_WB, Zero_WB, ALUResult_WB, ReadData_WB;
+    wire [31:0] ReadHi_WB, ReadLo_WB, ALUResult_WB, ReadData_WB;
     wire [4:0] WriteAddress_WB;
-    wire RegWrite_WB, MoveOnNotZero_WB, HiOrLo_WB, DontMove_WB, MemToReg_WB, HiLoToReg_WB;
+    wire Zero_WB, RegWrite_WB, MoveOnNotZero_WB, HiOrLo_WB, DontMove_WB, MemToReg_WB, HiLoToReg_WB;
     
     InstructionFetchUnit IF(
         .Instruction(Instruction_IF), 
