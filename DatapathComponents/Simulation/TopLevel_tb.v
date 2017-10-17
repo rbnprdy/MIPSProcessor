@@ -24,7 +24,7 @@ module TopLevel_tb();
 
     reg Clk, Rst;
     
-    wire [31:0] WriteData, PCValue;
+    wire [31:0] WriteData, PCValue, HiData, LoData;
     
     integer tests, passed;
     
@@ -32,7 +32,9 @@ module TopLevel_tb();
         .Clk(Clk),
         .Rst(Rst),
         .WriteData(WriteData),
-        .PCValue(PCValue)
+        .PCValue(PCValue),
+        .HiData(HiData),
+        .LoData(LoData)
     );
     
    initial begin
@@ -50,7 +52,7 @@ module TopLevel_tb();
                
         @(negedge Clk);
         @(negedge Clk);
-        #5 Rst <= 0;
+        #50 Rst <= 0;
         @(negedge Clk);
         @(negedge Clk);
         @(negedge Clk); 
