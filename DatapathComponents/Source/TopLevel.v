@@ -20,10 +20,10 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module TopLevel(Clk, Rst, WriteData, PCValue);
+module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     input Clk, Rst;
     
-    output [31:0] WriteData, PCValue;
+    output [31:0] WriteData, PCValue, HiData, LoData;
     
     // InstructionFetch Inputs
     wire Branch_IF;
@@ -52,7 +52,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue);
     wire ALUSrc_EX, RegDst_EX, HiLoWrite_EX, Madd_EX, Msub_EX;
     wire [31:0] InstructionToALU_EX;
     // Execute Outputs
-    wire [31:0] ReadDataHi_EX, ReadDataLo_EX, PCAddResult_Out_EX, ALUResult_EX;
+    wire [31:0] PCAddResult_Out_EX, ALUResult_EX;
     wire Zero_EX;
     wire [4:0] WriteRegister_EX;
     
@@ -183,8 +183,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue);
         .Madd(Madd_EX), 
         .Msub(Msub_EX), 
         // Outputs
-        .ReadDataHi(ReadDataHi_EX),
-        .ReadDataLo(ReadDataLo_EX),
+        .ReadDataHi(HiData),
+        .ReadDataLo(LoData),
         .PCAddResultOut(PCAddResult_Out_EX),
         .ALUResult(ALUResult_EX),
         .Zero(Zero_EX),
@@ -202,8 +202,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue);
         .MemWriteIn(MemWrite_EX),
         .BranchIn(Branch_EX),
         .MemReadIn(MemRead_EX),
-        .RHiIn(ReadDataHi_EX),
-        .RLoIn(ReadDataLo_EX),
+        .RHiIn(HiData),
+        .RLoIn(LoData),
         .AddResultIn(PCAddResult_Out_EX),
         .ZeroIn(Zero_EX),
         .ALUResultIn(ALUResult_EX),
