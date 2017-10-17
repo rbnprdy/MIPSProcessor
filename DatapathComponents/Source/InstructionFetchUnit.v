@@ -51,9 +51,22 @@ module InstructionFetchUnit(Instruction, PCAddResult, Branch, BranchAddress, Res
         .inB(BranchAddress),
         .sel(Branch)
     );
-    ProgramCounter m2(BranchMuxOut, PCResult, Reset, Clk);
-    PCAdder m1(PCResult, PCAddResult);
-    InstructionMemory m3(PCResult, Instruction);
+    ProgramCounter m2(
+        .Address(BranchMuxOut),
+        .PCResult(PCResult),
+        .Reset(Reset),
+        .Clk(Clk)
+    );
+        
+    PCAdder m1(
+        .PCResult(PCResult),
+        .PCAddResult(PCAddResult)
+    );
+    
+    InstructionMemory m3(
+        .Address(PCResult),
+        .Instruction(Instruction)
+    );
     
 endmodule
 

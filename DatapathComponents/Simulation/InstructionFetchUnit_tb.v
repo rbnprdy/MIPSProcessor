@@ -43,7 +43,9 @@ module InstructionFetchUnit_tb();
     
     initial begin
         Reset <= 1'b1;
-        #5 Reset <= 1'b0;
+        Branch <= 1'b0;
+        BranchAddress <= 32'b0;
+        #15 Reset <= 1'b0;
     end
     
 endmodule

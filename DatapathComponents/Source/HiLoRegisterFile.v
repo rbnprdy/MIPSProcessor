@@ -20,7 +20,16 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module HiLoRegisterFile(Clk, WriteHiData, WriteLoData, ReadHi, ReadLo, Madd, Msub, WriteEn);
+module HiLoRegisterFile(
+    Clk,
+    WriteHiData,
+    WriteLoData,
+    ReadHi,
+    ReadLo,
+    Madd,
+    Msub,
+    WriteEn
+);
     input Clk, Madd, Msub, WriteEn;
     input [31:0] WriteHiData;
     input [31:0] WriteLoData;

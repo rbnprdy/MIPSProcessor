@@ -41,7 +41,7 @@ module TopLevel_tb();
         @(posedge Clk);
         @(posedge Clk);
         */
-        #20 Rst <= 0;
+        #150 Rst <= 0;
         #500;
     end
     
