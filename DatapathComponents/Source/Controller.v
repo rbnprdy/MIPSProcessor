@@ -114,15 +114,15 @@ module Controller(
                         DontMove <= 1;
                     end
                     else if (Instruction[5:0] == 6'b010010) begin // mflo
-                        RegWrite <= 0;
+                        RegWrite <= 1;
                         LoWrite <= 0;
                         HiWrite <= 0;
                         DontMove <= 1;
                         HiOrLo <= 0;
                         HiToReg <= 1;
                     end
-                    else if (Instruction[5:0] == 6'b010010) begin // mfhi
-                        RegWrite <= 0;
+                    else if (Instruction[5:0] == 6'b010000) begin // mfhi
+                        RegWrite <= 1;
                         LoWrite <= 0;
                         HiWrite <= 0;
                         DontMove <= 1;
