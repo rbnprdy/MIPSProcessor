@@ -40,7 +40,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     wire [4:0] WriteRegister_ID;
     // InstructionDecode Outputs
     wire [31:0] ReadData1_ID, ReadData2_ID, Instruction_15_0_Extended_ID;
-    wire PCSrc_ID, RegWrite_ID, ALUSrc_ID, RegDst_ID, HiLoWrite_ID, Madd_ID, Msub_ID, MemWrite_ID, MemRead_ID, Branch_ID, MemToReg_ID, HiOrLo_ID, HiToReg_ID, DontMove_ID, MoveOnNotZero_ID;
+    wire PCSrc_ID, RegWrite_ID, ALUSrc_ID, RegDst_ID, HiWrite_ID, LoWrite_ID, Madd_ID, Msub_ID, MemWrite_ID, MemRead_ID, Branch_ID, MemToReg_ID, HiOrLo_ID, HiToReg_ID, DontMove_ID, MoveOnNotZero_ID;
     wire [31:0] InstructionToALU_ID;
     
     // ID_EX Outputs
@@ -49,7 +49,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     // Execute Inputs
     wire [31:0] ReadData1_EX, ReadData2_EX, PCAddResult_In_EX, Instruction_15_0_Extended_EX;
     wire [4:0] Instruction_10_6_EX, Instruction_20_16_EX, Instruction_15_11_EX;
-    wire ALUSrc_EX, RegDst_EX, HiLoWrite_EX, Madd_EX, Msub_EX;
+    wire ALUSrc_EX, RegDst_EX, HiWrite_EX, LoWrite_EX, Madd_EX, Msub_EX;
     wire [31:0] InstructionToALU_EX;
     // Execute Outputs
     wire [31:0] PCAddResult_Out_EX, ALUResult_EX;
@@ -104,7 +104,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ALUSrc(ALUSrc_ID), 
         .InstructionToALU(InstructionToALU_ID),
         .RegDst(RegDst_ID),
-        .HiLoWrite(HiLoWrite_ID), 
+        .HiWrite(HiWrite_ID),
+        .LoWrite(LoWrite_ID), 
         .Madd(Madd_ID), 
         .Msub(Msub_ID), 
         .MemWrite(MemWrite_ID), 
@@ -128,7 +129,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .Instr1511In(Instruction_ID[15:11]),
         .MsubIn(Msub_ID),
         .MaddIn(Madd_ID),
-        .HiLoWriteIn(HiLoWrite_ID),
+        .HiWriteIn(HiWrite_ID),
+        .LoWriteIn(LoWrite_ID),
         .RegWriteIn(RegWrite_ID),
         .MoveNotZeroIn(MoveOnNotZero_ID),
         .DontMoveIn(DontMove_ID),
@@ -150,7 +152,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .Instr1511Out(Instruction_15_11_EX),
         .MsubOut(Msub_EX),
         .MaddOut(Madd_EX),
-        .HiLoWriteOut(HiLoWrite_EX),
+        .HiWriteOut(HiWrite_EX),
+        .LoWriteOut(LoWrite_EX),
         .RegWriteOut(RegWrite_EX),
         .MoveNotZeroOut(MoveOnNotZero_EX),
         .DontMoveOut(DontMove_EX),
@@ -179,7 +182,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ALUSrc(ALUSrc_EX), 
         .InstructionToALU(InstructionToALU_EX),
         .RegDst(RegDst_EX),
-        .HiLoWrite(HiLoWrite_EX), 
+        .HiWrite(HiWrite_EX), 
+        .LoWrite(LoWrite_EX),
         .Madd(Madd_EX), 
         .Msub(Msub_EX), 
         // Outputs

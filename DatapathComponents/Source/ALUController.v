@@ -112,8 +112,8 @@ module ALUController(Instruction, ALUOp);
         else if (Instruction[31:26] == 6'b000000 && Instruction[10:6] == 5'b00001 && Instruction[5:0] == 6'b000110)
             ALUOp <= 5'b10100;
             
-        // Movn/Movz
-        else if (Instruction[31:26] == 6'b000000 && Instruction[10:6] == 5'b00000 && (Instruction[5:0] == 6'b001011 || Instruction[5:0] == 6'b001010))
+        // Movn/Movz/Mtlo/Mthi
+        else if (Instruction[31:26] == 6'b000000 && (Instruction[5:0] == 6'b001011 || Instruction[5:0] == 6'b001010 || Instruction[5:0] == 6'b010011 || Instruction[5:0] == 6'b010001))
             ALUOp <= 5'b10101;
            
     end

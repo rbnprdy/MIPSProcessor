@@ -21,11 +21,13 @@
 
 
 module EX_MEM(Clk, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RHiIn, RLoIn, AddResultIn, ZeroIn, ALUResultIn, RD2In, WriteAddressIn, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RHiOut, RLoOut, AddResultOut, ZeroOut, ALUResultOut, RD2Out, WriteAddressOut);
-    input [31:0] RHiIn, RLoIn, AddResultIn, ZeroIn, ALUResultIn, RD2In;
+    input [31:0] RHiIn, RLoIn, AddResultIn, ALUResultIn, RD2In;
+    input ZeroIn;
     input [4:0] WriteAddressIn;
     input Clk, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn;
     
-    output reg [31:0] RHiOut, RLoOut, AddResultOut, ZeroOut, ALUResultOut, RD2Out;
+    output reg [31:0] RHiOut, RLoOut, AddResultOut, ALUResultOut, RD2Out;
+    output reg ZeroOut;
     output reg [4:0] WriteAddressOut;
     output reg RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut;
     

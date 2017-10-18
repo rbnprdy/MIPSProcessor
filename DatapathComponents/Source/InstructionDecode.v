@@ -38,7 +38,8 @@ module InstructionDecode(
         ALUSrc, 
         InstructionToALU,
         RegDst,
-        HiLoWrite, 
+        HiWrite, 
+        LoWrite,
         Madd, 
         Msub, 
         MemWrite, 
@@ -55,7 +56,7 @@ module InstructionDecode(
     input [4:0] WriteRegister;
     
     output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended;
-    output PCSrc, RegWrite, ALUSrc, RegDst, HiLoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero;
+    output PCSrc, RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero;
     output [31:0] InstructionToALU;
     
     wire [15:0] Instruction_15_0;
@@ -91,7 +92,8 @@ module InstructionDecode(
         .ALUSrc(ALUSrc), 
         .InstructionToALU(InstructionToALU),
         .RegDst(RegDst),
-        .HiLoWrite(HiLoWrite), 
+        .HiWrite(HiWrite), 
+        .LoWrite(LoWrite),
         .Madd(Madd), 
         .Msub(Msub), 
         .MemWrite(MemWrite), 

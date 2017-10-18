@@ -51,11 +51,13 @@ module MEM_WB(
 );
     
     
-    input [31:0] RHiIn, RLoIn, ZeroIn, ALUResultIn, ReadDataIn;
+    input [31:0] RHiIn, RLoIn, ALUResultIn, ReadDataIn;
+    input ZeroIn;
     input [4:0] WriteAddressIn;
     input Clk, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn;
     
-    output reg [31:0] RHiOut, RLoOut, ZeroOut, ALUResultOut, ReadDataOut;
+    output reg [31:0] RHiOut, RLoOut, ALUResultOut, ReadDataOut;
+    output reg ZeroOut;
     output reg [4:0] WriteAddressOut;
     output reg RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut;
     

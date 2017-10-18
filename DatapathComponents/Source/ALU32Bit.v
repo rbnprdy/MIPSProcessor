@@ -87,7 +87,10 @@ module ALU32Bit(ALUControl, A, B, ShiftAmount, ALUResult, HiResult, Zero);
                 temp2 = B << (32 - A);
                 ALUResult <= temp1 | temp2;
             end
-            5'b10101 : ALUResult <= A; //Move
+            5'b10101 : begin
+                ALUResult <= A;
+                HiResult <= A; //Move
+            end
             default : ALUResult <= 1; // Default
         endcase
     end
