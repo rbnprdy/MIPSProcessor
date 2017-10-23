@@ -647,11 +647,11 @@ module TopLevel_tb();
         @(negedge Clk);
         
         // mult $s1, $s2
-//        tests = tests + 1;
-//        #5 if (m0.EX.HiLoReg.ReadHi == -1 && m0.EX.HiLoReg.ReadLo == -32)
-//            passed = passed + 1;
-//        else
-//            $display("mult $s1, $s2 failed. Exp Hi: -1. Act Hi: %d. Exp Lo: -32. Act Lo: %d", m0.EX.HiLoReg.ReadHi, m0.EX.HiLoReg.ReadLo);
+        tests = tests + 1;
+        #5 if (HiData == -1 && LoData == -32)
+            passed = passed + 1;
+        else
+            $display("mult $s1, $s2 failed. Exp Hi: -1. Act Hi: %d. Exp Lo: -32. Act Lo: %d", HiData, LoData);
         
         @(negedge Clk);
         @(negedge Clk);
@@ -689,11 +689,11 @@ module TopLevel_tb();
         @(negedge Clk);
         
         // multu $s1, $s2
-//        tests = tests + 1;
-//        #5 if (m0.EX.HiLoReg.ReadHi == 31 && m0.EX.HiLoReg.ReadLo == -32)
-//            passed = passed + 1;
-//        else
-//            $display("multu $s1, $s2 failed. Exp Hi: 31. Act Hi: %d. Exp Lo: -32. Act Lo: %d", m0.EX.HiLoReg.ReadHi, m0.EX.HiLoReg.ReadLo);
+        tests = tests + 1;
+        #5 if (HiData == 31 && LoData == -32)
+            passed = passed + 1;
+        else
+            $display("multu $s1, $s2 failed. Exp Hi: 31. Act Hi: %d. Exp Lo: -32. Act Lo: %d", HiData, LoData);
         
         @(negedge Clk);
         @(negedge Clk);
@@ -730,11 +730,11 @@ module TopLevel_tb();
         @(negedge Clk);
         @(negedge Clk);
         // madd $s1, $s2
-//        tests = tests + 1;
-//        #5 if (m0.EX.HiLoReg.ReadHi == 31 && m0.EX.HiLoReg.ReadLo == -64)
-//            passed = passed + 1;
-//        else
-//            $display("madd $s1, $s2 failed. Exp Hi: 31. Act Hi: %d. Exp Lo: -64. Act Lo: %d", m0.EX.HiLoReg.ReadHi, m0.EX.HiLoReg.ReadLo);
+        tests = tests + 1;
+        #5 if (HiData == 31 && LoData == -64)
+            passed = passed + 1;
+        else
+            $display("madd $s1, $s2 failed. Exp Hi: 31. Act Hi: %d. Exp Lo: -64. Act Lo: %d", HiData, LoData);
         
         @(negedge Clk);
         @(negedge Clk);
@@ -772,11 +772,11 @@ module TopLevel_tb();
         @(negedge Clk);
         
         // mthi $s2
-//        tests = tests + 1;
-//        #5 if (WriteData == 32'd32)
-//            passed = passed + 1;
-//        else
-//            $display("mthi $s2 failed. Exp WD: 32. Act WD: %d", WriteData);
+        tests = tests + 1;
+        #5 if (HiData == 32'd32)
+            passed = passed + 1;
+        else
+            $display("mthi $s2 failed. Exp Hi: 32. Act Hi: %d", HiData);
             
         @(negedge Clk);
         @(negedge Clk);
@@ -786,11 +786,11 @@ module TopLevel_tb();
         @(negedge Clk);
         
         // mtlo $s1
-//        tests = tests + 1;
-//        #5 if (WriteData == -32'd1)
-//            passed = passed + 1;
-//        else
-//            $display("mtlo $s1 failed. Exp WD: -1. Act WD: %d", WriteData);
+        tests = tests + 1;
+        #5 if (LoData == -32'd1)
+            passed = passed + 1;
+        else
+            $display("mtlo $s1 failed. Exp Lo: -1. Act Lo: %d", LoData);
             
         @(negedge Clk);
         @(negedge Clk);
@@ -842,11 +842,11 @@ module TopLevel_tb();
         @(negedge Clk);
             
         // msub $s4, $s2
-//        tests = tests + 1;
-//        #5 if (m0.EX.HiLoReg.ReadHi == 32 && m0.EX.HiLoReg.ReadLo == -1025)
-//            passed = passed + 1;
-//        else
-//            $display("msub $s4, $s2 failed. Exp Hi: 32. Act Hi: %d. Exp Lo: -1025. Act Lo: %d", m0.EX.HiLoReg.ReadHi, m0.EX.HiLoReg.ReadLo);
+        tests = tests + 1;
+        #5 if (HiData == 32 && LoData == -1025)
+            passed = passed + 1;
+        else
+            $display("msub $s4, $s2 failed. Exp Hi: 32. Act Hi: %d. Exp Lo: -1025. Act Lo: %d", HiData, LoData);
         
         @(negedge Clk);
         @(negedge Clk);

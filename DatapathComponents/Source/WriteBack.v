@@ -56,8 +56,8 @@ module WriteBack(
     
     Mux32Bit2To1 HiOrLoMux(
         .out(HiOrLoOut),
-        .inA(ReadDataHi),
-        .inB(ReadDataLo),
+        .inA(ReadDataLo),
+        .inB(ReadDataHi),
         .sel(HiOrLo)
     );
     

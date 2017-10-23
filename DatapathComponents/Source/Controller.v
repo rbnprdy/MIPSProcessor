@@ -27,7 +27,8 @@ module Controller(
         ALUSrc, 
         InstructionToALU,
         RegDst,
-        HiLoWrite, 
+        HiWrite,
+        LoWrite, 
         Madd, 
         Msub, 
         MemWrite, 
@@ -41,7 +42,7 @@ module Controller(
     );
     
     input [31:0] Instruction;
-    output reg PCSrc, RegWrite, ALUSrc, RegDst, HiLoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero;
+    output reg PCSrc, RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero;
     output reg [31:0] InstructionToALU;
     
     always@(Instruction) begin
@@ -54,7 +55,8 @@ module Controller(
             RegDst <= 0;
             Msub <= 0;
             Madd <= 0;
-            HiLoWrite <= 0;
+            HiWrite <= 0;
+            LoWrite <= 0;
             MemWrite <= 0;
             MemRead <= 0;
             Branch <= 0;
@@ -72,7 +74,6 @@ module Controller(
                     PCSrc <= 0;
                     ALUSrc <= 0;
                     RegDst <= 1;
-                    HiLoWrite <= 0;
                     Madd <= 0;
                     Msub <= 0;
                     MemWrite <= 0;
@@ -82,24 +83,56 @@ module Controller(
                     HiToReg <= 0;
                     if (Instruction[5:0] == 6'b011000 || Instruction[5:0] == 6'b011001) begin // mult or multu
                         RegWrite <= 0;
-                        HiLoWrite <= 1;
+                        HiWrite <= 1;
+                        LoWrite <= 1;
                         DontMove <= 1;
                     end
                     else if (Instruction[5:0] == 6'b001011) begin // movn
                         RegWrite <= 1;
-                        HiLoWrite <= 0;
+                        HiWrite <= 0;
+                        LoWrite <= 0;
                         DontMove <= 0;
                         MoveOnNotZero <= 1;
                     end
                     else if (Instruction[5:0] == 6'b001010) begin // movz
                         RegWrite <= 1;
-                        HiLoWrite <= 0;
+                        HiWrite <= 0;
+                        LoWrite <= 0;
                         DontMove <= 0;
                         MoveOnNotZero <= 0;
                     end
+                    else if (Instruction[5:0] == 6'b010011) begin // mtlo
+                        RegWrite <= 0;
+                        LoWrite <= 1;
+                        HiWrite <= 0;
+                        DontMove <= 1;
+                    end
+                    else if (Instruction[5:0] == 6'b010001) begin // mthi
+                        RegWrite <= 0;
+                        LoWrite <= 0;
+                        HiWrite <= 1;
+                        DontMove <= 1;
+                    end
+                    else if (Instruction[5:0] == 6'b010010) begin // mflo
+                        RegWrite <= 1;
+                        LoWrite <= 0;
+                        HiWrite <= 0;
+                        DontMove <= 1;
+                        HiOrLo <= 0;
+                        HiToReg <= 1;
+                    end
+                    else if (Instruction[5:0] == 6'b010000) begin // mfhi
+                        RegWrite <= 1;
+                        LoWrite <= 0;
+                        HiWrite <= 0;
+                        DontMove <= 1;
+                        HiOrLo <= 1;
+                        HiToReg <= 1;
+                    end
                     else begin
                         RegWrite <= 1;
-                        HiLoWrite <= 0;
+                        HiWrite <= 0;
+                        LoWrite <= 0;
                         DontMove <= 1;
                     end
                 end
@@ -109,7 +142,8 @@ module Controller(
                     RegWrite <= 1;
                     ALUSrc <= 1;
                     RegDst <= 0;
-                    HiLoWrite <= 0;
+                    HiWrite <= 0;
+                    LoWrite <= 0;
                     Madd <= 0;
                     Msub <= 0;
                     MemWrite <= 0;
@@ -125,7 +159,8 @@ module Controller(
                     RegWrite <= 1;
                     ALUSrc <= 1;
                     RegDst <= 0;
-                    HiLoWrite <= 0;
+                    HiWrite <= 0;
+                    LoWrite <= 0;
                     Madd <= 0;
                     Msub <= 0;
                     MemWrite <= 0;
@@ -141,7 +176,8 @@ module Controller(
                     RegWrite <= 1;
                     ALUSrc <= 1;
                     RegDst <= 0;
-                    HiLoWrite <= 0;
+                    HiWrite <= 0;
+                    LoWrite <= 0;
                     Madd <= 0;
                     Msub <= 0;
                     MemWrite <= 0;
@@ -157,7 +193,8 @@ module Controller(
                     RegWrite <= 1;
                     ALUSrc <= 1;
                     RegDst <= 0;
-                    HiLoWrite <= 0;
+                    HiWrite <= 0;
+                    LoWrite <= 0;
                     Madd <= 0;
                     Msub <= 0;
                     MemWrite <= 0;
@@ -173,7 +210,8 @@ module Controller(
                     RegWrite <= 1;
                     ALUSrc <= 1;
                     RegDst <= 0;
-                    HiLoWrite <= 0;
+                    HiWrite <= 0;
+                    LoWrite <= 0;
                     Madd <= 0;
                     Msub <= 0;
                     MemWrite <= 0;
@@ -189,7 +227,8 @@ module Controller(
                     RegWrite <= 1;
                     ALUSrc <= 1;
                     RegDst <= 0;
-                    HiLoWrite <= 0;
+                    HiWrite <= 0;
+                    LoWrite <= 0;
                     Madd <= 0;
                     Msub <= 0;
                     MemWrite <= 0;
@@ -205,7 +244,8 @@ module Controller(
                     RegWrite <= 1;
                     ALUSrc <= 1;
                     RegDst <= 0;
-                    HiLoWrite <= 0;
+                    HiWrite <= 0;
+                    LoWrite <= 0;
                     Madd <= 0;
                     Msub <= 0;
                     MemWrite <= 0;
@@ -219,7 +259,8 @@ module Controller(
                 6'b011100 : begin // Mul, Madd, or Msub
                     PCSrc <= 0;
                     ALUSrc <= 0;
-                    HiLoWrite <= 0;
+                    HiWrite <= 0;
+                    LoWrite <= 0;
                     MemWrite <= 0;
                     MemRead <= 0;
                     Branch <= 0;
@@ -250,7 +291,8 @@ module Controller(
                         RegWrite <= 1;
                         ALUSrc <= 0;
                         RegDst <= 1;
-                        HiLoWrite <= 0;
+                        HiWrite <= 0;
+                        LoWrite <= 0;
                         Madd <= 0;
                         Msub <= 0;
                         MemWrite <= 0;

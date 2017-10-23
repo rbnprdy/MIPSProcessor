@@ -34,7 +34,8 @@ module Execute(
         ALUSrc, 
         InstructionToALU,
         RegDst,
-        HiLoWrite, 
+        HiWrite,
+        LoWrite, 
         Madd, 
         Msub, 
         // Outputs
@@ -47,7 +48,7 @@ module Execute(
 );
     input [31:0] ReadData1, ReadData2, PCAddResult, Instruction_15_0_Extended;
     input [4:0] Instruction_10_6, Instruction_20_16, Instruction_15_11;
-    input Clk, ALUSrc, RegDst, HiLoWrite, Madd, Msub;
+    input Clk, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub;
     input [31:0] InstructionToALU;
     
     output [31:0] ReadDataHi, ReadDataLo, PCAddResultOut, ALUResult;
@@ -107,7 +108,8 @@ module Execute(
         .ReadLo(ReadDataLo),
         .Madd(Madd),
         .Msub(Msub),
-        .WriteEn(HiLoWrite)
+        .WriteEnHi(HiWrite),
+        .WriteEnLo(LoWrite)
     );
         
 endmodule
