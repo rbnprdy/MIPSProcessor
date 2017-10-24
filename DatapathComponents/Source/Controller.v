@@ -139,7 +139,29 @@ module Controller(
                     end
                 end
                 
-                6'b001000 : begin // Addi
+                6'b000001, // bgez or bltz
+                6'b000100, // beq
+                6'b000101: begin // bne
+                    PCSrc <= 1;
+                    RegWrite <= 0;
+                    ALUSrc <= 0;
+                    HiWrite <= 0;
+                    LoWrite <= 0;
+                    Madd <= 0;
+                    Msub <= 0;
+                    MemWrite <= 0;
+                    MemRead <= 0;
+                    Branch <= 1;
+                end
+                
+                6'b001000, // addi
+                6'b001001, // addiu
+                6'b001010, // slti
+                6'b001011, // sltiu
+                6'b001100, // andi
+                6'b001101, // ori
+                6'b001110, // xori
+                6'b001111: begin // lui
                     PCSrc <= 0;
                     RegWrite <= 1;
                     ALUSrc <= 1;
@@ -156,109 +178,7 @@ module Controller(
                     DontMove <= 1;
                 end
                 
-                6'b001001 : begin // Addiu
-                    PCSrc <= 0;
-                    RegWrite <= 1;
-                    ALUSrc <= 1;
-                    RegDst <= 0;
-                    HiWrite <= 0;
-                    LoWrite <= 0;
-                    Madd <= 0;
-                    Msub <= 0;
-                    MemWrite <= 0;
-                    MemRead <= 0;
-                    Branch <= 0;
-                    MemToReg <= 1;
-                    HiToReg <= 0;
-                    DontMove <= 1;
-                end
-                
-                6'b001010 : begin // Slti
-                    PCSrc <= 0;
-                    RegWrite <= 1;
-                    ALUSrc <= 1;
-                    RegDst <= 0;
-                    HiWrite <= 0;
-                    LoWrite <= 0;
-                    Madd <= 0;
-                    Msub <= 0;
-                    MemWrite <= 0;
-                    MemRead <= 0;
-                    Branch <= 0;
-                    MemToReg <= 1;
-                    HiToReg <= 0;
-                    DontMove <= 1;
-                end
-                
-                6'b001011 : begin // Sltiu
-                    PCSrc <= 0;
-                    RegWrite <= 1;
-                    ALUSrc <= 1;
-                    RegDst <= 0;
-                    HiWrite <= 0;
-                    LoWrite <= 0;
-                    Madd <= 0;
-                    Msub <= 0;
-                    MemWrite <= 0;
-                    MemRead <= 0;
-                    Branch <= 0;
-                    MemToReg <= 1;
-                    HiToReg <= 0;
-                    DontMove <= 1;
-                end
-                
-                6'b001100 : begin // Andi
-                    PCSrc <= 0;
-                    RegWrite <= 1;
-                    ALUSrc <= 1;
-                    RegDst <= 0;
-                    HiWrite <= 0;
-                    LoWrite <= 0;
-                    Madd <= 0;
-                    Msub <= 0;
-                    MemWrite <= 0;
-                    MemRead <= 0;
-                    Branch <= 0;
-                    MemToReg <= 1;
-                    HiToReg <= 0;
-                    DontMove <= 1;
-                end
-                
-                6'b001101 : begin // Ori
-                    PCSrc <= 0;
-                    RegWrite <= 1;
-                    ALUSrc <= 1;
-                    RegDst <= 0;
-                    HiWrite <= 0;
-                    LoWrite <= 0;
-                    Madd <= 0;
-                    Msub <= 0;
-                    MemWrite <= 0;
-                    MemRead <= 0;
-                    Branch <= 0;
-                    MemToReg <= 1;
-                    HiToReg <= 0;
-                    DontMove <= 1;
-                end
-                
-                6'b001110 : begin // Xori
-                    PCSrc <= 0;
-                    RegWrite <= 1;
-                    ALUSrc <= 1;
-                    RegDst <= 0;
-                    HiWrite <= 0;
-                    LoWrite <= 0;
-                    Madd <= 0;
-                    Msub <= 0;
-                    MemWrite <= 0;
-                    MemRead <= 0;
-                    Branch <= 0;
-                    MemToReg <= 1;
-                    HiToReg <= 0;
-                    DontMove <= 1;
-                end
-                
-                6'b011100 : begin // Mul, Madd, or Msub
+                6'b011100 : begin // madd, msub, mul
                     PCSrc <= 0;
                     ALUSrc <= 0;
                     HiWrite <= 0;
@@ -267,43 +187,75 @@ module Controller(
                     MemRead <= 0;
                     Branch <= 0;
                     DontMove <= 1;
-                    if (Instruction[5:0] == 6'b000010) begin // Mul
-                        RegWrite <= 1;
-                        RegDst <= 1;
-                        Madd <= 0;
-                        Msub <= 0;
-                        MemToReg <= 1;
-                        HiToReg <= 0;
+                    if (Instruction[5:0] == 6'b000000) begin // madd
+                       RegWrite <= 0; 
+                       Madd <= 1;
+                       Msub <= 0;
                     end
-                    if (Instruction[5:0] == 6'b000000) begin // Madd
-                        RegWrite <= 0;
-                        Madd <= 1;
-                        Msub <= 0;
-                    end
-                    if (Instruction[5:0] == 6'b000100) begin // Msub
+                    else if (Instruction[5:0] == 6'b000100) begin // msub
                         RegWrite <= 0;
                         Madd <= 0;
                         Msub <= 1;
-                    end     
-                end    
-                
-                6'b011111 : begin // Seb or Seh
-                    if (Instruction[5:0] == 6'b100000) begin // Seb or Seh
-                        PCSrc <= 0;
+                    end
+                    else begin // mul
                         RegWrite <= 1;
-                        ALUSrc <= 0;
                         RegDst <= 1;
-                        HiWrite <= 0;
-                        LoWrite <= 0;
                         Madd <= 0;
                         Msub <= 0;
-                        MemWrite <= 0;
-                        MemRead <= 0;
-                        Branch <= 0;
                         MemToReg <= 1;
                         HiToReg <= 0;
-                        DontMove <= 1;
                     end
+                end
+                
+                6'b011111 : begin // seb, seh
+                    PCSrc <= 0;
+                    RegWrite <= 1;
+                    ALUSrc <= 0;
+                    RegDst <= 1;
+                    HiWrite <= 0;
+                    LoWrite <= 0;
+                    Madd <= 0;
+                    Msub <= 0;
+                    MemWrite <= 0;
+                    MemRead <= 0;
+                    Branch <= 0;
+                    MemToReg <= 1;
+                    HiToReg <= 0;
+                    DontMove <= 1;
+                end
+                
+                6'b100000, // lb
+                6'b100001, // lh
+                6'b100011 : begin // lw
+                    PCSrc <= 0;
+                    RegWrite <= 1;
+                    ALUSrc <= 1;
+                    RegDst <= 0;
+                    HiWrite <= 0;
+                    LoWrite <= 0;
+                    Madd <= 0;
+                    Msub <= 0;
+                    MemWrite <= 0;
+                    MemRead <= 1;
+                    Branch <= 0;
+                    MemToReg <= 0;
+                    HiToReg <= 0;
+                    DontMove <= 1;
+                end
+                
+                6'b101000, // sb
+                6'b101001, // sh
+                6'b101001 : begin // sw
+                    PCSrc <= 0;
+                    RegWrite <= 0;
+                    ALUSrc <= 1;
+                    HiWrite <= 0;
+                    LoWrite <= 0;
+                    Madd <= 0;
+                    Msub <= 0;
+                    MemWrite <= 1;
+                    MemRead <= 0;
+                    Branch <= 0;
                 end
             endcase
         end
