@@ -80,59 +80,61 @@ module Controller(
                     MemRead <= 0;
                     Branch <= 0;
                     MemToReg <= 1;
-                    HiToReg <= 0;
-                    if (Instruction[5:0] == 6'b011000 || Instruction[5:0] == 6'b011001) begin // mult or multu
+                    if (Instruction[5:0] == 6'b010001) begin // mthi
+                        RegWrite <= 0;
+                        HiWrite <= 1;
+                        LoWrite <= 0;
+                        DontMove <= 1;
+                    end
+                    else if (Instruction[5:0] == 6'b010011) begin // mtlo
+                        RegWrite <= 0;
+                        HiWrite <= 0;
+                        LoWrite <= 1;
+                        DontMove <= 1;
+                    end
+                    else if (Instruction[5:0] == 6'b011000 || Instruction[5:0] == 6'b011001) begin // mult or multu
                         RegWrite <= 0;
                         HiWrite <= 1;
                         LoWrite <= 1;
                         DontMove <= 1;
                     end
-                    else if (Instruction[5:0] == 6'b001011) begin // movn
+                    else if (Instruction[5:0] == 6'b010010) begin // mflo
                         RegWrite <= 1;
                         HiWrite <= 0;
                         LoWrite <= 0;
-                        DontMove <= 0;
-                        MoveOnNotZero <= 1;
+                        HiOrLo <= 0;
+                        HiToReg <= 1;
+                        DontMove <= 1;
+                    end
+                    else if (Instruction[5:0] == 6'b010000) begin // mfhi
+                        RegWrite <= 1;
+                        HiWrite <= 0;
+                        LoWrite <= 0;
+                        HiOrLo <= 1;
+                        HiToReg <= 1;
+                        DontMove <= 1;
                     end
                     else if (Instruction[5:0] == 6'b001010) begin // movz
                         RegWrite <= 1;
                         HiWrite <= 0;
                         LoWrite <= 0;
+                        HiToReg <= 0;
                         DontMove <= 0;
                         MoveOnNotZero <= 0;
                     end
-                    else if (Instruction[5:0] == 6'b010011) begin // mtlo
-                        RegWrite <= 0;
-                        LoWrite <= 1;
-                        HiWrite <= 0;
-                        DontMove <= 1;
-                    end
-                    else if (Instruction[5:0] == 6'b010001) begin // mthi
-                        RegWrite <= 0;
-                        LoWrite <= 0;
-                        HiWrite <= 1;
-                        DontMove <= 1;
-                    end
-                    else if (Instruction[5:0] == 6'b010010) begin // mflo
+                    else if (Instruction[5:0] == 6'b001011) begin // movn
                         RegWrite <= 1;
-                        LoWrite <= 0;
                         HiWrite <= 0;
-                        DontMove <= 1;
-                        HiOrLo <= 0;
-                        HiToReg <= 1;
-                    end
-                    else if (Instruction[5:0] == 6'b010000) begin // mfhi
-                        RegWrite <= 1;
                         LoWrite <= 0;
-                        HiWrite <= 0;
-                        DontMove <= 1;
-                        HiOrLo <= 1;
-                        HiToReg <= 1;
+                        HiToReg <= 0;
+                        DontMove <= 0;
+                        MoveOnNotZero <= 1;
                     end
                     else begin
                         RegWrite <= 1;
                         HiWrite <= 0;
                         LoWrite <= 0;
+                        HiToReg <= 0;
                         DontMove <= 1;
                     end
                 end

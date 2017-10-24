@@ -24,7 +24,7 @@ module Controller_tb();
     
     reg [31:0] Instruction;
     
-    wire PCSrc, RegWrite, ALUSrc, RegDst, HiLoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero;
+    wire PCSrc, RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero;
     wire [31:0] InstructionToALU;
     
     integer tests;
@@ -37,7 +37,8 @@ module Controller_tb();
         .ALUSrc(ALUSrc), 
         .InstructionToALU(InstructionToALU),
         .RegDst(RegDst),
-        .HiLoWrite(HiLoWrite), 
+        .HiWrite(HiWrite),
+        .LoWrite(LoWrite), 
         .Madd(Madd), 
         .Msub(Msub), 
         .MemWrite(MemWrite), 
@@ -64,7 +65,7 @@ module Controller_tb();
         #5 // Test Add
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00000, 5'b00000, 5'b00000, 5'b00000, 6'b100000}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -74,7 +75,7 @@ module Controller_tb();
         #5 // Test Addu
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00000, 5'b00000, 5'b00000, 5'b00000, 6'b100001}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -84,7 +85,7 @@ module Controller_tb();
         #5 // Test And
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00000, 5'b00000, 5'b00000, 5'b00000, 6'b100100}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -94,7 +95,7 @@ module Controller_tb();
         #5 // Test Nor
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00011, 5'b00010, 5'b00001, 5'b00000, 6'b100111}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -104,7 +105,7 @@ module Controller_tb();
         #5 // Test Or
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00011, 5'b00010, 5'b00001, 5'b00000, 6'b100101}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -114,7 +115,7 @@ module Controller_tb();
         #5 // Test Rotr
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00001, 5'b00010, 5'b00001, 5'b00000, 6'b000010}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -124,7 +125,7 @@ module Controller_tb();
         #5 // Test Rotrv
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00011, 5'b00010, 5'b00001, 5'b00001, 6'b000110}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -134,7 +135,7 @@ module Controller_tb();
         #5 // Test Sll
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00000, 5'b00010, 5'b00001, 5'b00000, 6'b000000}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -144,7 +145,7 @@ module Controller_tb();
         #5 // Test Sllv
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00011, 5'b00000, 5'b00001, 5'b00000, 6'b000100}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -154,7 +155,7 @@ module Controller_tb();
         #5 // Test Slt
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00011, 5'b00000, 5'b00001, 5'b00000, 6'b101010}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -164,7 +165,7 @@ module Controller_tb();
         #5 // Test Sltu
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00011, 5'b00000, 5'b00001, 5'b00000, 6'b101011}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -174,7 +175,7 @@ module Controller_tb();
         #5 // Test Sra
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00000, 5'b00000, 5'b00001, 5'b00000, 6'b000011}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -184,7 +185,7 @@ module Controller_tb();
         #5 // Test Srav
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00011, 5'b00000, 5'b00001, 5'b00000, 6'b000111}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -194,7 +195,7 @@ module Controller_tb();
         #5 // Test Srl
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00000, 5'b00000, 5'b00001, 5'b00000, 6'b000010}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -204,7 +205,7 @@ module Controller_tb();
         #5 // Test Srlv
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00011, 5'b00000, 5'b00001, 5'b00000, 6'b000110}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -214,7 +215,7 @@ module Controller_tb();
         #5 // Test Sub
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00011, 5'b00000, 5'b00001, 5'b00000, 6'b100010}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -224,7 +225,7 @@ module Controller_tb();
         #5 // Test Xor
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00011, 5'b00000, 5'b00001, 5'b00000, 6'b100110}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -234,7 +235,7 @@ module Controller_tb();
         #5 // Test Movn
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00011, 5'b00000, 5'b00001, 5'b00000, 6'b001011}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 0 && MoveOnNotZero == 1)
             passed = passed + 1;
@@ -244,7 +245,7 @@ module Controller_tb();
         #5 // Test Movz
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00011, 5'b00000, 5'b00001, 5'b00000, 6'b001010}; // add
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 0 && MoveOnNotZero == 0)
             passed = passed + 1;
@@ -254,7 +255,7 @@ module Controller_tb();
         #5 // Test Mult
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00011, 5'b00001, 5'b00000, 5'b00000, 6'b011000};
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 1 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 1 && LoWrite == 1 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 0 && DontMove == 1)
             passed = passed + 1;
@@ -264,7 +265,7 @@ module Controller_tb();
         #5 // Test Multu
         tests = tests + 1;
         Instruction <= {6'b000000, 5'b00011, 5'b00001, 5'b00000, 5'b00000, 6'b011001};
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 1 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 1 && LoWrite == 1 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 0 && DontMove == 1)
             passed = passed + 1;
@@ -276,7 +277,7 @@ module Controller_tb();
         #5 // Test Addi
         tests = tests + 1;
         Instruction <= {6'b001000, 5'b00011, 5'b00001, 5'b00000, 5'b00000, 6'b011000};
-        #5 if (PCSrc == 0 && ALUSrc == 1 && RegDst == 0 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 1 && RegDst == 0 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -286,7 +287,7 @@ module Controller_tb();
         #5 // Test Addiu
         tests = tests + 1;
         Instruction <= {6'b001001, 5'b00011, 5'b00001, 5'b00000, 5'b00000, 6'b011000};
-        #5 if (PCSrc == 0 && ALUSrc == 1 && RegDst == 0 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 1 && RegDst == 0 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -296,7 +297,7 @@ module Controller_tb();
         #5 // Test Slti
         tests = tests + 1;
         Instruction <= {6'b001010, 5'b00011, 5'b00001, 5'b00000, 5'b00000, 6'b011000};
-        #5 if (PCSrc == 0 && ALUSrc == 1 && RegDst == 0 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 1 && RegDst == 0 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -306,7 +307,7 @@ module Controller_tb();
         #5 // Test Sltiu
         tests = tests + 1;
         Instruction <= {6'b001011, 5'b00011, 5'b00001, 5'b00000, 5'b00000, 6'b011000};
-        #5 if (PCSrc == 0 && ALUSrc == 1 && RegDst == 0 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 1 && RegDst == 0 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -316,7 +317,7 @@ module Controller_tb();
         #5 // Test Andi
         tests = tests + 1;
         Instruction <= {6'b001100, 5'b00011, 5'b00001, 5'b00000, 5'b00000, 6'b011000};
-        #5 if (PCSrc == 0 && ALUSrc == 1 && RegDst == 0 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 1 && RegDst == 0 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -326,7 +327,7 @@ module Controller_tb();
         #5 // Test Ori
         tests = tests + 1;
         Instruction <= {6'b001101, 5'b00011, 5'b00001, 5'b00000, 5'b00000, 6'b011000};
-        #5 if (PCSrc == 0 && ALUSrc == 1 && RegDst == 0 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 1 && RegDst == 0 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -336,7 +337,7 @@ module Controller_tb();
         #5 // Test Xori
         tests = tests + 1;
         Instruction <= {6'b001110, 5'b00011, 5'b00001, 5'b00000, 5'b00000, 6'b011000};
-        #5 if (PCSrc == 0 && ALUSrc == 1 && RegDst == 0 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 1 && RegDst == 0 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -346,7 +347,7 @@ module Controller_tb();
         #5 // Test Mul
         tests = tests + 1;
         Instruction <= {6'b011100, 5'b00011, 5'b00001, 5'b00000, 5'b00000, 6'b000010};
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0
             && RegWrite == 1 && DontMove == 1)
             passed = passed + 1;
@@ -356,7 +357,7 @@ module Controller_tb();
         #5 // Test Madd
         tests = tests + 1;
         Instruction <= {6'b011100, 5'b00011, 5'b00001, 5'b00000, 5'b00000, 6'b000000};
-        #5 if (PCSrc == 0 && ALUSrc == 0 && HiLoWrite == 0 && Madd == 1 && Msub == 0 
+        #5 if (PCSrc == 0 && ALUSrc == 0 && HiWrite == 0 && LoWrite == 0 && Madd == 1 && Msub == 0 
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && RegWrite == 0 && DontMove == 1)
             passed = passed + 1;
         else
@@ -365,7 +366,7 @@ module Controller_tb();
         #5 // Test Msub
         tests = tests + 1;
         Instruction <= {6'b011100, 5'b00011, 5'b00001, 5'b00000, 5'b00000, 6'b000100};
-        #5 if (PCSrc == 0 && ALUSrc == 0 && HiLoWrite == 0 && Madd == 0 && Msub == 1
+        #5 if (PCSrc == 0 && ALUSrc == 0 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 1
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && RegWrite == 0 && DontMove == 1)
             passed = passed + 1;
         else
@@ -374,7 +375,7 @@ module Controller_tb();
         #5 // Test Seb
         tests = tests + 1;
         Instruction <= {6'b011111, 5'b00011, 5'b00001, 5'b00000, 5'b10000, 6'b100000};
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0 && RegWrite == 1 
             && MemToReg == 1 && DontMove == 1)
             passed = passed + 1;
@@ -384,7 +385,7 @@ module Controller_tb();
         #5 // Test Seh
         tests = tests + 1;
         Instruction <= {6'b011111, 5'b00011, 5'b00001, 5'b00000, 5'b11000, 6'b100000};
-        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiLoWrite == 0 && Madd == 0 && Msub == 0
+        #5 if (PCSrc == 0 && ALUSrc == 0 && RegDst == 1 && HiWrite == 0 && LoWrite == 0 && Madd == 0 && Msub == 0
             && MemWrite == 0 && MemRead == 0 && Branch == 0 && MemToReg == 1 && HiToReg == 0 && RegWrite == 1 
             && MemToReg == 1 && DontMove == 1)
             passed = passed + 1;
