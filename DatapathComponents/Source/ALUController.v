@@ -29,15 +29,15 @@ module ALUController(Instruction, ALUOp);
     always@(Instruction) begin
         
         // Add
-        if ((Instruction[31:26] == 6'b000000 && Instruction[5:0] == 6'b100000) || (Instruction[31:26] == 6'b001000))
+        if ((Instruction[31:26] == 6'b000000 && Instruction[5:0] == 6'b100000) || (Instruction[31:26] == 6'b001000) || (Instruction[31:26] == 6'b100000) || (Instruction[31:26] == 6'b100001) || (Instruction[31:26] == 6'b100011) || (Instruction[31:26] == 6'b101000) || (Instruction[31:26] == 6'b101001) || (Instruction[31:26] == 6'b101011))
             ALUOp <= 5'b00000;
 
         // Subtract
-        else if (Instruction[31:26] == 6'b000000 && Instruction[5:0] == 6'b100010)
+        else if ((Instruction[31:26] == 6'b000000 && Instruction[5:0] == 6'b100010) || (Instruction[31:26] == 6'b000100) || (Instruction[31:26] == 6'b000101))
             ALUOp <= 5'b00001;
         
         // Multiply
-        else if ((Instruction[31:26] == 6'b000000 && Instruction[15:6] == 10'b0000000000 && Instruction[5:0] == 6'b011000) || Instruction[31:26] == 6'b011100)
+        else if ((Instruction[31:26] == 6'b000000 && Instruction[5:0] == 6'b011000) || Instruction[31:26] == 6'b011100)
             ALUOp <= 5'b00010;
             
         // And
@@ -69,7 +69,7 @@ module ALUController(Instruction, ALUOp);
             ALUOp <= 5'b01001;
             
         // Sra
-        else if (Instruction[31:26] == 6'b000000 && Instruction[25:21] == 5'b00000 && Instruction[5:0] == 6'b000011)
+        else if (Instruction[31:26] == 6'b000000 && Instruction[5:0] == 6'b000011)
             ALUOp <= 5'b01010;
             
         // Seh
@@ -81,7 +81,7 @@ module ALUController(Instruction, ALUOp);
             ALUOp <= 5'b01100;
             
         // Multu
-        else if (Instruction[31:26] == 6'b000000 && Instruction[15:6] == 10'b0000000000 && Instruction[5:0] == 6'b011001)
+        else if (Instruction[31:26] == 6'b000000 && Instruction[5:0] == 6'b011001)
             ALUOp <= 5'b01101;
         
         // Slt
@@ -97,7 +97,7 @@ module ALUController(Instruction, ALUOp);
             ALUOp <= 5'b10000;
             
         // Sllv
-        else if (Instruction[31:26] == 6'b000000 && Instruction[10:6] == 5'b00000 && Instruction[5:0] == 6'b000100)
+        else if (Instruction[31:26] == 6'b000000 && Instruction[5:0] == 6'b000100)
             ALUOp <= 5'b10001;
             
         // Srlv
@@ -105,7 +105,7 @@ module ALUController(Instruction, ALUOp);
             ALUOp <= 5'b10010;
             
         // Srav
-        else if (Instruction[31:26] == 6'b000000 && Instruction[10:6] == 5'b00000 && Instruction[5:0] == 6'b000111)
+        else if (Instruction[31:26] == 6'b000000 && Instruction[5:0] == 6'b000111)
             ALUOp <= 5'b10011;
             
         // Rotrv
@@ -115,6 +115,26 @@ module ALUController(Instruction, ALUOp);
         // Movn/Movz/Mtlo/Mthi
         else if (Instruction[31:26] == 6'b000000 && (Instruction[5:0] == 6'b001011 || Instruction[5:0] == 6'b001010 || Instruction[5:0] == 6'b010011 || Instruction[5:0] == 6'b010001))
             ALUOp <= 5'b10101;
+            
+        // Lui
+        else if (Instruction[31:26] == 6'b001111)
+            ALUOp <= 5'b10110;
+        
+        // Bltz
+        else if (Instruction[31:26] == 6'b000001 && Instruction[20:16] == 5'b00000)
+            ALUOp <= 5'b10111;
+            
+        // Blez
+        else if (Instruction[31:26] == 6'b000110)
+            ALUOp <= 5'b11000;
+            
+        // Bgtz
+        else if (Instruction[31:26] == 6'b000111)
+            ALUOp <= 5'b11001;
+        
+        // Bgez
+        else if (Instruction[31:26] == 6'b000001 && Instruction[20:16] == 5'b00011)
+            ALUOp <= 5'b11010;
            
     end
 endmodule

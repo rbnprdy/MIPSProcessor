@@ -95,11 +95,11 @@ module ALUController_tb();
             
         #5 // Test Rotrv
         tests = tests + 1;
-        Instruction <= {6'b000000, 5'b00011, 5'b00010, 5'b00001, 5'b00001, 6'b000110}; // add
+        Instruction <= {6'b000000, 5'b00011, 5'b00010, 5'b00001, 5'b00001, 6'b000110};
         #5 if (ALUOp == 5'b10100)
             passed = passed + 1;
         else
-            $display("Test Rotrv Failed.");
+            $display("Test Rotrv Failed. ALUOp: %b", ALUOp);
             
         #5 // Test Sll
         tests = tests + 1;
