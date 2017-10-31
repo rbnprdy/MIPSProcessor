@@ -33,17 +33,19 @@ module WriteBack(
         HiToReg, 
         DontMove, 
         MoveOnNotZero,
+        Lb,
+        LoadExtended,
         // Outputs
         WriteData,
         Move
 );
     input [31:0] MemoryReadData, ALUResult, ReadDataHi, ReadDataLo;
-    input Zero, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero;
+    input Zero, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Lb, LoadExtended;
     
     output [31:0] WriteData;
     output Move;
     
-    wire [31:0] MemToRegOut, HiOrLoOut;
+    wire [31:0] MemToRegOut, HiOrLoOut, HiToRegOut, SignExtendByteHalfOut;
     wire NotZeroOut, MoveOnZeroOut, MoveOnNotZeroOut;
     
     
@@ -62,10 +64,23 @@ module WriteBack(
     );
     
     Mux32Bit2To1 HiToRegMux(
-        .out(WriteData),
+        .out(HiToRegOut),
         .inA(MemToRegOut),
         .inB(HiOrLoOut),
         .sel(HiToReg)
+    );
+    
+    SignExtendBiteHalf SignExtendBH(
+        .in(HiToRegOut),
+        .out(SignExtendByteHalfOut),
+        .sel(Lb)
+    );
+    
+    Mux32Bit2To1 LoadExtendedMux(
+        .out(WriteData),
+        .inA(HiToRegOut),
+        .inB(SignExtendByteHalfOut),
+        .sel(LoadExtended)
     );
     
     OrGate1Bit2In MoveOnZeroOr(

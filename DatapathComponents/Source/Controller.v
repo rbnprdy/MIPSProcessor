@@ -38,11 +38,13 @@ module Controller(
         HiOrLo, 
         HiToReg, 
         DontMove, 
-        MoveOnNotZero
+        MoveOnNotZero,
+        Lb,
+        LoadExtended
     );
     
     input [31:0] Instruction;
-    output reg PCSrc, RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero;
+    output reg PCSrc, RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Lb, LoadExtended;
     output reg [31:0] InstructionToALU;
     
     always@(Instruction) begin
@@ -80,6 +82,7 @@ module Controller(
                     MemRead <= 0;
                     Branch <= 0;
                     MemToReg <= 1;
+                    LoadExtended <= 0;
                     if (Instruction[5:0] == 6'b010001) begin // mthi
                         RegWrite <= 0;
                         HiWrite <= 1;
@@ -178,6 +181,7 @@ module Controller(
                     MemToReg <= 1;
                     HiToReg <= 0;
                     DontMove <= 1;
+                    LoadExtended <= 0;
                 end
                 
                 6'b011100 : begin // madd, msub, mul
@@ -206,6 +210,7 @@ module Controller(
                         Msub <= 0;
                         MemToReg <= 1;
                         HiToReg <= 0;
+                        LoadExtended <= 0;
                     end
                 end
                 
@@ -224,6 +229,7 @@ module Controller(
                     MemToReg <= 1;
                     HiToReg <= 0;
                     DontMove <= 1;
+                    LoadExtended <= 0;
                 end
                 
                 6'b100000, // lb
@@ -243,6 +249,17 @@ module Controller(
                     MemToReg <= 0;
                     HiToReg <= 0;
                     DontMove <= 1;
+                    if (Instruction[31:26] == 6'b100000) begin // lb
+                        LoadExtended <= 1;
+                        Lb <= 1;
+                    end
+                    if (Instruction[31:26] == 6'b100001) begin // lh
+                        LoadExtended <= 1;
+                        Lb <= 0; 
+                    end
+                    if (Instruction[31:26] == 6'b100011) begin // lw
+                        LoadExtended <= 0;
+                    end
                 end
                 
                 6'b101000, // sb

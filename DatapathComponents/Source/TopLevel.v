@@ -40,11 +40,11 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     wire [4:0] WriteRegister_ID;
     // InstructionDecode Outputs
     wire [31:0] ReadData1_ID, ReadData2_ID, Instruction_15_0_Extended_ID;
-    wire PCSrc_ID, RegWrite_ID, ALUSrc_ID, RegDst_ID, HiWrite_ID, LoWrite_ID, Madd_ID, Msub_ID, MemWrite_ID, MemRead_ID, Branch_ID, MemToReg_ID, HiOrLo_ID, HiToReg_ID, DontMove_ID, MoveOnNotZero_ID;
+    wire PCSrc_ID, RegWrite_ID, ALUSrc_ID, RegDst_ID, HiWrite_ID, LoWrite_ID, Madd_ID, Msub_ID, MemWrite_ID, MemRead_ID, Branch_ID, MemToReg_ID, HiOrLo_ID, HiToReg_ID, DontMove_ID, MoveOnNotZero_ID, Lb_ID, LoadExtended_ID;
     wire [31:0] InstructionToALU_ID;
     
     // ID_EX Outputs
-    wire RegWrite_EX, MoveOnNotZero_EX, DontMove_EX, HiOrLo_EX, MemToReg_EX, MemWrite_EX, MemRead_EX, HiToReg_EX, Branch_EX; 
+    wire RegWrite_EX, MoveOnNotZero_EX, DontMove_EX, HiOrLo_EX, MemToReg_EX, MemWrite_EX, MemRead_EX, HiToReg_EX, Branch_EX, Lb_EX, LoadExtended_EX; 
     
     // Execute Inputs
     wire [31:0] ReadData1_EX, ReadData2_EX, PCAddResult_In_EX, Instruction_15_0_Extended_EX;
@@ -59,7 +59,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     //EX_MEM Outputs
     wire [31:0] ReadHi_MEM, ReadLo_MEM, AddResult_MEM, ALUResult_MEM, ReadRegister2_MEM;
     wire [4:0] WriteAddress_MEM;
-    wire Zero_MEM, RegWrite_MEM, MoveOnNotZero_MEM, DontMove_MEM, HiOrLo_MEM, MemToReg_MEM, HiLoToReg_MEM, MemWrite_MEM, Branch_MEM, MemRead_MEM;
+    wire Zero_MEM, RegWrite_MEM, MoveOnNotZero_MEM, DontMove_MEM, HiOrLo_MEM, MemToReg_MEM, HiLoToReg_MEM, MemWrite_MEM, Branch_MEM, MemRead_MEM, Lb_MEM, LoadExtended_MEM;
     
     //MEM Outputs
     wire [31:0] ReadData_MEM;
@@ -67,7 +67,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     //MEM_WB Outputs
     wire [31:0] ReadHi_WB, ReadLo_WB, ALUResult_WB, ReadData_WB;
     wire [4:0] WriteAddress_WB;
-    wire Zero_WB, RegWrite_WB, MoveOnNotZero_WB, HiOrLo_WB, DontMove_WB, MemToReg_WB, HiLoToReg_WB;
+    wire Zero_WB, RegWrite_WB, MoveOnNotZero_WB, HiOrLo_WB, DontMove_WB, MemToReg_WB, HiLoToReg_WB, Lb_WB, LoadExtended_WB;
     
     InstructionFetchUnit IF(
         .Instruction(Instruction_IF),
@@ -116,7 +116,9 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .HiOrLo(HiOrLo_ID), 
         .HiToReg(HiToReg_ID), 
         .DontMove(DontMove_ID), 
-        .MoveOnNotZero(MoveOnNotZero_ID)
+        .MoveOnNotZero(MoveOnNotZero_ID),
+        .Lb(Lb_ID),
+        .LoadExtended(LoadExtended_ID)
     );
     
     ID_EX ID_EX_Reg(
@@ -144,6 +146,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .RegDestIn(RegDst_ID),
         .ALUSrcIn(ALUSrc_ID),
         .ALUOpIn(InstructionToALU_ID),
+        .LbIn(Lb_ID),
+        .LoadExtendedIn(LoadExtended_ID),
         .PCAddOut(PCAddResult_In_EX),
         .RD1Out(ReadData1_EX),
         .RD2Out(ReadData2_EX),
@@ -166,7 +170,9 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .MemReadOut(MemRead_EX),
         .RegDestOut(RegDst_EX),
         .ALUSrcOut(ALUSrc_EX),
-        .ALUOpOut(InstructionToALU_EX)
+        .ALUOpOut(InstructionToALU_EX),
+        .LbOut(Lb_EX),
+        .LoadExtendedOut(LoadExtended_EX)
     );
     
     Execute EX(
@@ -214,6 +220,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ALUResultIn(ALUResult_EX),
         .RD2In(ReadData2_EX),
         .WriteAddressIn(WriteRegister_EX),
+        .LbIn(Lb_EX),
+        .LoadExtendedIn(LoadExtended_EX),
         .RegWriteOut(RegWrite_MEM),
         .MoveNotZeroOut(MoveOnNotZero_MEM),
         .DontMoveOut(DontMove_MEM),
@@ -229,7 +237,9 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ZeroOut(Zero_MEM),
         .ALUResultOut(ALUResult_MEM),
         .RD2Out(ReadRegister2_MEM),
-        .WriteAddressOut(WriteAddress_MEM)
+        .WriteAddressOut(WriteAddress_MEM),
+        .LbOut(Lb_MEM),
+        .LoadExtendedOut(LoadExtended_MEM)
     );
     
     Memory MEM(
@@ -260,6 +270,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ALUResultIn(ALUResult_MEM),
         .WriteAddressIn(WriteAddress_MEM),
         .ReadDataIn(ReadData_MEM),
+        .LbIn(Lb_MEM),
+        .LoadExtendedIn(LoadExtended_MEM),
         .RegWriteOut(RegWrite_In_ID),
         .MoveNotZeroOut(MoveOnNotZero_WB),
         .DontMoveOut(DontMove_WB),
@@ -271,7 +283,9 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ZeroOut(Zero_WB),
         .ALUResultOut(ALUResult_WB),
         .WriteAddressOut(WriteRegister_ID),
-        .ReadDataOut(ReadData_WB)
+        .ReadDataOut(ReadData_WB),
+        .LbOut(Lb_WB),
+        .LoadExtendedOut(LoadExtended_WB)
     );
     
     WriteBack WB(
@@ -287,6 +301,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .HiToReg(HiLoToReg_WB), 
         .DontMove(DontMove_WB), 
         .MoveOnNotZero(MoveOnNotZero_WB),
+        .Lb(Lb_WB),
+        .LoadExtended(LoadExtended_WB),
         // Outputs
         .WriteData(WriteData),
         .Move(Move_ID)

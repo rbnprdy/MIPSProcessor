@@ -20,16 +20,15 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module EX_MEM(Clk, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RHiIn, RLoIn, AddResultIn, ZeroIn, ALUResultIn, RD2In, WriteAddressIn, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RHiOut, RLoOut, AddResultOut, ZeroOut, ALUResultOut, RD2Out, WriteAddressOut);
+module EX_MEM(Clk, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RHiIn, RLoIn, AddResultIn, ZeroIn, ALUResultIn, RD2In, WriteAddressIn, LbIn, LoadExtendedIn, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RHiOut, RLoOut, AddResultOut, ZeroOut, ALUResultOut, RD2Out, WriteAddressOut, LbOut, LoadExtendedOut);
     input [31:0] RHiIn, RLoIn, AddResultIn, ALUResultIn, RD2In;
-    input ZeroIn;
     input [4:0] WriteAddressIn;
-    input Clk, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn;
+    input Clk, ZeroIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, LbIn, LoadExtendedIn;
     
     output reg [31:0] RHiOut, RLoOut, AddResultOut, ALUResultOut, RD2Out;
     output reg ZeroOut;
     output reg [4:0] WriteAddressOut;
-    output reg RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut;
+    output reg RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, LbOut, LoadExtendedOut;
     
     always @(negedge Clk) begin
         RHiOut <= RHiIn;
@@ -48,6 +47,8 @@ module EX_MEM(Clk, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, 
         MemWriteOut <= MemWriteIn;
         BranchOut <= BranchIn;
         MemReadOut <= MemReadIn;
+        LbOut <= LbIn;
+        LoadExtendedOut <= LoadExtendedIn;
     end
     
 endmodule

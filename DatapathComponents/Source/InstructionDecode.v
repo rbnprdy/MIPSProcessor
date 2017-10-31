@@ -49,14 +49,16 @@ module InstructionDecode(
         HiOrLo, 
         HiToReg, 
         DontMove, 
-        MoveOnNotZero
+        MoveOnNotZero,
+        Lb,
+        LoadExtended
 );
     input Clk, RegWriteIn, Move;
     input [31:0] Instruction, WriteData;
     input [4:0] WriteRegister;
     
     output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended;
-    output PCSrc, RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero;
+    output PCSrc, RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Lb, LoadExtended;
     output [31:0] InstructionToALU;
     
     wire [15:0] Instruction_15_0;
@@ -103,7 +105,9 @@ module InstructionDecode(
         .HiOrLo(HiOrLo), 
         .HiToReg(HiToReg), 
         .DontMove(DontMove), 
-        .MoveOnNotZero(MoveOnNotZero)
+        .MoveOnNotZero(MoveOnNotZero),
+        .Lb(Lb),
+        .LoadExtended(LoadExtended)
     );
       
 endmodule

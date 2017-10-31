@@ -20,14 +20,14 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ID_EX(Clk, PCAddIn, RD1In, RD2In, SignExtendIn, Instr106In, Instr2016In, Instr1511In, MsubIn, MaddIn, HiWriteIn, LoWriteIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RegDestIn, ALUSrcIn, ALUOpIn, PCAddOut, RD1Out, RD2Out, SignExtendOut, Instr106Out, Instr2016Out, Instr1511Out, MsubOut, MaddOut, HiWriteOut, LoWriteOut, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RegDestOut, ALUSrcOut, ALUOpOut);
+module ID_EX(Clk, PCAddIn, RD1In, RD2In, SignExtendIn, Instr106In, Instr2016In, Instr1511In, MsubIn, MaddIn, HiWriteIn, LoWriteIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RegDestIn, ALUSrcIn, ALUOpIn, LbIn, LoadExtendedIn, PCAddOut, RD1Out, RD2Out, SignExtendOut, Instr106Out, Instr2016Out, Instr1511Out, MsubOut, MaddOut, HiWriteOut, LoWriteOut, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RegDestOut, ALUSrcOut, ALUOpOut, LbOut, LoadExtendedOut);
     input [31:0] PCAddIn, RD1In, RD2In, SignExtendIn, ALUOpIn;
     input [4:0] Instr106In, Instr2016In, Instr1511In;
-    input MsubIn, MaddIn, HiWriteIn, LoWriteIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RegDestIn, ALUSrcIn, Clk;
+    input MsubIn, MaddIn, HiWriteIn, LoWriteIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RegDestIn, ALUSrcIn, LbIn, LoadExtendedIn, Clk;
     
     output reg [31:0] PCAddOut, RD1Out, RD2Out, SignExtendOut, ALUOpOut;
     output reg [4:0] Instr106Out, Instr2016Out, Instr1511Out;
-    output reg MsubOut, MaddOut, HiWriteOut, LoWriteOut, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RegDestOut, ALUSrcOut;
+    output reg MsubOut, MaddOut, HiWriteOut, LoWriteOut, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RegDestOut, ALUSrcOut, LbOut, LoadExtendedOut;
 
     always @(negedge Clk) begin
         PCAddOut <= PCAddIn;
@@ -53,6 +53,8 @@ module ID_EX(Clk, PCAddIn, RD1In, RD2In, SignExtendIn, Instr106In, Instr2016In, 
         MemReadOut <= MemReadIn;
         RegDestOut <= RegDestIn;
         ALUSrcOut <= ALUSrcIn;
+        LbOut <= LbIn;
+        LoadExtendedOut <= LoadExtendedIn;
     end
 
 endmodule
