@@ -27,9 +27,9 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     
     // InstructionFetch Inputs
     wire Branch_IF;
-    wire [31:0] BranchAddress_IF;
     // Instruction Fetch Outputs
     wire [31:0] Instruction_IF;
+    wire [31:0] PCAddResult_IF;
     
     // IF_ID Outputs
     wire [31:0] PCAdd_IF_ID;
@@ -70,17 +70,18 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     wire Zero_WB, RegWrite_WB, MoveOnNotZero_WB, HiOrLo_WB, DontMove_WB, MemToReg_WB, HiLoToReg_WB;
     
     InstructionFetchUnit IF(
-        .Instruction(Instruction_IF), 
-        .PCAddResult(PCValue),
+        .Instruction(Instruction_IF),
+        .PCResult(PCValue), 
+        .PCAddResult(PCAddResult_IF),
         .Branch(Branch_IF),
-        .BranchAddress(BranchAddress_IF),
+        .BranchAddress(AddResult_MEM),
         .Reset(Rst),
         .Clk(Clk)
     );
     
     IF_ID IF_ID_Reg(
         .Clk(Clk),
-        .PCAddIn(PCValue),
+        .PCAddIn(PCAddResult_IF),
         .InstructionIn(Instruction_IF),
         .PCAddOut(PCAdd_IF_ID),
         .InstructionOut(Instruction_ID)
