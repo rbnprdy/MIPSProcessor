@@ -133,7 +133,7 @@ module ALUController(Instruction, ALUOp);
             ALUOp <= 5'b11001;
         
         // Bgez
-        else if (Instruction[31:26] == 6'b000001 && Instruction[20:16] == 5'b00011)
+        else if (Instruction[31:26] == 6'b000001 && Instruction[20:16] == 5'b00001)
             ALUOp <= 5'b11010;
            
     end

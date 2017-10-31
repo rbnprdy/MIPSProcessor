@@ -93,25 +93,25 @@ module ALU32Bit(ALUControl, A, B, ShiftAmount, ALUResult, HiResult, Zero);
             end
             5'b10110 : ALUResult <= B << 16; // SLL 16 B (for LUI)
             5'b10111 : begin // A < 0
-                if (A < 0)
+                if ($signed(A) < 0)
                     ALUResult <= 0;
                 else
                     ALUResult <= 1;
             end
             5'b11000 : begin // A <= 0
-                if (A <= 0)
+                if ($signed(A) <= 0)
                     ALUResult <= 0;
                 else
                     ALUResult <= 1;
             end
             5'b11001 : begin // A > 0
-                if (A > 0)
+                if ($signed(A) > 0)
                     ALUResult <= 0;
                 else
                     ALUResult <= 1;
             end
             5'b11010 : begin // A >= 0
-                if (A >= 0)
+                if ($signed(A) >= 0)
                     ALUResult <= 0;
                 else
                     ALUResult <= 1;

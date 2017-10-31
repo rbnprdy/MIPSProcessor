@@ -140,6 +140,8 @@ module Controller(
                 end
                 
                 6'b000001, // bgez or bltz
+                6'b000111, // bgtz
+                6'b000110, // blez
                 6'b000100, // beq
                 6'b000101: begin // bne
                     PCSrc <= 1;
@@ -245,7 +247,7 @@ module Controller(
                 
                 6'b101000, // sb
                 6'b101001, // sh
-                6'b101001 : begin // sw
+                6'b101011 : begin // sw
                     PCSrc <= 0;
                     RegWrite <= 0;
                     ALUSrc <= 1;
