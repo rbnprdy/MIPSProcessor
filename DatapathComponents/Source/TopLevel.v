@@ -40,7 +40,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     wire [4:0] WriteRegister_ID;
     // InstructionDecode Outputs
     wire [31:0] ReadData1_ID, ReadData2_ID, Instruction_15_0_Extended_ID;
-    wire PCSrc_ID, RegWrite_ID, ALUSrc_ID, RegDst_ID, HiWrite_ID, LoWrite_ID, Madd_ID, Msub_ID, MemWrite_ID, MemRead_ID, Branch_ID, MemToReg_ID, HiOrLo_ID, HiToReg_ID, DontMove_ID, MoveOnNotZero_ID;
+    wire JumpRegWrite_ID, Jump_ID, PCSrc_ID, RegWrite_ID, ALUSrc_ID, RegDst_ID, HiWrite_ID, LoWrite_ID, Madd_ID, Msub_ID, MemWrite_ID, MemRead_ID, Branch_ID, MemToReg_ID, HiOrLo_ID, HiToReg_ID, DontMove_ID, MoveOnNotZero_ID;
     wire [31:0] InstructionToALU_ID;
     
     // ID_EX Outputs
@@ -115,7 +115,9 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .HiOrLo(HiOrLo_ID), 
         .HiToReg(HiToReg_ID), 
         .DontMove(DontMove_ID), 
-        .MoveOnNotZero(MoveOnNotZero_ID)
+        .MoveOnNotZero(MoveOnNotZero_ID),
+        .JumpRegWrite(JumpRegWrite_ID),
+        .Jump(Jump_ID)
     );
     
     ID_EX ID_EX_Reg(
