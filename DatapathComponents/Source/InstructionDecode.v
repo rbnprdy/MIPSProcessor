@@ -28,6 +28,7 @@ module InstructionDecode(
         WriteData,
         RegWriteIn,
         Move,
+        PCResult,
         // Outputs
         ReadData1,
         ReadData2,
@@ -49,18 +50,24 @@ module InstructionDecode(
         HiOrLo, 
         HiToReg, 
         DontMove, 
-        MoveOnNotZero
+        MoveOnNotZero,
+        JumpData,
+        Jump
 );
     input Clk, RegWriteIn, Move;
-    input [31:0] Instruction, WriteData;
+    input [31:0] Instruction, WriteData, PCResult;
     input [4:0] WriteRegister;
     
     output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended;
-    output PCSrc, RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero;
-    output [31:0] InstructionToALU;
+    output Jump, PCSrc, RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero;
+    output [31:0] InstructionToALU, JumpData;
     
     wire [15:0] Instruction_15_0;
-    wire AndOut;
+    wire AndOut, And2Out, OrOut, JumpAndLink;
+    wire [31:0] JALInput, RegWriteData;
+    wire [4:0] RegWriteRegister;
+    
+    parameter thirtyOne = 5'd31;
     
     AndGate1Bit RegWriteAnd(
         .A(RegWriteIn),
@@ -68,12 +75,43 @@ module InstructionDecode(
         .O(AndOut)
     );
     
+    AndGate1Bit JumpWriteAnd(
+        .A(RegWriteIn),
+        .B(JumpAndLink),
+        .O(And2Out)
+    );
+    
+    OrGate1Bit2In RegWriteOr(
+        .A(AndOut),
+        .B(And2Out),
+        .O(OrOut)
+    );
+    
+    PCAdder AddForJAL(
+        .PCResult(PCResult),
+        .PCAddResult(JALInput)
+    );
+    
+    Mux32Bit2To1 WriteDataMux(
+        .out(RegWriteData),
+        .inA(WriteData),
+        .inB(JALInput),
+        .sel(JumpAndLink)
+    );
+    
+    Mux5Bit2To1 WriteRegisterMux(
+        .out(RegWriteRegister),
+        .inA(WriteRegister),
+        .inB(thirtyOne),
+        .sel(JumpAndLink)
+    );
+    
     RegisterFile RegFile(
         .ReadRegister1(Instruction[25:21]),
         .ReadRegister2(Instruction[20:16]),
-        .WriteRegister(WriteRegister),
-        .WriteData(WriteData),
-        .RegWrite(AndOut),
+        .WriteRegister(RegWriteRegister),
+        .WriteData(RegWriteData),
+        .RegWrite(OrOut),
         .Clk(Clk),
         .ReadData1(ReadData1),
         .ReadData2(ReadData2)
@@ -103,7 +141,9 @@ module InstructionDecode(
         .HiOrLo(HiOrLo), 
         .HiToReg(HiToReg), 
         .DontMove(DontMove), 
-        .MoveOnNotZero(MoveOnNotZero)
+        .MoveOnNotZero(MoveOnNotZero),
+        .JumpAndLink(JumpAndLink),
+        .Jump(Jump)
     );
       
 endmodule
