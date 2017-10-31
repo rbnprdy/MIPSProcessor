@@ -116,6 +116,12 @@ module ALU32Bit(ALUControl, A, B, ShiftAmount, ALUResult, HiResult, Zero);
                 else
                     ALUResult <= 1;
             end
+            5'b11011 : begin // A != B
+                if ($signed(A) != $signed(B))
+                    ALUResult <= 0;
+                else
+                    ALUResult <= 1;
+            end
             default : ALUResult <= 1; // Default
         endcase
     end
