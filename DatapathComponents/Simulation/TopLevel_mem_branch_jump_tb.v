@@ -349,6 +349,236 @@ module TopLevel_mem_branch_jump_tb();
         else
             $display("branch4 addi $s1, $zero, -1 failed. Exp WriteData: -1. Act WD: %d", WriteData);
             
+        // bne    $s0, $s1, branch5
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(posedge Clk);
+        
+        // bne $s0, $zero branch5
+        tests = tests + 1;
+        #5 if (PCValue == 32'd336)
+            passed = passed + 1;
+        else
+            $display("bne $s0, $zero, branch5 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        
+        // addi $s0, $zero, 128
+        tests = tests + 1;
+        #5 if (WriteData == 32'd128)
+            passed = passed + 1;
+        else
+            $display("branch5 addi $s0, $zero, 128 failed. Exp WriteData: 128. Act WD: %d", WriteData);
+           
+        // sb $s0, 0($a0)
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+          
+        // lb $s0, 0($a0)
+        tests = tests + 1;
+        #5 if (WriteData == 32'hffffff80)
+            passed = passed + 1;
+        else
+            $display("lb $s0, 0($a0) 128 failed. Exp WriteData: 0xffffff80 . Act WD: %h", WriteData);
+            
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(posedge Clk);
+        
+        // blez $s0, branch6
+        tests = tests + 1;
+        #5 if (PCValue == 32'd336)
+            passed = passed + 1;
+        else
+            $display("blez $s0, branch6 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        
+        // addi $s0, $zero, -1
+        tests = tests + 1;
+        #5 if (WriteData == -32'd1)
+            passed = passed + 1;
+        else
+            $display("branch6 addi $s0, $zero, -1 failed. Exp WriteData: -1. Act WD: %d", WriteData);
+           
+        // sh $s0, 0($a0)
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+                
+        // addi $s0, $zero, 0
+        tests = tests + 1;
+        #5 if (WriteData == 32'd0)
+            passed = passed + 1;
+        else
+            $display("branch6 addi $s0, $zero, 0 failed. Exp WriteData: 0. Act WD: %d", WriteData);
+                                                       
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+                
+        // lh $s0, 0($a0)
+        tests = tests + 1;
+        #5 if (WriteData == 32'hffffffff)
+            passed = passed + 1;
+        else
+            $display("branch6 lh $s0, 0($a0) failed. Exp WriteData: ffffffff. Act WD: %h", WriteData);
+            
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(posedge Clk);
+        
+        // blez $s0, branch7
+        tests = tests + 1;
+        #5 if (PCValue == 32'd336)
+            passed = passed + 1;
+        else
+            $display("blez $s0, branch7 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        
+        // addi $s0, $zero, -1
+        tests = tests + 1;
+        #5 if (WriteData == -32'd1)
+            passed = passed + 1;
+        else
+            $display("branch7 addi $s0, $zero, -1 failed. Exp WriteData: -1. Act WD: %d", WriteData);
+            
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+                
+        // lui $s0, 1
+        tests = tests + 1;
+        #5 if (WriteData == 32'h10000)
+            passed = passed + 1;
+        else
+            $display("branch7 lui $s0, 1 failed. Exp WriteData: 0x10000. Act WD: %h", WriteData);
+            
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(posedge Clk);
+        
+        // bgez $s0, branch8
+        tests = tests + 1;
+        #5 if (PCValue == 32'd336)
+            passed = passed + 1;
+        else
+            $display("bgez $s0, branch8 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            
+        @(negedge Clk);
+        @(posedge Clk);
+        
+        // j jump1
+        tests = tests + 1;
+        #5 if (PCValue == 32'd336)
+            passed = passed + 1;
+        else
+            $display("j jump1 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+        
+        @(negedge Clk);
+        @(posedge Clk);
+            
+        // jal jal1
+        // FIXME: Check Write Data too
+        tests = tests + 1;
+        #5 if (PCValue == 32'd336)
+            passed = passed + 1;
+        else
+            $display("jal jal1 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            
+        @(negedge Clk);
+        @(posedge Clk);
+        
+        // jr $ra
+        tests = tests + 1;
+        #5 if (PCValue == 32'd336)
+            passed = passed + 1;
+        else
+            $display("jr $ra failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(negedge Clk);
+        @(posedge Clk);
+        
+        // j start
+        tests = tests + 1;
+        #5 if (PCValue == 32'd336)
+            passed = passed + 1;
+        else
+            $display("j start failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            
+        @(posedge Clk);
+        @(posedge Clk);
+        @(posedge Clk);
+        @(posedge Clk);
+        
+        // lw $s0, 4($a0)
+        tests = tests + 1;
+        #5 if (WriteData == 32'd1)
+            passed = passed + 1;
+        else
+            $display("lw $s0, 4($a0) failed. Exp WriteData: 1. Act WD: %d", WriteData);
+                                                                   
         // Report results
         if (passed == tests)
             $display("All tests passed.");

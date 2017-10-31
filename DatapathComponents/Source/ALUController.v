@@ -33,7 +33,7 @@ module ALUController(Instruction, ALUOp);
             ALUOp <= 5'b00000;
 
         // Subtract
-        else if ((Instruction[31:26] == 6'b000000 && Instruction[5:0] == 6'b100010) || (Instruction[31:26] == 6'b000100) || (Instruction[31:26] == 6'b000101))
+        else if ((Instruction[31:26] == 6'b000000 && Instruction[5:0] == 6'b100010) || (Instruction[31:26] == 6'b000100))
             ALUOp <= 5'b00001;
         
         // Multiply
@@ -135,6 +135,10 @@ module ALUController(Instruction, ALUOp);
         // Bgez
         else if (Instruction[31:26] == 6'b000001 && Instruction[20:16] == 5'b00001)
             ALUOp <= 5'b11010;
+            
+        // bne
+        else if (Instruction[31:26] == 6'b000101)
+            ALUOp <= 5'b11011;
            
     end
 endmodule
