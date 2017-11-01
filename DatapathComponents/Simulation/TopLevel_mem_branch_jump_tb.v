@@ -67,35 +67,15 @@ module TopLevel_mem_branch_jump_tb();
         @(negedge Clk);
         @(negedge Clk);
         @(negedge Clk);
-        @(negedge Clk);
-        @(negedge Clk);
-        @(negedge Clk);
+        @(posedge Clk);
         
         // j start
         tests = tests + 1;
-        #5 if (PCValue == 6'b011000)
+        #5 if (PCValue == 8'b01100000)
             passed = passed + 1;
         else
             $display("j start failed. Exp PCValue: 011000. Act PC: %b", PCValue);
-            
-        /////// DELETE AFTER JUMP IS WORKING ///////
-        @(negedge Clk);
-        @(negedge Clk);
-        @(negedge Clk);
-        @(negedge Clk);
-        @(negedge Clk);
-        @(negedge Clk);
-        
-        @(negedge Clk);
-        @(negedge Clk);
-        @(negedge Clk);
-        @(negedge Clk);
-        @(negedge Clk);
-        @(negedge Clk);
-        /////// DELETE AFTER JUMP IS WORKING ///////
     
-        @(negedge Clk);
-        @(negedge Clk);
         @(negedge Clk);
         @(negedge Clk);
         @(negedge Clk);
@@ -195,12 +175,12 @@ module TopLevel_mem_branch_jump_tb();
         @(negedge Clk);
         @(posedge Clk);
         
-        // branch $s0, $s1, branch1
+        // beq $s0, $s1, branch1
         tests = tests + 1;
         #5 if (PCValue == 32'd336)
             passed = passed + 1;
         else
-            $display("branch $s0, $s1, branch1 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            $display("beq $s0, $s1, branch1 failed. Exp PCValue: 336. Act PC: %d", PCValue);
             
         @(negedge Clk);
         @(negedge Clk);
@@ -245,10 +225,10 @@ module TopLevel_mem_branch_jump_tb();
         
         // bgez $s0, branch2
         tests = tests + 1;
-        #5 if (PCValue == 32'd336)
+        #5 if (PCValue == 32'd456)
             passed = passed + 1;
         else
-            $display("bgez $s0, branch2 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            $display("bgez $s0, branch2 failed. Exp PCValue: 456. Act PC: %d", PCValue);
         
         @(negedge Clk);
         @(negedge Clk);
@@ -298,10 +278,10 @@ module TopLevel_mem_branch_jump_tb();
         
         // bgtz $s0, branch3
         tests = tests + 1;
-        #5 if (PCValue == 32'd336)
+        #5 if (PCValue == 32'd584)
             passed = passed + 1;
         else
-            $display("bgtz $s0, branch3 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            $display("bgtz $s0, branch3 failed. Exp PCValue: 584. Act PC: %d", PCValue);
         
         // bltz $s0, branch4
         @(negedge Clk);
@@ -332,10 +312,10 @@ module TopLevel_mem_branch_jump_tb();
         
         // bltz $s0, branch4
         tests = tests + 1;
-        #5 if (PCValue == 32'd336)
+        #5 if (PCValue == 32'd680)
             passed = passed + 1;
         else
-            $display("bltz $s0, branch4 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            $display("bltz $s0, branch4 failed. Exp PCValue: 680. Act PC: %d", PCValue);
         
         @(negedge Clk);
         @(negedge Clk);
@@ -366,10 +346,10 @@ module TopLevel_mem_branch_jump_tb();
         
         // bne $s0, $zero branch5
         tests = tests + 1;
-        #5 if (PCValue == 32'd336)
+        #5 if (PCValue == 32'd776)
             passed = passed + 1;
         else
-            $display("bne $s0, $zero, branch5 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            $display("bne $s0, $zero, branch5 failed. Exp PCValue: 776. Act PC: %d", PCValue);
             
         @(negedge Clk);
         @(negedge Clk);
@@ -414,10 +394,10 @@ module TopLevel_mem_branch_jump_tb();
         
         // blez $s0, branch6
         tests = tests + 1;
-        #5 if (PCValue == 32'd336)
+        #5 if (PCValue == 32'd896)
             passed = passed + 1;
         else
-            $display("blez $s0, branch6 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            $display("blez $s0, branch6 failed. Exp PCValue: 896. Act PC: %d", PCValue);
             
         @(negedge Clk);
         @(negedge Clk);
@@ -476,10 +456,10 @@ module TopLevel_mem_branch_jump_tb();
         
         // blez $s0, branch7
         tests = tests + 1;
-        #5 if (PCValue == 32'd336)
+        #5 if (PCValue == 32'd1040)
             passed = passed + 1;
         else
-            $display("blez $s0, branch7 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            $display("blez $s0, branch7 failed. Exp PCValue: 1040. Act PC: %d", PCValue);
             
         @(negedge Clk);
         @(negedge Clk);
@@ -516,43 +496,41 @@ module TopLevel_mem_branch_jump_tb();
         
         // bgez $s0, branch8
         tests = tests + 1;
-        #5 if (PCValue == 32'd336)
+        #5 if (PCValue == 32'd1136)
             passed = passed + 1;
         else
-            $display("bgez $s0, branch8 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            $display("bgez $s0, branch8 failed. Exp PCValue: 1136. Act PC: %d", PCValue);
             
         @(negedge Clk);
         @(posedge Clk);
         
         // j jump1
         tests = tests + 1;
-        #5 if (PCValue == 32'd336)
+        #5 if (PCValue == 32'd1184)
             passed = passed + 1;
         else
-            $display("j jump1 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            $display("j jump1 failed. Exp PCValue: 1184. Act PC: %d", PCValue);
         
         @(negedge Clk);
         @(posedge Clk);
             
         // jal jal1
-        // FIXME: Check Write Data too
         tests = tests + 1;
-        #5 if (PCValue == 32'd336)
+        #5 if (PCValue == 32'd1232)
             passed = passed + 1;
         else
-            $display("jal jal1 failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            $display("jal jal1 failed. Exp PCValue: 1232. Act PC: %d", PCValue);
             
         @(negedge Clk);
         @(posedge Clk);
         
         // jr $ra
         tests = tests + 1;
-        #5 if (PCValue == 32'd336)
+        #5 if (PCValue == 32'd1192)
             passed = passed + 1;
         else
-            $display("jr $ra failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            $display("jr $ra failed. Exp PCValue: 1192. Act PC: %d", PCValue);
             
-        @(negedge Clk);
         @(negedge Clk);
         @(negedge Clk);
         @(negedge Clk);
@@ -562,10 +540,10 @@ module TopLevel_mem_branch_jump_tb();
         
         // j start
         tests = tests + 1;
-        #5 if (PCValue == 32'd336)
+        #5 if (PCValue == 32'd96)
             passed = passed + 1;
         else
-            $display("j start failed. Exp PCValue: 336. Act PC: %d", PCValue);
+            $display("j start failed. Exp PCValue: 96. Act PC: %d", PCValue);
             
         @(posedge Clk);
         @(posedge Clk);
