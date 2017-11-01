@@ -36,11 +36,11 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     
     // InstructionDecode Inputs
     wire RegWrite_In_ID, Move_ID;
-    wire [31:0] Instruction_ID;
+    wire [31:0] Instruction_ID, JumpAddress_ID;
     wire [4:0] WriteRegister_ID;
     // InstructionDecode Outputs
     wire [31:0] ReadData1_ID, ReadData2_ID, Instruction_15_0_Extended_ID;
-    wire PCSrc_ID, RegWrite_ID, ALUSrc_ID, RegDst_ID, HiWrite_ID, LoWrite_ID, Madd_ID, Msub_ID, MemWrite_ID, MemRead_ID, Branch_ID, MemToReg_ID, HiOrLo_ID, HiToReg_ID, DontMove_ID, MoveOnNotZero_ID, Lb_ID, LoadExtended_ID;
+    wire RegWrite_ID, ALUSrc_ID, RegDst_ID, HiWrite_ID, LoWrite_ID, Madd_ID, Msub_ID, MemWrite_ID, MemRead_ID, Branch_ID, MemToReg_ID, HiOrLo_ID, HiToReg_ID, DontMove_ID, MoveOnNotZero_ID, Jump_ID, JumpAndLink_ID, Lb_ID, LoadExtended_ID;
     wire [31:0] InstructionToALU_ID;
     
     // ID_EX Outputs
@@ -75,6 +75,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .PCAddResult(PCAddResult_IF),
         .Branch(Branch_IF),
         .BranchAddress(AddResult_MEM),
+        .Jump(Jump_ID),
+        .JumpAddress(JumpAddress_ID),
         .Reset(Rst),
         .Clk(Clk)
     );
@@ -91,6 +93,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         // Inputs
         .Clk(Clk),
         .Instruction(Instruction_ID),
+        .PCResult(PCAdd_IF_ID),
         .WriteRegister(WriteRegister_ID),
         .WriteData(WriteData),
         .RegWriteIn(RegWrite_In_ID),
@@ -99,8 +102,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ReadData1(ReadData1_ID),
         .ReadData2(ReadData2_ID),
         .Instruction_15_0_Extended(Instruction_15_0_Extended_ID),
-        // Control Signals
-        .PCSrc(PCSrc_ID), 
+        .JumpAddress(JumpAddress_ID),
+        // Control Signals 
         .RegWrite(RegWrite_ID), 
         .ALUSrc(ALUSrc_ID), 
         .InstructionToALU(InstructionToALU_ID),
@@ -117,6 +120,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .HiToReg(HiToReg_ID), 
         .DontMove(DontMove_ID), 
         .MoveOnNotZero(MoveOnNotZero_ID),
+        .Jump(Jump_ID),
         .Lb(Lb_ID),
         .LoadExtended(LoadExtended_ID)
     );

@@ -37,20 +37,28 @@
 // which generates a continuous clock pulse into the module.
 ////////////////////////////////////////////////////////////////////////////////
 
-module InstructionFetchUnit(Instruction, PCResult, PCAddResult, Branch, BranchAddress, Reset, Clk);
+module InstructionFetchUnit(Instruction, PCResult, PCAddResult, Branch, BranchAddress, Jump, JumpAddress, Reset, Clk);
     
-    input Reset, Clk, Branch; // Inputs to ProgramCounter
-    input [31:0] BranchAddress;
+    input Reset, Clk, Branch, Jump; // Inputs to ProgramCounter
+    input [31:0] BranchAddress, JumpAddress;
     output [31:0] Instruction, PCResult, PCAddResult; // Output of InstructionMemory
     
-    wire [31:0] BranchMuxOut; // Output by ProgramCounter and input to PCAdder and InstructionMemory
+    wire [31:0] BranchMuxOut, JumpMuxOut; // Output by ProgramCounter and input to PCAdder and InstructionMemory
+    
+    Mux32Bit2To1 JumpMux(
+        .out(JumpMuxOut),
+        .inA(PCAddResult),
+        .inB(JumpAddress),
+        .sel(Jump)
+    );
     
     Mux32Bit2To1 BranchMux(
         .out(BranchMuxOut),
-        .inA(PCAddResult),
+        .inA(JumpMuxOut),
         .inB(BranchAddress),
         .sel(Branch)
     );
+    
     ProgramCounter m2(
         .Address(BranchMuxOut),
         .PCResult(PCResult),

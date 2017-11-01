@@ -24,6 +24,7 @@ module InstructionDecode(
         // Inputs
         Clk, 
         Instruction,
+        PCResult,
         WriteRegister,
         WriteData,
         RegWriteIn,
@@ -32,8 +33,8 @@ module InstructionDecode(
         ReadData1,
         ReadData2,
         Instruction_15_0_Extended,
-        // Control Signals
-        PCSrc, 
+        JumpAddress,
+        // Control Signals 
         RegWrite, 
         ALUSrc, 
         InstructionToALU,
@@ -50,19 +51,40 @@ module InstructionDecode(
         HiToReg, 
         DontMove, 
         MoveOnNotZero,
+        Jump,
         Lb,
         LoadExtended
 );
     input Clk, RegWriteIn, Move;
-    input [31:0] Instruction, WriteData;
+    input [31:0] Instruction, PCResult, WriteData;
     input [4:0] WriteRegister;
     
-    output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended;
-    output PCSrc, RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Lb, LoadExtended;
-    output [31:0] InstructionToALU;
+    output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended, InstructionToALU, JumpAddress;
+    output RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Jump, Lb, LoadExtended;
     
+    wire [31:0] PCAddResult, WriteDataMuxOut;
     wire [15:0] Instruction_15_0;
-    wire AndOut;
+    wire [5:0] WriteRegisterMuxOut;
+    wire AndOut, OrOut, JumpAndLink;
+    
+    PCAdder PCAdderJump(
+        .PCResult(PCResult),
+        .PCAddResult(PCAddResult)
+    );
+    
+    Mux32Bit2To1 WriteDataMux(
+        .out(WriteDataMuxOut),
+        .inA(WriteData),
+        .inB(PCAddResult),
+        .sel(JumpAndLink)
+    );
+    
+    Mux32Bit2To1 WriteRegisterMux(
+        .out(WriteRegisterMuxOut),
+        .inA(WriteRegister),
+        .inB(32'd31),
+        .sel(JumpAndLink)
+    );
     
     AndGate1Bit RegWriteAnd(
         .A(RegWriteIn),
@@ -70,15 +92,28 @@ module InstructionDecode(
         .O(AndOut)
     );
     
+    OrGate1Bit2In RegWriteOr(
+        .A(JumpAndLink),
+        .B(AndOut),
+        .O(OrOut)
+    );
+    
     RegisterFile RegFile(
         .ReadRegister1(Instruction[25:21]),
         .ReadRegister2(Instruction[20:16]),
-        .WriteRegister(WriteRegister),
-        .WriteData(WriteData),
-        .RegWrite(AndOut),
+        .WriteRegister(WriteRegisterMuxOut),
+        .WriteData(WriteDataMuxOut),
+        .RegWrite(OrOut),
         .Clk(Clk),
         .ReadData1(ReadData1),
         .ReadData2(ReadData2)
+    );
+    
+    JumpController JControl(
+        .Instruction(Instruction),
+        .PCResult(PCResult),
+        .JumpRegister(ReadData1),
+        .JumpAddress(JumpAddress)
     );
     
     SignExtension SignExtend(
@@ -88,8 +123,7 @@ module InstructionDecode(
     );
     
     Controller C(
-        .Instruction(Instruction), 
-        .PCSrc(PCSrc), 
+        .Instruction(Instruction),  
         .RegWrite(RegWrite), 
         .ALUSrc(ALUSrc), 
         .InstructionToALU(InstructionToALU),
@@ -106,6 +140,8 @@ module InstructionDecode(
         .HiToReg(HiToReg), 
         .DontMove(DontMove), 
         .MoveOnNotZero(MoveOnNotZero),
+        .Jump(Jump),
+        .JumpAndLink(JumpAndLink),
         .Lb(Lb),
         .LoadExtended(LoadExtended)
     );
