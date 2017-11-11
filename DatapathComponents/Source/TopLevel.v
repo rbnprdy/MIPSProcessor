@@ -41,16 +41,15 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     // InstructionDecode Outputs
     wire [31:0] ReadData1_ID, ReadData2_ID, Instruction_15_0_Extended_ID;
     wire RegWrite_ID, ALUSrc_ID, RegDst_ID, HiWrite_ID, LoWrite_ID, Madd_ID, Msub_ID, MemWrite_ID, MemRead_ID, Branch_ID, MemToReg_ID, HiOrLo_ID, HiToReg_ID, DontMove_ID, MoveOnNotZero_ID, Jump_ID, JumpAndLink_ID, Lb_ID, LoadExtended_ID;
-    wire [31:0] InstructionToALU_ID;
+    //wire [31:0] InstructionToALU_ID;
     
     // ID_EX Outputs
     wire RegWrite_EX, MoveOnNotZero_EX, DontMove_EX, HiOrLo_EX, MemToReg_EX, MemWrite_EX, MemRead_EX, HiToReg_EX, Branch_EX, Lb_EX, LoadExtended_EX; 
     
     // Execute Inputs
     wire [31:0] ReadData1_EX, ReadData2_EX, PCAddResult_In_EX, Instruction_15_0_Extended_EX;
-    wire [4:0] Instruction_10_6_EX, Instruction_20_16_EX, Instruction_15_11_EX;
     wire ALUSrc_EX, RegDst_EX, HiWrite_EX, LoWrite_EX, Madd_EX, Msub_EX;
-    wire [31:0] InstructionToALU_EX;
+    wire [31:0] Instruction_EX;
     // Execute Outputs
     wire [31:0] PCAddResult_Out_EX, ALUResult_EX;
     wire Zero_EX;
@@ -106,7 +105,6 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         // Control Signals 
         .RegWrite(RegWrite_ID), 
         .ALUSrc(ALUSrc_ID), 
-        .InstructionToALU(InstructionToALU_ID),
         .RegDst(RegDst_ID),
         .HiWrite(HiWrite_ID),
         .LoWrite(LoWrite_ID), 
@@ -130,10 +128,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .PCAddIn(PCAdd_IF_ID),
         .RD1In(ReadData1_ID),
         .RD2In(ReadData2_ID),
+        .InstructionIn(Instruction_ID),
         .SignExtendIn(Instruction_15_0_Extended_ID),
-        .Instr106In(Instruction_ID[10:6]),
-        .Instr2016In(Instruction_ID[20:16]),
-        .Instr1511In(Instruction_ID[15:11]),
         .MsubIn(Msub_ID),
         .MaddIn(Madd_ID),
         .HiWriteIn(HiWrite_ID),
@@ -149,16 +145,13 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .MemReadIn(MemRead_ID),
         .RegDestIn(RegDst_ID),
         .ALUSrcIn(ALUSrc_ID),
-        .ALUOpIn(InstructionToALU_ID),
         .LbIn(Lb_ID),
         .LoadExtendedIn(LoadExtended_ID),
         .PCAddOut(PCAddResult_In_EX),
         .RD1Out(ReadData1_EX),
         .RD2Out(ReadData2_EX),
+        .InstructionOut(Instruction_EX),
         .SignExtendOut(Instruction_15_0_Extended_EX),
-        .Instr106Out(Instruction_10_6_EX),
-        .Instr2016Out(Instruction_20_16_EX),
-        .Instr1511Out(Instruction_15_11_EX),
         .MsubOut(Msub_EX),
         .MaddOut(Madd_EX),
         .HiWriteOut(HiWrite_EX),
@@ -174,7 +167,6 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .MemReadOut(MemRead_EX),
         .RegDestOut(RegDst_EX),
         .ALUSrcOut(ALUSrc_EX),
-        .ALUOpOut(InstructionToALU_EX),
         .LbOut(Lb_EX),
         .LoadExtendedOut(LoadExtended_EX)
     );
@@ -184,14 +176,11 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .Clk(Clk),
         .ReadData1(ReadData1_EX),
         .ReadData2(ReadData2_EX),
-        .Instruction_10_6(Instruction_10_6_EX),
+        .Instruction(Instruction_EX),
         .Instruction_15_0_Extended(Instruction_15_0_Extended_EX),
-        .Instruction_20_16(Instruction_20_16_EX),
-        .Instruction_15_11(Instruction_15_11_EX),
         .PCAddResult(PCAddResult_In_EX),
         // Controller Inputs
         .ALUSrc(ALUSrc_EX), 
-        .InstructionToALU(InstructionToALU_EX),
         .RegDst(RegDst_EX),
         .HiWrite(HiWrite_EX), 
         .LoWrite(LoWrite_EX),

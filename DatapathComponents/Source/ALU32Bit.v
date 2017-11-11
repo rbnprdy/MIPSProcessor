@@ -49,6 +49,7 @@ module ALU32Bit(ALUControl, A, B, ShiftAmount, ALUResult, HiResult, Zero);
 
     /* Please fill in the implementation here... */
     always@(ALUControl, A, B, ShiftAmount) begin
+        HiResult <= 32'd0;
         case(ALUControl)
             5'b00000 : ALUResult <= $signed(A) + $signed(B); // Add
             5'b00001 : ALUResult <= $signed(A) - $signed(B); // Subtract

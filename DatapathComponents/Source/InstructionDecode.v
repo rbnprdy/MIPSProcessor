@@ -36,8 +36,7 @@ module InstructionDecode(
         JumpAddress,
         // Control Signals 
         RegWrite, 
-        ALUSrc, 
-        InstructionToALU,
+        ALUSrc,
         RegDst,
         HiWrite, 
         LoWrite,
@@ -59,12 +58,12 @@ module InstructionDecode(
     input [31:0] Instruction, PCResult, WriteData;
     input [4:0] WriteRegister;
     
-    output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended, InstructionToALU, JumpAddress;
+    output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended, JumpAddress;
     output RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Jump, Lb, LoadExtended;
     
     wire [31:0] PCAddResult, WriteDataMuxOut;
     wire [15:0] Instruction_15_0;
-    wire [5:0] WriteRegisterMuxOut;
+    wire [4:0] WriteRegisterMuxOut;
     wire AndOut, OrOut, JumpAndLink;
     
     PCAdder PCAdderJump(
@@ -79,10 +78,10 @@ module InstructionDecode(
         .sel(JumpAndLink)
     );
     
-    Mux32Bit2To1 WriteRegisterMux(
+    Mux5Bit2To1 WriteRegisterMux(
         .out(WriteRegisterMuxOut),
         .inA(WriteRegister),
-        .inB(32'd31),
+        .inB(5'd31),
         .sel(JumpAndLink)
     );
     
@@ -111,7 +110,7 @@ module InstructionDecode(
     
     JumpController JControl(
         .Instruction(Instruction),
-        .PCResult(PCResult),
+        .PCResult(PCResult[31:28]),
         .JumpRegister(ReadData1),
         .JumpAddress(JumpAddress)
     );
@@ -126,7 +125,6 @@ module InstructionDecode(
         .Instruction(Instruction),  
         .RegWrite(RegWrite), 
         .ALUSrc(ALUSrc), 
-        .InstructionToALU(InstructionToALU),
         .RegDst(RegDst),
         .HiWrite(HiWrite), 
         .LoWrite(LoWrite),

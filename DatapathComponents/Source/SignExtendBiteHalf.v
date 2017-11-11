@@ -21,7 +21,7 @@
 
 
 module SignExtendBiteHalf(in, out, sel);
-    input [31:0] in;
+    input [15:0] in;
     input sel;
     
     output reg [31:0] out;
@@ -29,7 +29,7 @@ module SignExtendBiteHalf(in, out, sel);
     always@(*) begin
         // if sel is 1, sign extend byte
         if (sel == 1)
-            out = {{24{in[7]}}, in[7:0]};
+            out <= {{24{in[7]}}, in[7:0]};
         else // otherwise, sign extend half
             out <= { {16{in[15]}}, in[15:0]}; 
     end

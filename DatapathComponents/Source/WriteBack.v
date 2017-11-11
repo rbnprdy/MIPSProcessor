@@ -71,7 +71,7 @@ module WriteBack(
     );
     
     SignExtendBiteHalf SignExtendBH(
-        .in(HiToRegOut),
+        .in(HiToRegOut[15:0]),
         .out(SignExtendByteHalfOut),
         .sel(Lb)
     );

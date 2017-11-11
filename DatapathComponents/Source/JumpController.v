@@ -22,7 +22,8 @@
 
 module JumpController(Instruction, PCResult, JumpRegister, JumpAddress);
 
-    input [31:0] Instruction, PCResult, JumpRegister;
+    input [31:0] Instruction, JumpRegister;
+    input [3:0] PCResult;
     
     output reg [31:0] JumpAddress;
     
@@ -30,6 +31,6 @@ module JumpController(Instruction, PCResult, JumpRegister, JumpAddress);
         if (Instruction[31:26] == 6'b000000) // jr
             JumpAddress <= JumpRegister;
         else // j, jal
-            JumpAddress = {PCResult[31:28], Instruction[25:0], 2'b00};
+            JumpAddress <= {PCResult, Instruction[25:0], 2'b00};
     end
 endmodule

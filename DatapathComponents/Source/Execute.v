@@ -25,14 +25,11 @@ module Execute(
         Clk,
         ReadData1,
         ReadData2,
-        Instruction_10_6,
+        Instruction,
         Instruction_15_0_Extended,
-        Instruction_20_16,
-        Instruction_15_11,
         PCAddResult,
         // Controller Inputs
         ALUSrc, 
-        InstructionToALU,
         RegDst,
         HiWrite,
         LoWrite, 
@@ -46,10 +43,8 @@ module Execute(
         Zero,
         WriteRegister
 );
-    input [31:0] ReadData1, ReadData2, PCAddResult, Instruction_15_0_Extended;
-    input [4:0] Instruction_10_6, Instruction_20_16, Instruction_15_11;
+    input [31:0] ReadData1, ReadData2, Instruction, Instruction_15_0_Extended, PCAddResult;
     input Clk, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub;
-    input [31:0] InstructionToALU;
     
     output [31:0] ReadDataHi, ReadDataLo, PCAddResultOut, ALUResult;
     output [4:0] WriteRegister;
@@ -62,8 +57,8 @@ module Execute(
     
     Mux5Bit2To1 RegDstMux(
         .out(WriteRegister),
-        .inA(Instruction_20_16),
-        .inB(Instruction_15_11),
+        .inA(Instruction[20:16]),
+        .inB(Instruction[15:11]),
         .sel(RegDst)
     );
         
@@ -75,7 +70,8 @@ module Execute(
     );
     
     ALUController ALUC(
-        .Instruction(InstructionToALU),
+        .Instruction_31_16(Instruction[31:16]),
+        .Instruction_10_0(Instruction[10:0]),
         .ALUOp(ALUOp)
     );
     
@@ -83,7 +79,7 @@ module Execute(
         .ALUControl(ALUOp),
         .A(ReadData1),
         .B(ALUInputB),
-        .ShiftAmount(Instruction_10_6),
+        .ShiftAmount(Instruction[10:6]),
         .ALUResult(ALUResult),
         .HiResult(ALUHiResult),
         .Zero(Zero)

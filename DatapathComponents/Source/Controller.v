@@ -24,7 +24,6 @@ module Controller(
         Instruction, 
         RegWrite, 
         ALUSrc, 
-        InstructionToALU,
         RegDst,
         HiWrite,
         LoWrite, 
@@ -46,10 +45,8 @@ module Controller(
     
     input [31:0] Instruction;
     output reg RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Jump, JumpAndLink, Lb, LoadExtended;
-    output reg [31:0] InstructionToALU;
     
     always@(Instruction) begin
-        InstructionToALU <= Instruction; // Initialize OpCode and Function
 
         if (Instruction == 32'd0) begin // This is a nop
             RegWrite <= 0;
@@ -69,6 +66,8 @@ module Controller(
             MoveOnNotZero <= 0;
             Jump <= 0;
             JumpAndLink <= 0;
+            Lb <= 0;
+            LoadExtended <= 0;
         end
         
         else begin
@@ -89,22 +88,34 @@ module Controller(
                         RegWrite <= 0;
                         HiWrite <= 1;
                         LoWrite <= 0;
+                        HiOrLo <= 0;
+                        HiToReg <= 0;
                         DontMove <= 1;
+                        MoveOnNotZero <= 0;
                         Jump <= 0;
+                        Lb <= 0;
                     end
                     else if (Instruction[5:0] == 6'b010011) begin // mtlo
                         RegWrite <= 0;
                         HiWrite <= 0;
                         LoWrite <= 1;
+                        HiOrLo <= 0;
+                        HiToReg <= 0;
                         DontMove <= 1;
+                        MoveOnNotZero <= 0;
                         Jump <= 0;
+                        Lb <= 0;
                     end
                     else if (Instruction[5:0] == 6'b011000 || Instruction[5:0] == 6'b011001) begin // mult or multu
                         RegWrite <= 0;
                         HiWrite <= 1;
                         LoWrite <= 1;
+                        HiOrLo <= 0;
+                        HiToReg <= 0;
                         DontMove <= 1;
+                        MoveOnNotZero <= 0;
                         Jump <= 0;
+                        Lb <= 0;
                     end
                     else if (Instruction[5:0] == 6'b010010) begin // mflo
                         RegWrite <= 1;
@@ -113,7 +124,9 @@ module Controller(
                         HiOrLo <= 0;
                         HiToReg <= 1;
                         DontMove <= 1;
+                        MoveOnNotZero <= 0;
                         Jump <= 0;
+                        Lb <= 0;
                     end
                     else if (Instruction[5:0] == 6'b010000) begin // mfhi
                         RegWrite <= 1;
@@ -122,39 +135,53 @@ module Controller(
                         HiOrLo <= 1;
                         HiToReg <= 1;
                         DontMove <= 1;
+                        MoveOnNotZero <= 0;
                         Jump <= 0;
+                        Lb <= 0;
                     end
                     else if (Instruction[5:0] == 6'b001010) begin // movz
                         RegWrite <= 1;
                         HiWrite <= 0;
                         LoWrite <= 0;
+                        HiOrLo <= 0;
                         HiToReg <= 0;
                         DontMove <= 0;
                         MoveOnNotZero <= 0;
                         Jump <= 0;
+                        Lb <= 0;
                     end
                     else if (Instruction[5:0] == 6'b001011) begin // movn
                         RegWrite <= 1;
                         HiWrite <= 0;
                         LoWrite <= 0;
+                        HiOrLo <= 0;
                         HiToReg <= 0;
                         DontMove <= 0;
                         MoveOnNotZero <= 1;
                         Jump <= 0;
+                        Lb <= 0;
                     end
                     else if (Instruction[5:0] == 6'b001000) begin // jr
                         RegWrite <= 0;
                         HiWrite <=0;
                         LoWrite <= 0;
+                        HiOrLo <= 0;
+                        HiToReg <= 0;
+                        DontMove <= 0;
+                        MoveOnNotZero <= 1;
                         Jump <= 1;
+                        Lb <= 0;
                     end
                     else begin
                         RegWrite <= 1;
                         HiWrite <= 0;
                         LoWrite <= 0;
+                        HiOrLo <= 0;
                         HiToReg <= 0;
                         DontMove <= 1;
+                        MoveOnNotZero <= 1;
                         Jump <= 0;
+                        Lb <= 0;
                     end
                 end
                 
@@ -165,6 +192,7 @@ module Controller(
                 6'b000101: begin // bne
                     RegWrite <= 0;
                     ALUSrc <= 0;
+                    RegDst <= 0;
                     HiWrite <= 0;
                     LoWrite <= 0;
                     Madd <= 0;
@@ -172,8 +200,15 @@ module Controller(
                     MemWrite <= 0;
                     MemRead <= 0;
                     Branch <= 1;
+                    MemToReg <= 0;
+                    HiOrLo <= 0;
+                    HiToReg <= 0;
+                    DontMove <= 0;
+                    MoveOnNotZero <= 0;
                     Jump <= 0;
                     JumpAndLink <= 0;
+                    Lb <= 0;
+                    LoadExtended <= 0;
                 end
                 
                 6'b001000, // addi
@@ -195,23 +230,33 @@ module Controller(
                     MemRead <= 0;
                     Branch <= 0;
                     MemToReg <= 1;
+                    HiOrLo <= 0;
                     HiToReg <= 0;
                     DontMove <= 1;
-                    LoadExtended <= 0;
+                    MoveOnNotZero <= 0;
                     Jump <= 0;
                     JumpAndLink <= 0;
+                    Lb <= 0;
+                    LoadExtended <= 0;
                 end
                 
                 6'b011100 : begin // madd, msub, mul
                     ALUSrc <= 0;
+                    RegDst <= 1;
                     HiWrite <= 0;
                     LoWrite <= 0;
                     MemWrite <= 0;
                     MemRead <= 0;
                     Branch <= 0;
+                    MemToReg <= 1;
+                    HiOrLo <= 0;
+                    HiToReg <= 0;
                     DontMove <= 1;
+                    MoveOnNotZero <= 0;
                     Jump <= 0;
                     JumpAndLink <= 0;
+                    Lb <= 0;
+                    LoadExtended <= 0;
                     if (Instruction[5:0] == 6'b000000) begin // madd
                        RegWrite <= 0; 
                        Madd <= 1;
@@ -224,12 +269,8 @@ module Controller(
                     end
                     else begin // mul
                         RegWrite <= 1;
-                        RegDst <= 1;
                         Madd <= 0;
                         Msub <= 0;
-                        MemToReg <= 1;
-                        HiToReg <= 0;
-                        LoadExtended <= 0;
                     end
                 end
                 
@@ -245,10 +286,13 @@ module Controller(
                     MemRead <= 0;
                     Branch <= 0;
                     MemToReg <= 1;
+                    HiOrLo <= 0;
                     HiToReg <= 0;
                     DontMove <= 1;
+                    MoveOnNotZero <= 0;
                     Jump <= 0;
                     JumpAndLink <= 0;
+                    Lb <= 0;
                     LoadExtended <= 0;
                 end
                 
@@ -266,19 +310,22 @@ module Controller(
                     MemRead <= 1;
                     Branch <= 0;
                     MemToReg <= 0;
+                    HiOrLo <= 0;
                     HiToReg <= 0;
                     DontMove <= 1;
+                    MoveOnNotZero <= 0;
                     Jump <= 0;
                     JumpAndLink <= 0;
                     if (Instruction[31:26] == 6'b100000) begin // lb
-                        LoadExtended <= 1;
                         Lb <= 1;
-                    end
-                    if (Instruction[31:26] == 6'b100001) begin // lh
                         LoadExtended <= 1;
-                        Lb <= 0; 
                     end
-                    if (Instruction[31:26] == 6'b100011) begin // lw
+                    else if (Instruction[31:26] == 6'b100001) begin // lh
+                        Lb <= 0; 
+                        LoadExtended <= 1;
+                    end
+                    else begin // if (Instruction[31:26] == 6'b100011) begin // lw
+                        Lb <= 0;
                         LoadExtended <= 0;
                     end
                 end
@@ -288,6 +335,7 @@ module Controller(
                 6'b101011 : begin // sw
                     RegWrite <= 0;
                     ALUSrc <= 1;
+                    RegDst <= 0;
                     HiWrite <= 0;
                     LoWrite <= 0;
                     Madd <= 0;
@@ -295,24 +343,62 @@ module Controller(
                     MemWrite <= 1;
                     MemRead <= 0;
                     Branch <= 0;
+                    MemToReg <= 0;
+                    HiOrLo <= 0;
+                    HiToReg <= 0;
+                    DontMove <= 0;
+                    MoveOnNotZero <= 0;
                     Jump <= 0;
                     JumpAndLink <= 0;
+                    Lb <= 0;
+                    LoadExtended <= 0;
                 end
                 
                 6'b000011, // jal
                 6'b000010 : begin // j
                     RegWrite <= 0;
+                    ALUSrc <= 0;
+                    RegDst <= 0;
                     HiWrite <= 0;
                     LoWrite <= 0;
                     Madd <= 0;
                     Msub <= 0;
                     MemWrite <= 0;
+                    MemRead <= 0;
                     Branch <= 0;
+                    MemToReg <= 0;
+                    HiOrLo <= 0;
+                    HiToReg <= 0;
+                    DontMove <= 0;
+                    MoveOnNotZero <= 0;
                     Jump <= 1;
+                    Lb <= 0;
+                    LoadExtended <= 0;
                     if (Instruction[31:26] == 6'b000010) // j
                         JumpAndLink <= 0;
                     else // jal
                         JumpAndLink <= 1;
+                end
+                default : begin
+                    RegWrite <= 0;
+                    ALUSrc <= 0;
+                    RegDst <= 0;
+                    Msub <= 0;
+                    Madd <= 0;
+                    HiWrite <= 0;
+                    LoWrite <= 0;
+                    MemWrite <= 0;
+                    MemRead <= 0;
+                    Branch <= 0;
+                    MemToReg <= 0;
+                    HiOrLo <= 0;
+                    HiToReg <= 0;
+                    DontMove <= 1;
+                    MoveOnNotZero <= 0;
+                    Jump <= 0;
+                    JumpAndLink <= 0;
+                    Lb <= 0;
+                    LoadExtended <= 0;
                 end
             endcase
         end
