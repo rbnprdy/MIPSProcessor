@@ -45,28 +45,43 @@ module DataMemory(Address, WriteData, Clk, MemWrite, MemRead, ReadData);
     input MemWrite; 		// Control signal for memory write 
     input MemRead; 			// Control signal for memory read 
     
-    reg [31:0] memory [0:2**MEMORY_SIZE]; //memory array
+    //reg [31:0] memory [0:2**MEMORY_SIZE]; //memory array
+    reg [31:0] memory [0:1024];
     
     output reg[31:0] ReadData; // Contents of memory location at Address
     
     // setup initial memory
     initial begin
-        memory[0] = 32'd0;
-        memory[1] = 32'd1;
-        memory[2] = 32'd2;
-        memory[3] = 32'd3;
-        memory[4] = 32'd4;
-        memory[5] = -32'd1;
+//        memory[0] = 32'd0;
+//        memory[1] = 32'd1;
+//        memory[2] = 32'd2;
+//        memory[3] = 32'd3;
+//        memory[4] = 32'd4;
+//        memory[5] = -32'd1;
+        memory[0] = 32'd100;
+        memory[1] = 32'd200;
+        memory[2] = 32'd300;
+        memory[3] = 32'd400;
+        memory[4] = 32'd500;
+        memory[5] = 32'd600;
+        memory[6] = 32'd700;
+        memory[7] = 32'd800;
+        memory[8] = 32'd900;
+        memory[9] = 32'd1000;
+        memory[10] = 32'd1100;
+        memory[11] = 32'd1200;
     end
 
     always @(posedge Clk) begin
         if (MemWrite == 1)
-            memory[Address[MEMORY_SIZE+1:2]] <= WriteData;
+            //memory[Address[MEMORY_SIZE+1:2]] <= WriteData;
+            memory[Address[11:2]] <= WriteData;
     end
     
     always @(*) begin
         if (MemRead == 1)
-            ReadData <= memory[Address[MEMORY_SIZE+1:2]];
+            //ReadData <= memory[Address[MEMORY_SIZE+1:2]];
+            ReadData <= memory[Address[11:2]];
         else
             ReadData <= 32'b0;
     end

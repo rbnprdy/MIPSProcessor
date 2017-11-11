@@ -45,8 +45,9 @@ module InstructionMemory(Address, Instruction);
     reg [31:0] memory [0:395]; // memory is an array with 9 32 bit numbers ([lsb:msb] is convention for words)
     
     initial begin
+        $readmemh("Instruction_memory.txt", memory); // place "Instruction_memory.txt" in PROJECT_NAME.sim\sim_1\behav\xsim
         // Testbench 1 memory
- /*       memory[0] = 32'b00100000000100000000000000000001;
+/*        memory[0] = 32'b00100000000100000000000000000001;
         memory[1] = 32'b00000000000000000000000000000000;
         memory[2] = 32'b00000000000000000000000000000000;
         memory[3] = 32'b00000000000000000000000000000000;
@@ -442,9 +443,9 @@ module InstructionMemory(Address, Instruction);
         memory[393] = 32'b00000000000000000000000000000000;
         memory[394] = 32'b00000000000000000000000000000000;
         memory[395] = 32'b00000000000000000000000000000000;
-*/ 
+*/
        
-        memory[0] = 32'b00110100000001000000000000000000;	//	main:		ori	$a0, $zero, 0
+/*        memory[0] = 32'b00110100000001000000000000000000;	//	main:		ori	$a0, $zero, 0
         memory[1] = 32'b00000000000000000000000000000000;	//			nop
         memory[2] = 32'b00000000000000000000000000000000;	//			nop
         memory[3] = 32'b00000000000000000000000000000000;	//			nop
@@ -782,7 +783,7 @@ module InstructionMemory(Address, Instruction);
         memory[335] = 32'b00000000000000000000000000000000;	//			nop
         memory[336] = 32'b00000000000000000000000000000000;	//			nop
         memory[337] = 32'b00000000000000000000000000000000;	//			nop
-        
+*/      
     end
     
     always @(Address) begin

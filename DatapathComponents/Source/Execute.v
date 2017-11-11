@@ -35,6 +35,11 @@ module Execute(
         LoWrite, 
         Madd, 
         Msub, 
+        // Forwarding Inputs
+        ForwardA,
+        ForwardB,
+        ForwardData_Mem,
+        ForwardData_Wb,
         // Outputs
         ReadDataHi,
         ReadDataLo,
@@ -43,17 +48,16 @@ module Execute(
         Zero,
         WriteRegister
 );
-    input [31:0] ReadData1, ReadData2, Instruction, Instruction_15_0_Extended, PCAddResult;
+    input [31:0] ReadData1, ReadData2, Instruction, Instruction_15_0_Extended, PCAddResult, ForwardData_Mem, ForwardData_Wb;
+    input [1:0] ForwardA, ForwardB;
     input Clk, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub;
     
     output [31:0] ReadDataHi, ReadDataLo, PCAddResultOut, ALUResult;
     output [4:0] WriteRegister;
     output Zero;
     
-    wire [31:0] ALUInputB;
-    wire [4:0] ALUOp;
-    wire [31:0] ALUHiResult;
-    wire [31:0] Instruction_15_0_Shifted;
+    wire [31:0] ForwardBInput, ALUInputA, ALUInputB, ALUHiResult, Instruction_15_0_Shifted;
+    wire [4:0] ALUOp; 
     
     Mux5Bit2To1 RegDstMux(
         .out(WriteRegister),
@@ -63,10 +67,26 @@ module Execute(
     );
         
     Mux32Bit2To1 ALUSrcMux(
-        .out(ALUInputB),
+        .out(ForwardBInput),
         .inA(ReadData2),
         .inB(Instruction_15_0_Extended),
         .sel(ALUSrc)
+    );
+    
+    Mux32Bit3To1 ForwardAMux(
+        .out(ALUInputA),
+        .inA(ReadData1),
+        .inB(ForwardData_Wb),
+        .inC(ForwardData_Mem),
+        .sel(ForwardA)
+    );
+    
+    Mux32Bit3To1 ForwardBMux(
+        .out(ALUInputB),
+        .inA(ForwardBInput),
+        .inB(ForwardData_Wb),
+        .inC(ForwardData_Mem),
+        .sel(ForwardB)
     );
     
     ALUController ALUC(
@@ -77,7 +97,7 @@ module Execute(
     
     ALU32Bit ALU(
         .ALUControl(ALUOp),
-        .A(ReadData1),
+        .A(ALUInputA),
         .B(ALUInputB),
         .ShiftAmount(Instruction[10:6]),
         .ALUResult(ALUResult),
