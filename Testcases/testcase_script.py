@@ -58,6 +58,8 @@ def main():
     searching = False
     searchName = "main"
 
+    test_num = 1
+
     for line in f:
         if (not searching) or (len(line.strip().split(":")) > 0 and line.strip().split(":")[0] == searchName):
             searching = False
@@ -82,6 +84,7 @@ def main():
                     elif len(l) > 1:
                         l2 = l[1].split("=")
                         if len(l2) == 2:
+                            out_f.write("tests = tests + 1; // Test #{}\n".format(test_num))
                             value = l2[1]
                             # Hex
                             if len(value.split("x")) == 2:
@@ -89,20 +92,20 @@ def main():
                                 out_f.write("#5 if (WriteData == 32'h{})\n".format(value_stripped))
                                 out_f.write("\tpassed = passed + 1;\n")
                                 out_f.write("else\n")
-                                out_f.write("\t$display(\"Failed: {}. Exceptect WriteData: {}. Actual WriteData: %h\", WriteData);\n".format(l[0].strip(), value_stripped))
+                                out_f.write("\t$display(\"Time: %0d. Failed Test #{}: {}. Exceptect WriteData: {}. Actual WriteData: %h\", $time, WriteData);\n".format(test_num, l[0].strip(), value_stripped))
                             # Decimal
                             else:
                                 value_stripped = value.strip()
                                 out_f.write("#5 if (WriteData == 32'd{})\n".format(value_stripped))
                                 out_f.write("\tpassed = passed + 1;\n")
                                 out_f.write("else\n")
-                                out_f.write("\t$display(\"Failed: {}. Exceptect WriteData: {}. Actual WriteData: %d\", WriteData);\n".format(l[0].strip(), value_stripped))
-
+                                out_f.write("\t$display(\"Time: %0d. Failed Test #{}: {}. Exceptect WriteData: {}. Actual WriteData: %d\", $time, WriteData);\n".format(test_num, l[0].strip(), value_stripped))
+                            test_num += 1
     out_f.write("\n// Report results\n")
     out_f.write("if (passed == tests)\n")
     out_f.write("\t$display(\"All tests passed.\");\n")
     out_f.write("else\n")
-    out_f.write("\t$display(\"%4d out of %4d tests passed.\", passed, tests);\n")
+    out_f.write("\t$display(\"%3d out of %3d tests passed.\", passed, tests);\n")
     out_f.write("$display(\"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\\n\\n\");\n")
             
     f.close()
