@@ -43,144 +43,7 @@ module TopLevel_tb_Forwarding();
     end
     
     initial begin
- /*       tests <= 0;
-        passed <= 0;
-        Rst <= 1;
-        
-        $display("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        $display("Starting Unit Tests.");
-        
-        @(negedge Clk);
-        @(negedge Clk);
-        Rst <= 0;
-        @(negedge Clk);
-        @(negedge Clk);
-        
-        // la $s2, asize0
-        tests = tests + 1;
-        @(negedge Clk) #5;
-        if (WriteData == 32'd0)
-            passed = passed + 1;
-        else
-            $display("Failed: la $s2, asize0.");
-        
-        // lw $s2, 0($s2)
-        tests = tests + 1;
-        @(negedge Clk) #5;
-        if (WriteData == 32'h64)
-            passed = passed + 1;
-        else
-            $display("Failed: lw $s2, 0($s2): %d", WriteData);
-        
-        // la $s3, asize0
-        tests = tests + 1;
-        @(negedge Clk) #5;
-        if (WriteData == 32'd0)
-            passed = passed + 1;
-        else
-            $display("Failed: la $s3, asize0");
-        
-        // lw $s3, 4($s3)
-        tests = tests + 1;
-        @(negedge Clk) #5;
-        if (WriteData == 32'hc8)
-            passed = passed + 1;
-        else    
-            $display("Failed: lw $s3, 4($s3)");
-            
-        //// Read After Write ////
-            
-        // add $s1, $s2, $s3
-        tests = tests + 1;
-        @(negedge Clk) #5;
-        if (WriteData == 32'h12c)
-            passed = passed + 1;
-        else
-            $display("Failed: add $s1, $s2, $s3");
-            
-        // sub $s4, $s1, $s3
-        tests = tests + 1;
-        @(negedge Clk) #5;
-        if (WriteData == 32'h64)
-            passed = passed + 1;
-        else 
-            $display("Failed: sub $s4, $s1, $s3");
-        
-        // sub $s1, $s1, $s4
-        tests = tests + 1;
-        @(negedge Clk) #5;
-        if (WriteData == 32'hc8)
-            passed = passed + 1;
-        else
-            $display("Failed: sub $s1, $s1, $s4");
-           
-        //// Write After Read ////
-        
-        // sub $s4, $s1, $s3
-        tests = tests + 1;
-        @(negedge Clk) #5;
-        if (WriteData == 32'h0)
-            passed = passed + 1;
-        else
-            $display("Failed: sub $s4, $s1, $s3");
-            
-        // add $s1, $s2, $s3
-        tests = tests + 1;
-        @(negedge Clk) #5;
-        if (WriteData == 32'h12c)
-            passed = passed + 1;
-        else
-            $display("Failed: add $s1, $s2, $s3");
-            
-        // mul $s6, $s1, $s4
-        tests = tests + 1;
-        @(negedge Clk) #5;
-        if (WriteData == 32'h0)
-            passed = passed + 1;
-        else
-            $display("Failed: mul $s6, $s1, $s4");
-            
-        //// Write After Write ////
-            
-        // sub $s1, $s4, $s6
-        tests = tests + 1;
-        @(negedge Clk) #5;
-        if (WriteData == 32'h0)
-            passed = passed + 1;
-        else
-            $display("Failed: sub $s1, $s4, $s6");
-        
-        // add $s1, $s2, $s6
-        tests = tests + 1;
-        @(negedge Clk) #5;
-        if (WriteData == 32'h64)
-            passed = passed + 1;
-        else
-            $display("Failed: add $s1, $s2, $s6");
-        
-        // ori $s1, $s1, 0xaaaa
-        tests = tests + 1;
-        @(negedge Clk) #5;
-        if (WriteData == 32'haaee)
-            passed = passed + 1;
-        else
-            $display("Failed: ori $s1, $s1, 0xaaaa");
-            
-        // sll $s1, $s1, 10
-        tests = tests + 1;
-        @(negedge Clk) #5;
-        if (WriteData == 32'h2abb800)
-            passed = passed + 1;
-        else
-            $display("Failed: sll $s1, $s1, 10");
-        
-        // Report results
-        if (passed == tests)
-            $display("All tests passed.");
-        else
-            $display("%2d out of %2d tests passed.", passed, tests);
-        $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n");
-*/
+    
         tests <= 0;
         passed <= 0;
         Rst <= 1;
@@ -192,6 +55,9 @@ module TopLevel_tb_Forwarding();
         @(negedge Clk);
         Rst <= 0;
         @(negedge Clk);
+        @(negedge Clk);
+        
+        //  needed to add an extra one after implementing the hazard detection unit
         @(negedge Clk);
         
         // main:
@@ -227,6 +93,8 @@ module TopLevel_tb_Forwarding();
         
         //// Read After Write(RAW) case 1 ////
         
+        // Extra Clk for hazard
+        @(negedge Clk);
         // add $s1, $s2, $s3		
         @(negedge Clk);
         tests = tests + 1; // Test #4
@@ -351,6 +219,8 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #17: lw $s1, 0($s2). Exceptect WriteData: 2bc. Actual WriteData: %h", $time, WriteData);
         
+        // Extra Clk for stall
+        @(negedge Clk);
         // sub $s4, $s1, $s5		
         @(negedge Clk);
         tests = tests + 1; // Test #18
@@ -520,7 +390,7 @@ module TopLevel_tb_Forwarding();
         // j       start               
         @(negedge Clk);
         
-        // main:
+        // start:
         
         // lw      $s0, 4($a0)
         @(negedge Clk);
@@ -528,7 +398,7 @@ module TopLevel_tb_Forwarding();
         // sw      $s0, 0($a0)
         @(negedge Clk);
         
-        // main:
+        // branch1:
         
         // bgez    $s0, branch2
         @(negedge Clk);
@@ -542,7 +412,7 @@ module TopLevel_tb_Forwarding();
         // j       error
         @(negedge Clk);
         
-        // main:
+        // error:
         
         // j error
         @(negedge Clk);

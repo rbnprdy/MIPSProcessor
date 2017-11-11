@@ -71,9 +71,13 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     // Forwarding Outputs
     wire [1:0] ForwardA, ForwardB;
     
+    // Hazard Detection Outputs
+    wire PCWrite, IF_ID_Write, FlushControl;
+    
     InstructionFetchUnit IF(
         .Instruction(Instruction_IF),
         .PCResult(PCValue), 
+        .PCWrite(PCWrite),
         .PCAddResult(PCAddResult_IF),
         .Branch(Branch_IF),
         .BranchAddress(AddResult_MEM),
@@ -87,6 +91,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .Clk(Clk),
         .PCAddIn(PCAddResult_IF),
         .InstructionIn(Instruction_IF),
+        .WriteEn(IF_ID_Write),
         .PCAddOut(PCAdd_IF_ID),
         .InstructionOut(Instruction_ID)
     );
@@ -100,6 +105,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .WriteData(WriteData),
         .RegWriteIn(RegWrite_In_ID),
         .Move(Move_ID),
+        // Hazard Detection Signal
+        .FlushControl(FlushControl),
         // Outputs
         .ReadData1(ReadData1_ID),
         .ReadData2(ReadData2_ID),
@@ -318,8 +325,20 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ALUSrc(ALUSrc_EX),
         .RegWrite_Mem(RegWrite_MEM),
         .RegWrite_Wb(RegWrite_In_ID),
+        // Outputs
         .ForwardA(ForwardA),
         .ForwardB(ForwardB)
+    );
+    
+    HazardDetectionUnit HDU(
+        // Inputs
+        .Rs_ID(Instruction_ID[25:21]),
+        .Rt_ID(Instruction_ID[20:16]),
+        .Rt_EX(Instruction_EX[20:16]),
+        .MemRead_EX(MemRead_EX),
+        .PCWrite(PCWrite),
+        .IF_ID_Write(IF_ID_Write),
+        .FlushControl(FlushControl)
     );
                 
 endmodule

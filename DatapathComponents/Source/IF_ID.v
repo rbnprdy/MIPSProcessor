@@ -20,16 +20,30 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module IF_ID(Clk, PCAddIn, InstructionIn, PCAddOut, InstructionOut);
+module IF_ID(Clk, PCAddIn, InstructionIn, WriteEn, PCAddOut, InstructionOut);
     
     input [31:0] PCAddIn, InstructionIn;
-    input Clk;
+    input Clk, WriteEn;
+    
+    reg [31:0] PCAddReg, InstructionReg;
     
     output reg [31:0] PCAddOut, InstructionOut;
     
+    initial begin
+        PCAddReg <= 32'd0;
+        InstructionReg <= 32'd0;
+    end
+    
+    always @(posedge Clk) begin
+        if (WriteEn != 0) begin
+            PCAddReg <= PCAddIn;
+            InstructionReg <= InstructionIn;
+        end
+    end
+    
     always @(negedge Clk) begin
-        PCAddOut <= PCAddIn;
-        InstructionOut <= InstructionIn;
+        PCAddOut <= PCAddReg;
+        InstructionOut <= InstructionReg;
     end
 
 
