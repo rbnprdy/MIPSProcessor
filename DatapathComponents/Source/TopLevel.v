@@ -66,10 +66,11 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     //MEM_WB Outputs
     wire [31:0] ReadHi_WB, ReadLo_WB, ALUResult_WB, ReadData_WB;
     wire [4:0] WriteAddress_WB;
-    wire Zero_WB, RegWrite_WB, MoveOnNotZero_WB, HiOrLo_WB, DontMove_WB, MemToReg_WB, HiLoToReg_WB, Lb_WB, LoadExtended_WB;
+    wire Zero_WB, RegWrite_WB, MoveOnNotZero_WB, HiOrLo_WB, DontMove_WB, MemToReg_WB, HiLoToReg_WB, Lb_WB, LoadExtended_WB, MemRead_WB;
     
     // Forwarding Outputs
     wire [1:0] ForwardA, ForwardB;
+    wire ForwardC, ForwardD;
     
     // Hazard Detection Outputs
     wire PCWrite, IF_ID_Write, FlushControl;
@@ -255,6 +256,9 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .Zero(Zero_MEM),
         .MemoryAddress(ALUResult_MEM),
         .MemoryWriteData(ReadData2_MEM),
+        // Forwarding Signals
+        .ForwardD(ForwardD),  
+        .WriteDataD(WriteData),
         // Control Signals
         .MemWrite(MemWrite_MEM), 
         .MemRead(MemRead_MEM), 
@@ -280,6 +284,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ReadDataIn(ReadData_MEM),
         .LbIn(Lb_MEM),
         .LoadExtendedIn(LoadExtended_MEM),
+        .MemReadIn(MemRead_MEM),
         .RegWriteOut(RegWrite_In_ID),
         .MoveNotZeroOut(MoveOnNotZero_WB),
         .DontMoveOut(DontMove_WB),
@@ -293,7 +298,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .WriteAddressOut(WriteRegister_ID),
         .ReadDataOut(ReadData_WB),
         .LbOut(Lb_WB),
-        .LoadExtendedOut(LoadExtended_WB)
+        .LoadExtendedOut(LoadExtended_WB),
+        .MemReadOut(MemRead_WB)
     );
     
     WriteBack WB(
@@ -323,11 +329,16 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .Rd_Mem(WriteAddress_MEM),
         .Rd_Wb(WriteRegister_ID),
         .ALUSrc(ALUSrc_EX),
+        .MemWrite_Ex(MemWrite_EX),
         .RegWrite_Mem(RegWrite_MEM),
+        .MemWrite_Mem(MemWrite_MEM),
+        .MemRead_Wb(MemRead_WB),
         .RegWrite_Wb(RegWrite_In_ID),
         // Outputs
         .ForwardA(ForwardA),
-        .ForwardB(ForwardB)
+        .ForwardB(ForwardB),
+        .ForwardC(ForwardC),
+        .ForwardD(ForwardD)
     );
     
     HazardDetectionUnit HDU(
@@ -335,6 +346,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .Rs_ID(Instruction_ID[25:21]),
         .Rt_ID(Instruction_ID[20:16]),
         .Rt_EX(Instruction_EX[20:16]),
+        .Instruction_31_26(Instruction_ID[31:26]),
         .MemRead_EX(MemRead_EX),
         .PCWrite(PCWrite),
         .IF_ID_Write(IF_ID_Write),

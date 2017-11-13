@@ -131,7 +131,7 @@ module InstructionDecode(
     );
     
     Controller C(
-        .Instruction(Instruction),  
+        .Instruction(FlushControllerOut),  
         .RegWrite(RegWrite), 
         .ALUSrc(ALUSrc), 
         .RegDst(RegDst),

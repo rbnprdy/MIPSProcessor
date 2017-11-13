@@ -25,6 +25,9 @@ module Memory(
         Zero,
         MemoryAddress,
         MemoryWriteData,
+        // Forwarding Signals
+        ForwardD,
+        WriteDataD,
         // Control Signals
         MemWrite, 
         MemRead, 
@@ -33,15 +36,24 @@ module Memory(
         MemoryReadData,
         BranchOut
 );
-    input Clk, Zero, MemWrite, MemRead, Branch;
-    input [31:0] MemoryAddress, MemoryWriteData;
+    input Clk, Zero, ForwardD, MemWrite, MemRead, Branch;
+    input [31:0] MemoryAddress, MemoryWriteData, WriteDataD;
     
     output [31:0] MemoryReadData;
     output BranchOut;
     
+    wire [31:0] ForwardDMuxOut;
+    
+    Mux32Bit2To1 ForwardDMux(
+        .out(ForwardDMuxOut),
+        .inA(MemoryWriteData),
+        .inB(WriteDataD),
+        .sel(ForwardD)
+    );
+    
     DataMemory Memory(
         .Address(MemoryAddress),
-        .WriteData(MemoryWriteData),
+        .WriteData(ForwardDMuxOut),
         .Clk(Clk),
         .MemWrite(MemWrite),
         .MemRead(MemRead),

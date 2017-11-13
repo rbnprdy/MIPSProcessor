@@ -68,19 +68,36 @@ def main():
                 continue
             # Check if this is a comment
             elif line.strip()[0] == "#":
-                out_f.write("\n\n//// {} ////\n".format(line[1:].strip()))
+                # If this is a stall, add a clock cycle
+                if line[1:].strip().lower() == "stall":
+                    out_f.write("\n// Stalling. \n")
+                    out_f.write("@(negedge Clk);\n")
+                # Otherwise, just copy the comment over.
+                else:
+                    out_f.write("\n\n//// {} ////\n".format(line[1:].strip()))
+            # Check if this is a branch label
             elif ":" in line:
-                out_f.write("\n// main:\n")
+                out_f.write("\n// {}\n".format(line.strip()))
+            # This is an instruction
             else:
                 l = line.strip().split("#")
                 if len(l) > 0:
                     out_f.write("\n// {}\n".format(l[0]))
                     out_f.write("@(negedge Clk);\n")
+                    # This is a jump
                     if l[0][0] == "j":
                         instr = l[0].strip().split()
                         if len(instr) == 2:
                             searching = True
                             searchName = instr[1].strip()
+                    # This is a conditional branch
+                    elif l[0][0] == "b":
+                        if len(l) == 2:
+                            if l[1].strip() == "taken":
+                                searching = True
+                                searchName = l[0].strip().split()[-1]
+                            
+                    # This is not a branch
                     elif len(l) > 1:
                         l2 = l[1].split("=")
                         if len(l2) == 2:
@@ -101,6 +118,7 @@ def main():
                                 out_f.write("else\n")
                                 out_f.write("\t$display(\"Time: %0d. Failed Test #{}: {}. Exceptect WriteData: {}. Actual WriteData: %d\", $time, WriteData);\n".format(test_num, l[0].strip(), value_stripped))
                             test_num += 1
+
     out_f.write("\n// Report results\n")
     out_f.write("if (passed == tests)\n")
     out_f.write("\t$display(\"All tests passed.\");\n")

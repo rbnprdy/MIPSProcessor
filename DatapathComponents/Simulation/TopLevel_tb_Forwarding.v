@@ -43,7 +43,6 @@ module TopLevel_tb_Forwarding();
     end
     
     initial begin
-    
         tests <= 0;
         passed <= 0;
         Rst <= 1;
@@ -57,13 +56,12 @@ module TopLevel_tb_Forwarding();
         @(negedge Clk);
         @(negedge Clk);
         
-        //  needed to add an extra one after implementing the hazard detection unit
-        @(negedge Clk);
-        
         // main:
         
+        // Had to add this after implementing hazard detection.
+        @(negedge Clk);
         
-        // la $s2, asize0		
+        // la $s2, asize0        
         @(negedge Clk);
         tests = tests + 1; // Test #1
         #5 if (WriteData == 32'h00000000)
@@ -71,7 +69,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #1: la $s2, asize0. Exceptect WriteData: 00000000. Actual WriteData: %h", $time, WriteData);
         
-        // lw $s2, 0($s2)		
+        // lw $s2, 0($s2)        
         @(negedge Clk);
         tests = tests + 1; // Test #2
         #5 if (WriteData == 32'h64)
@@ -82,7 +80,7 @@ module TopLevel_tb_Forwarding();
         // la $s3, asize0
         @(negedge Clk);
         
-        // lw $s3, 4($s3)		
+        // lw $s3, 4($s3)        
         @(negedge Clk);
         tests = tests + 1; // Test #3
         #5 if (WriteData == 32'hc8)
@@ -93,9 +91,10 @@ module TopLevel_tb_Forwarding();
         
         //// Read After Write(RAW) case 1 ////
         
-        // Extra Clk for hazard
+        // Stalling. 
         @(negedge Clk);
-        // add $s1, $s2, $s3		
+        
+        // add $s1, $s2, $s3        
         @(negedge Clk);
         tests = tests + 1; // Test #4
         #5 if (WriteData == 32'h12c)
@@ -103,7 +102,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #4: add $s1, $s2, $s3. Exceptect WriteData: 12c. Actual WriteData: %h", $time, WriteData);
         
-        // sub $s4, $s1, $s3		
+        // sub $s4, $s1, $s3        
         @(negedge Clk);
         tests = tests + 1; // Test #5
         #5 if (WriteData == 32'h64)
@@ -111,7 +110,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #5: sub $s4, $s1, $s3. Exceptect WriteData: 64. Actual WriteData: %h", $time, WriteData);
         
-        // sub $s1, $s1, $s4		
+        // sub $s1, $s1, $s4        
         @(negedge Clk);
         tests = tests + 1; // Test #6
         #5 if (WriteData == 32'hc8)
@@ -119,7 +118,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #6: sub $s1, $s1, $s4. Exceptect WriteData: c8. Actual WriteData: %h", $time, WriteData);
         
-        // mul $s4, $s1, $s3		
+        // mul $s4, $s1, $s3        
         @(negedge Clk);
         tests = tests + 1; // Test #7
         #5 if (WriteData == 32'h9c40)
@@ -130,7 +129,7 @@ module TopLevel_tb_Forwarding();
         
         //// Write after read case 2 ////
         
-        // sub $s4, $s1, $s3		
+        // sub $s4, $s1, $s3        
         @(negedge Clk);
         tests = tests + 1; // Test #8
         #5 if (WriteData == 32'h0)
@@ -138,7 +137,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #8: sub $s4, $s1, $s3. Exceptect WriteData: 0. Actual WriteData: %h", $time, WriteData);
         
-        // add $s1, $s2,$s3		
+        // add $s1, $s2,$s3        
         @(negedge Clk);
         tests = tests + 1; // Test #9
         #5 if (WriteData == 32'h12c)
@@ -146,7 +145,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #9: add $s1, $s2,$s3. Exceptect WriteData: 12c. Actual WriteData: %h", $time, WriteData);
         
-        // mul $s6, $s1, $s4		
+        // mul $s6, $s1, $s4        
         @(negedge Clk);
         tests = tests + 1; // Test #10
         #5 if (WriteData == 32'h0)
@@ -157,7 +156,7 @@ module TopLevel_tb_Forwarding();
         
         //// write after write case 3 ////
         
-        // sub $s1, $s4, $s6		
+        // sub $s1, $s4, $s6        
         @(negedge Clk);
         tests = tests + 1; // Test #11
         #5 if (WriteData == 32'h0)
@@ -165,7 +164,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #11: sub $s1, $s4, $s6. Exceptect WriteData: 0. Actual WriteData: %h", $time, WriteData);
         
-        // add $s1, $s2, $s6		
+        // add $s1, $s2, $s6        
         @(negedge Clk);
         tests = tests + 1; // Test #12
         #5 if (WriteData == 32'h64)
@@ -173,7 +172,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #12: add $s1, $s2, $s6. Exceptect WriteData: 64. Actual WriteData: %h", $time, WriteData);
         
-        // ori $s1, $s1, 0xaaaa	
+        // ori $s1, $s1, 0xaaaa    
         @(negedge Clk);
         tests = tests + 1; // Test #13
         #5 if (WriteData == 32'haaee)
@@ -181,7 +180,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #13: ori $s1, $s1, 0xaaaa. Exceptect WriteData: aaee. Actual WriteData: %h", $time, WriteData);
         
-        // sll $s1, $s1, 10		
+        // sll $s1, $s1, 10        
         @(negedge Clk);
         tests = tests + 1; // Test #14
         #5 if (WriteData == 32'h2abb800)
@@ -192,7 +191,7 @@ module TopLevel_tb_Forwarding();
         
         //// Stall case 4 ////
         
-        // addi $s5, $s1, 0		
+        // addi $s5, $s1, 0        
         @(negedge Clk);
         tests = tests + 1; // Test #15
         #5 if (WriteData == 32'h2abb800)
@@ -200,7 +199,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #15: addi $s5, $s1, 0. Exceptect WriteData: 2abb800. Actual WriteData: %h", $time, WriteData);
         
-        // addi $s7, $s5, 0		
+        // addi $s7, $s5, 0        
         @(negedge Clk);
         tests = tests + 1; // Test #16
         #5 if (WriteData == 32'h2abb800)
@@ -208,10 +207,10 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #16: addi $s7, $s5, 0. Exceptect WriteData: 2abb800. Actual WriteData: %h", $time, WriteData);
         
-        // la $s2, asize1			
+        // la $s2, asize1            
         @(negedge Clk);
         
-        // lw $s1, 0($s2)			
+        // lw $s1, 0($s2)            
         @(negedge Clk);
         tests = tests + 1; // Test #17
         #5 if (WriteData == 32'h2bc)
@@ -219,9 +218,10 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #17: lw $s1, 0($s2). Exceptect WriteData: 2bc. Actual WriteData: %h", $time, WriteData);
         
-        // Extra Clk for stall
+        // Stalling. 
         @(negedge Clk);
-        // sub $s4, $s1, $s5		
+        
+        // sub $s4, $s1, $s5        
         @(negedge Clk);
         tests = tests + 1; // Test #18
         #5 if (WriteData == 32'hfd544abc)
@@ -229,7 +229,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #18: sub $s4, $s1, $s5. Exceptect WriteData: fd544abc. Actual WriteData: %h", $time, WriteData);
         
-        // and $s6, $s1, $s7		
+        // and $s6, $s1, $s7        
         @(negedge Clk);
         tests = tests + 1; // Test #19
         #5 if (WriteData == 32'h0)
@@ -237,7 +237,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #19: and $s6, $s1, $s7. Exceptect WriteData: 0. Actual WriteData: %h", $time, WriteData);
         
-        // or $s7, $s1, $s6		
+        // or $s7, $s1, $s6        
         @(negedge Clk);
         tests = tests + 1; // Test #20
         #5 if (WriteData == 32'h2bc)
@@ -248,7 +248,7 @@ module TopLevel_tb_Forwarding();
         
         //// text book example case 5 ////
         
-        // sub $s2, $s1, $s3		
+        // sub $s2, $s1, $s3        
         @(negedge Clk);
         tests = tests + 1; // Test #21
         #5 if (WriteData == 32'h1f4)
@@ -256,7 +256,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #21: sub $s2, $s1, $s3. Exceptect WriteData: 1f4. Actual WriteData: %h", $time, WriteData);
         
-        // and $t0, $s2, $s5		
+        // and $t0, $s2, $s5        
         @(negedge Clk);
         tests = tests + 1; // Test #22
         #5 if (WriteData == 32'h0)
@@ -264,7 +264,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #22: and $t0, $s2, $s5. Exceptect WriteData: 0. Actual WriteData: %h", $time, WriteData);
         
-        // or $t1, $s6, $s2		
+        // or $t1, $s6, $s2        
         @(negedge Clk);
         tests = tests + 1; // Test #23
         #5 if (WriteData == 32'h1f4)
@@ -272,7 +272,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #23: or $t1, $s6, $s2. Exceptect WriteData: 1f4. Actual WriteData: %h", $time, WriteData);
         
-        // add $t2, $s2, $s2		
+        // add $t2, $s2, $s2        
         @(negedge Clk);
         tests = tests + 1; // Test #24
         #5 if (WriteData == 32'h3e8)
@@ -280,13 +280,13 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #24: add $t2, $s2, $s2. Exceptect WriteData: 3e8. Actual WriteData: %h", $time, WriteData);
         
-        // la $s1 , asize0			
+        // la $s1 , asize0            
         @(negedge Clk);
         
-        // sw $t1, 4($s1)			
+        // sw $t1, 4($s1)            
         @(negedge Clk);
         
-        // lw $t2, 4($s1)			
+        // lw $t2, 4($s1)            
         @(negedge Clk);
         tests = tests + 1; // Test #25
         #5 if (WriteData == 32'h1f4)
@@ -303,7 +303,7 @@ module TopLevel_tb_Forwarding();
         #5 if (WriteData == 32'hffffff38)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #26: sub   $s2,    $s1,   $s3. Exceptect WriteData: ffffff38. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #26: sub   $s2,    $s1,   $s3. Exceptect WriteData: ffffff38. Actual WriteData: %h", $time, WriteData);
         
         // or    $t3,  $s2,   $s5        
         @(negedge Clk);
@@ -311,7 +311,7 @@ module TopLevel_tb_Forwarding();
         #5 if (WriteData == 32'hffffff38)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #27: or    $t3,  $s2,   $s5. Exceptect WriteData: ffffff38. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #27: or    $t3,  $s2,   $s5. Exceptect WriteData: ffffff38. Actual WriteData: %h", $time, WriteData);
         
         // add   $t4,  $s2,   $s2        
         @(negedge Clk);
@@ -319,7 +319,7 @@ module TopLevel_tb_Forwarding();
         #5 if (WriteData == 32'hfffffe70)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #28: add   $t4,  $s2,   $s2. Exceptect WriteData: fffffe70. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #28: add   $t4,  $s2,   $s2. Exceptect WriteData: fffffe70. Actual WriteData: %h", $time, WriteData);
         
         // or    $t2, $s2, $s2        
         @(negedge Clk);
@@ -327,7 +327,7 @@ module TopLevel_tb_Forwarding();
         #5 if (WriteData == 32'hffffff38)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #29: or    $t2, $s2, $s2. Exceptect WriteData: ffffff38. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #29: or    $t2, $s2, $s2. Exceptect WriteData: ffffff38. Actual WriteData: %h", $time, WriteData);
         
         // add   $s4,   $s7,    $t2    
         @(negedge Clk);
@@ -335,15 +335,15 @@ module TopLevel_tb_Forwarding();
         #5 if (WriteData == 32'h000001f4)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #30: add   $s4,   $s7,    $t2. Exceptect WriteData: 000001f4. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #30: add   $s4,   $s7,    $t2. Exceptect WriteData: 000001f4. Actual WriteData: %h", $time, WriteData);
         
         
         //// case 7 ////
         
-        // la $t1, asize0				
+        // la $t1, asize0                
         @(negedge Clk);
         
-        // lw $t0, 0($t1)				
+        // lw $t0, 0($t1)                
         @(negedge Clk);
         tests = tests + 1; // Test #31
         #5 if (WriteData == 32'h64)
@@ -351,7 +351,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #31: lw $t0, 0($t1). Exceptect WriteData: 64. Actual WriteData: %h", $time, WriteData);
         
-        // lw $t2, 4($t1)				
+        // lw $t2, 4($t1)                
         @(negedge Clk);
         tests = tests + 1; // Test #32
         #5 if (WriteData == 32'h1f4)
@@ -359,13 +359,13 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #32: lw $t2, 4($t1). Exceptect WriteData: 1f4. Actual WriteData: %h", $time, WriteData);
         
-        // sw $t2, 0($t1)				
+        // sw $t2, 0($t1)                
         @(negedge Clk);
         
-        // sw $t0, 4($t1)				
+        // sw $t0, 4($t1)                
         @(negedge Clk);
         
-        // lw $t0, 0($t1)				
+        // lw $t0, 0($t1)                
         @(negedge Clk);
         tests = tests + 1; // Test #33
         #5 if (WriteData == 32'h1f4)
@@ -373,7 +373,7 @@ module TopLevel_tb_Forwarding();
         else
             $display("Time: %0d. Failed Test #33: lw $t0, 0($t1). Exceptect WriteData: 1f4. Actual WriteData: %h", $time, WriteData);
         
-        // lw $t2, 4($t1)				
+        // lw $t2, 4($t1)                
         @(negedge Clk);
         tests = tests + 1; // Test #34
         #5 if (WriteData == 32'h64)
@@ -384,7 +384,7 @@ module TopLevel_tb_Forwarding();
         
         //// branch  cases 8,9,10 ////
         
-        // la      $a0, asize1			
+        // la      $a0, asize1            
         @(negedge Clk);
         
         // j       start               
@@ -392,29 +392,43 @@ module TopLevel_tb_Forwarding();
         
         // start:
         
-        // lw      $s0, 4($a0)
+        // lw      $s0, 4($a0)    
         @(negedge Clk);
+        tests = tests + 1; // Test #35
+        #5 if (WriteData == 32'h320)
+            passed = passed + 1;
+        else
+            $display("Time: %0d. Failed Test #35: lw      $s0, 4($a0). Exceptect WriteData: 320. Actual WriteData: %h", $time, WriteData);
         
         // sw      $s0, 0($a0)
         @(negedge Clk);
         
         // branch1:
         
-        // bgez    $s0, branch2
+        // bgez    $s0, branch2     
         @(negedge Clk);
         
-        // addi    $s0, $s0, 1
+        // branch2:
+        
+        // addi    $s0, $zero, -1  
+        @(negedge Clk);
+        tests = tests + 1; // Test #36
+        #5 if (WriteData == -32'd1)
+            passed = passed + 1;
+        else
+            $display("Time: %0d. Failed Test #36: addi    $s0, $zero, -1. Exceptect WriteData: -1. Actual WriteData: %d", $time, WriteData);
+        
+        // bltz    $s0, branch3    
         @(negedge Clk);
         
-        // bgez    $s0, branch1
+        // branch3:
+        
+        // bltz    $s0, done        
         @(negedge Clk);
         
-        // j       error
-        @(negedge Clk);
+        // done:
         
-        // error:
-        
-        // j error
+        // j done
         @(negedge Clk);
         
         // Report results
@@ -423,6 +437,5 @@ module TopLevel_tb_Forwarding();
         else
             $display("%3d out of %3d tests passed.", passed, tests);
         $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n");
-
     end
 endmodule
