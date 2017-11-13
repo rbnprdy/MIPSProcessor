@@ -37,9 +37,9 @@
 // which generates a continuous clock pulse into the module.
 ////////////////////////////////////////////////////////////////////////////////
 
-module InstructionFetchUnit(Instruction, PCResult, PCAddResult, Branch, BranchAddress, Jump, JumpAddress, Reset, Clk);
+module InstructionFetchUnit(Instruction, PCResult, PCWrite, PCAddResult, Branch, BranchAddress, Jump, JumpAddress, Reset, Clk);
     
-    input Reset, Clk, Branch, Jump; // Inputs to ProgramCounter
+    input Reset, Clk, PCWrite, Branch, Jump; // Inputs to ProgramCounter
     input [31:0] BranchAddress, JumpAddress;
     output [31:0] Instruction, PCResult, PCAddResult; // Output of InstructionMemory
     
@@ -68,6 +68,7 @@ module InstructionFetchUnit(Instruction, PCResult, PCAddResult, Branch, BranchAd
         
     PCAdder m1(
         .PCResult(PCResult),
+        .WriteEn(PCWrite),
         .PCAddResult(PCAddResult)
     );
     

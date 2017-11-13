@@ -29,6 +29,8 @@ module InstructionDecode(
         WriteData,
         RegWriteIn,
         Move,
+        // Hazard Detection Signal
+        FlushControl,
         // Outputs
         ReadData1,
         ReadData2,
@@ -54,14 +56,14 @@ module InstructionDecode(
         Lb,
         LoadExtended
 );
-    input Clk, RegWriteIn, Move;
+    input Clk, RegWriteIn, Move, FlushControl;
     input [31:0] Instruction, PCResult, WriteData;
     input [4:0] WriteRegister;
     
     output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended, JumpAddress;
     output RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Jump, Lb, LoadExtended;
     
-    wire [31:0] PCAddResult, WriteDataMuxOut;
+    wire [31:0] PCAddResult, WriteDataMuxOut, FlushControllerOut;
     wire [15:0] Instruction_15_0;
     wire [4:0] WriteRegisterMuxOut;
     wire AndOut, OrOut, JumpAndLink;
@@ -121,8 +123,15 @@ module InstructionDecode(
         .out(Instruction_15_0_Extended)
     );
     
+    Mux32Bit2To1 FlushControllerMux(
+        .out(FlushControllerOut),
+        .inA(Instruction),
+        .inB(32'd0),
+        .sel(FlushControl)  
+    );
+    
     Controller C(
-        .Instruction(Instruction),  
+        .Instruction(FlushControllerOut),  
         .RegWrite(RegWrite), 
         .ALUSrc(ALUSrc), 
         .RegDst(RegDst),
