@@ -1,8 +1,8 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Team Members: Ruben Purdy and Kray Althuas 
 // 
+// Percent Effort: 50/50
 // Create Date: 10/15/2017 09:56:14 PM
 // Design Name: 
 // Module Name: TopLevel
@@ -26,7 +26,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     output [31:0] WriteData, PCValue, HiData, LoData;
     
     // InstructionFetch Inputs
-    wire Branch_IF;
+    wire Branch_IF; 
+    wire [31:0] BranchAddress_IF;
     // Instruction Fetch Outputs
     wire [31:0] Instruction_IF;
     wire [31:0] PCAddResult_IF;
@@ -81,7 +82,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .PCWrite(PCWrite),
         .PCAddResult(PCAddResult_IF),
         .Branch(Branch_IF),
-        .BranchAddress(AddResult_MEM),
+        .BranchAddress(BranchAddress_IF),
         .Jump(Jump_ID),
         .JumpAddress(JumpAddress_ID),
         .Reset(Rst),
@@ -123,7 +124,6 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .Msub(Msub_ID), 
         .MemWrite(MemWrite_ID), 
         .MemRead(MemRead_ID), 
-        .Branch(Branch_ID),
         .MemToReg(MemToReg_ID), 
         .HiOrLo(HiOrLo_ID), 
         .HiToReg(HiToReg_ID), 
@@ -131,7 +131,9 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .MoveOnNotZero(MoveOnNotZero_ID),
         .Jump(Jump_ID),
         .Lb(Lb_ID),
-        .LoadExtended(LoadExtended_ID)
+        .LoadExtended(LoadExtended_ID),
+        .BranchOut(Branch_IF),
+        .BranchAddress(BranchAddress_IF)
     );
     
     ID_EX ID_EX_Reg(
@@ -152,7 +154,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .MemToRegIn(MemToReg_ID),
         .HiLoToRegIn(HiToReg_ID),
         .MemWriteIn(MemWrite_ID),
-        .BranchIn(Branch_ID),
+        .BranchIn(1'b0),
         .MemReadIn(MemRead_ID),
         .RegDestIn(RegDst_ID),
         .ALUSrcIn(ALUSrc_ID),
@@ -264,8 +266,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .MemRead(MemRead_MEM), 
         .Branch(Branch_MEM),
         // Outputs
-        .MemoryReadData(ReadData_MEM),
-        .BranchOut(Branch_IF)
+        .MemoryReadData(ReadData_MEM)
+        //.BranchOut(Branch_IF)
     );
     
     MEM_WB MEM_WB_Reg(

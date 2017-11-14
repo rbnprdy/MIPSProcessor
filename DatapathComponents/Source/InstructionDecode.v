@@ -46,7 +46,7 @@ module InstructionDecode(
         Msub, 
         MemWrite, 
         MemRead, 
-        Branch,
+        //Branch,
         MemToReg, 
         HiOrLo, 
         HiToReg, 
@@ -54,22 +54,26 @@ module InstructionDecode(
         MoveOnNotZero,
         Jump,
         Lb,
-        LoadExtended
+        LoadExtended,
+        // BranchOutput
+        BranchOut,
+        BranchAddress
 );
     input Clk, RegWriteIn, Move, FlushControl;
     input [31:0] Instruction, PCResult, WriteData;
     input [4:0] WriteRegister;
     
-    output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended, JumpAddress;
-    output RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, Branch, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Jump, Lb, LoadExtended;
+    output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended, JumpAddress, BranchAddress;
+    output RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Jump, Lb, LoadExtended, BranchOut;
     
-    wire [31:0] PCAddResult, WriteDataMuxOut, FlushControllerOut;
+    wire [31:0] PCAddResult, WriteDataMuxOut, FlushControllerOut, ShiftLeftOut;
     wire [15:0] Instruction_15_0;
     wire [4:0] WriteRegisterMuxOut;
-    wire AndOut, OrOut, JumpAndLink;
+    wire AndOut, OrOut, JumpAndLink, ComparatorOut, Branch;
     
     PCAdder PCAdderJump(
         .PCResult(PCResult),
+        .WriteEn(1'b1),
         .PCAddResult(PCAddResult)
     );
     
@@ -151,6 +155,31 @@ module InstructionDecode(
         .JumpAndLink(JumpAndLink),
         .Lb(Lb),
         .LoadExtended(LoadExtended)
+    );
+    
+    BranchComparator Comparator(
+        .ReadData1(ReadData1),
+        .ReadData2(ReadData2),
+        .OpCode(Instruction[31:26]),
+        .Instruction_20_16(Instruction[20:16]),
+        .Out(ComparatorOut)
+    );
+    
+    AndGate1Bit AndGateBranch(
+        .A(Branch),
+        .B(ComparatorOut),
+        .O(BranchOut)
+    );
+    
+    ShiftLeft2 ShifterBranch(
+        .in(Instruction_15_0_Extended),
+        .out(ShiftLeftOut)
+    );
+    
+    Adder32Bit2Input AdderBranch(
+        .A(ShiftLeftOut),
+        .B(PCResult),
+        .O(BranchAddress)
     );
       
 endmodule
