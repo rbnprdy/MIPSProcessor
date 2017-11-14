@@ -20,12 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ForwardingUnit(Rs, Rt, Rd_Mem, Rd_Wb, ALUSrc, MemWrite_Ex, RegWrite_Mem, MemWrite_Mem, MemRead_Wb, RegWrite_Wb, ForwardA, ForwardB, ForwardC, ForwardD);
+module ForwardingUnit(Rs, Rt, Rd_Mem, Rd_Wb, ALUSrc, MemWrite_Ex, RegWrite_Mem, MemWrite_Mem, MemRead_Wb, RegWrite_Wb, ForwardA, ForwardB, ForwardC, ForwardD, ForwardE, ForwardF, Branch);
     input [4:0] Rs, Rt, Rd_Mem, Rd_Wb;
-    input ALUSrc, MemWrite_Ex, RegWrite_Mem, MemWrite_Mem, MemRead_Wb, RegWrite_Wb;
+    input ALUSrc, MemWrite_Ex, RegWrite_Mem, MemWrite_Mem, MemRead_Wb, RegWrite_Wb, Branch;
     
     output reg [1:0] ForwardA, ForwardB;
-    output reg ForwardC, ForwardD;
+    output reg ForwardC, ForwardD, ForwardE, ForwardF;
     
     always@(*) begin
         // Forwarding from Mem to ALU input A
@@ -57,5 +57,17 @@ module ForwardingUnit(Rs, Rt, Rd_Mem, Rd_Wb, ALUSrc, MemWrite_Ex, RegWrite_Mem, 
             ForwardD <= 1;
         else
             ForwardD <= 0;   
+            
+        // Forwarding from Mem to Branch
+        if ((Rs == Rd_Mem) && (RegWrite_Mem == 1) && (Branch == 1))
+            ForwardE <= 1;
+        else
+            ForwardE <= 0;
+            
+        // Forwarding from Mem to Branch
+        if ((Rt == Rd_Mem) && (RegWrite_Mem == 1) && (Branch == 1))
+            ForwardF <= 1;
+        else
+            ForwardF <= 0;
     end
 endmodule
