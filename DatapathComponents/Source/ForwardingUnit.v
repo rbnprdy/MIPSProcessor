@@ -24,7 +24,8 @@ module ForwardingUnit(Rs, Rt, Rd_Mem, Rd_Wb, ALUSrc, MemWrite_Ex, RegWrite_Mem, 
     input [4:0] Rs, Rt, Rd_Mem, Rd_Wb;
     input ALUSrc, MemWrite_Ex, RegWrite_Mem, MemWrite_Mem, MemRead_Wb, RegWrite_Wb;
     
-    output reg [1:0] ForwardA, ForwardB, ForwardC, ForwardD;
+    output reg [1:0] ForwardA, ForwardB;
+    output reg ForwardC, ForwardD;
     
     always@(*) begin
         // Forwarding from Mem to ALU input A
