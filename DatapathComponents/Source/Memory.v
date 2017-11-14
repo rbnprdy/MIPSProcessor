@@ -31,16 +31,13 @@ module Memory(
         // Control Signals
         MemWrite, 
         MemRead, 
-        Branch,
         // Outputs
-        MemoryReadData,
-        BranchOut
+        MemoryReadData
 );
-    input Clk, Zero, ForwardD, MemWrite, MemRead, Branch;
+    input Clk, Zero, ForwardD, MemWrite, MemRead;
     input [31:0] MemoryAddress, MemoryWriteData, WriteDataD;
     
     output [31:0] MemoryReadData;
-    output BranchOut;
     
     wire [31:0] ForwardDMuxOut;
     
@@ -58,12 +55,6 @@ module Memory(
         .MemWrite(MemWrite),
         .MemRead(MemRead),
         .ReadData(MemoryReadData)
-    );
-    
-    AndGate1Bit AndGateBranch(
-        .A(Branch),
-        .B(Zero),
-        .O(BranchOut)
     );
     
 endmodule

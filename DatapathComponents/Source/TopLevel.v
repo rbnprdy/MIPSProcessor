@@ -41,7 +41,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     wire [4:0] WriteRegister_ID;
     // InstructionDecode Outputs
     wire [31:0] ReadData1_ID, ReadData2_ID, Instruction_15_0_Extended_ID;
-    wire RegWrite_ID, ALUSrc_ID, RegDst_ID, HiWrite_ID, LoWrite_ID, Madd_ID, Msub_ID, MemWrite_ID, MemRead_ID, Branch_ID, MemToReg_ID, HiOrLo_ID, HiToReg_ID, DontMove_ID, MoveOnNotZero_ID, Jump_ID, JumpAndLink_ID, Lb_ID, LoadExtended_ID;
+    wire RegWrite_ID, ALUSrc_ID, RegDst_ID, HiWrite_ID, LoWrite_ID, Madd_ID, Msub_ID, MemWrite_ID, MemRead_ID, MemToReg_ID, HiOrLo_ID, HiToReg_ID, DontMove_ID, MoveOnNotZero_ID, Jump_ID, JumpAndLink_ID, Lb_ID, LoadExtended_ID;
     //wire [31:0] InstructionToALU_ID;
     
     // ID_EX Outputs
@@ -59,7 +59,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     //EX_MEM Outputs
     wire [31:0] ReadHi_MEM, ReadLo_MEM, AddResult_MEM, ALUResult_MEM, ReadData2_MEM;
     wire [4:0] WriteAddress_MEM;
-    wire Zero_MEM, RegWrite_MEM, MoveOnNotZero_MEM, DontMove_MEM, HiOrLo_MEM, MemToReg_MEM, HiLoToReg_MEM, MemWrite_MEM, Branch_MEM, MemRead_MEM, Lb_MEM, LoadExtended_MEM;
+    wire Zero_MEM, RegWrite_MEM, MoveOnNotZero_MEM, DontMove_MEM, HiOrLo_MEM, MemToReg_MEM, HiLoToReg_MEM, MemWrite_MEM, MemRead_MEM, Lb_MEM, LoadExtended_MEM;
     
     //MEM Outputs
     wire [31:0] ReadData_MEM;
@@ -154,7 +154,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .MemToRegIn(MemToReg_ID),
         .HiLoToRegIn(HiToReg_ID),
         .MemWriteIn(MemWrite_ID),
-        .BranchIn(1'b0),
+        .BranchIn(Branch_IF),
         .MemReadIn(MemRead_ID),
         .RegDestIn(RegDst_ID),
         .ALUSrcIn(ALUSrc_ID),
@@ -222,7 +222,6 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .MemToRegIn(MemToReg_EX),
         .HiLoToRegIn(HiToReg_EX),
         .MemWriteIn(MemWrite_EX),
-        .BranchIn(Branch_EX),
         .MemReadIn(MemRead_EX),
         .RHiIn(HiData),
         .RLoIn(LoData),
@@ -240,7 +239,6 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .MemToRegOut(MemToReg_MEM),
         .HiLoToRegOut(HiLoToReg_MEM),
         .MemWriteOut(MemWrite_MEM),
-        .BranchOut(Branch_MEM),
         .MemReadOut(MemRead_MEM),
         .RHiOut(ReadHi_MEM),
         .RLoOut(ReadLo_MEM),
@@ -264,10 +262,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         // Control Signals
         .MemWrite(MemWrite_MEM), 
         .MemRead(MemRead_MEM), 
-        .Branch(Branch_MEM),
         // Outputs
         .MemoryReadData(ReadData_MEM)
-        //.BranchOut(Branch_IF)
     );
     
     MEM_WB MEM_WB_Reg(
