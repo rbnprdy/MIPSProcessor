@@ -390,6 +390,9 @@ module TopLevel_tb_Forwarding();
         // j       start               
         @(negedge Clk);
         
+        // stall
+        @(negedge Clk);
+        
         // start:
         
         // lw      $s0, 4($a0)    
@@ -403,9 +406,15 @@ module TopLevel_tb_Forwarding();
         // sw      $s0, 0($a0)
         @(negedge Clk);
         
+        // stall
+        @(negedge Clk);
+        
         // branch1:
         
         // bgez    $s0, branch2     
+        @(negedge Clk);
+        
+        // stall
         @(negedge Clk);
         
         // branch2:

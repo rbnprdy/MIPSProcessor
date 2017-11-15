@@ -69,10 +69,12 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     wire [4:0] WriteAddress_WB;
     wire Zero_WB, RegWrite_WB, MoveOnNotZero_WB, HiOrLo_WB, DontMove_WB, MemToReg_WB, HiLoToReg_WB, Lb_WB, LoadExtended_WB, MemRead_WB;
     
+    wire Branch_Forwarding;
     // Forwarding Outputs
     wire [1:0] ForwardA, ForwardB;
-    wire ForwardC, ForwardD;
+    wire ForwardC, ForwardD, ForwardE, ForwardF;
     
+    wire Jump_Hazard;
     // Hazard Detection Outputs
     wire PCWrite, IF_ID_Write, FlushControl;
     
@@ -132,8 +134,13 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .Jump(Jump_ID),
         .Lb(Lb_ID),
         .LoadExtended(LoadExtended_ID),
+        .Branch(Branch_Forwarding),
         .BranchOut(Branch_IF),
-        .BranchAddress(BranchAddress_IF)
+        .BranchAddress(BranchAddress_IF),
+        // Forwarding
+        .ForwardE(ForwardE),
+        .ForwardF(ForwardF),
+        .ForwardData(ALUResult_MEM)
     );
     
     ID_EX ID_EX_Reg(
@@ -181,7 +188,9 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .RegDestOut(RegDst_EX),
         .ALUSrcOut(ALUSrc_EX),
         .LbOut(Lb_EX),
-        .LoadExtendedOut(LoadExtended_EX)
+        .LoadExtendedOut(LoadExtended_EX),
+        .JumpIn(Jump_ID),
+        .JumpOut(Jump_Hazard)
     );
     
     Execute EX(
@@ -336,7 +345,10 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ForwardA(ForwardA),
         .ForwardB(ForwardB),
         .ForwardC(ForwardC),
-        .ForwardD(ForwardD)
+        .ForwardD(ForwardD),
+        .ForwardE(ForwardE),
+        .ForwardF(ForwardF),
+        .Branch(Branch_Forwarding)
     );
     
     HazardDetectionUnit HDU(
@@ -348,7 +360,13 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .MemRead_EX(MemRead_EX),
         .PCWrite(PCWrite),
         .IF_ID_Write(IF_ID_Write),
-        .FlushControl(FlushControl)
+        .FlushControl(FlushControl),
+        .RegWrite_Ex(RegWrite_EX),
+        .MemRead_Mem(MemRead_MEM),
+        .Rd_Mem(WriteAddress_MEM),
+        .Rd_Ex(WriteRegister_EX),
+        .Branch_Ex(Branch_EX),
+        .Jump_Ex(Jump_Hazard)
     );
                 
 endmodule

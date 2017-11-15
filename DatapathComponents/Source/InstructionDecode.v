@@ -55,21 +55,26 @@ module InstructionDecode(
         Jump,
         Lb,
         LoadExtended,
+        Branch,
         // BranchOutput
         BranchOut,
-        BranchAddress
+        BranchAddress,
+        // Forwarding
+        ForwardE,
+        ForwardF,
+        ForwardData
 );
-    input Clk, RegWriteIn, Move, FlushControl;
-    input [31:0] Instruction, PCResult, WriteData;
+    input Clk, RegWriteIn, Move, FlushControl, ForwardE, ForwardF;
+    input [31:0] Instruction, PCResult, WriteData, ForwardData;
     input [4:0] WriteRegister;
     
     output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended, JumpAddress, BranchAddress;
-    output RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Jump, Lb, LoadExtended, BranchOut;
+    output RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Jump, Lb, LoadExtended, Branch, BranchOut;
     
-    wire [31:0] PCAddResult, WriteDataMuxOut, FlushControllerOut, ShiftLeftOut;
+    wire [31:0] PCAddResult, WriteDataMuxOut, FlushControllerOut, ShiftLeftOut, ForwardEOut, ForwardFOut;
     wire [15:0] Instruction_15_0;
     wire [4:0] WriteRegisterMuxOut;
-    wire AndOut, OrOut, JumpAndLink, ComparatorOut, Branch;
+    wire AndOut, OrOut, JumpAndLink, ComparatorOut;
     
     PCAdder PCAdderJump(
         .PCResult(PCResult),
@@ -157,9 +162,23 @@ module InstructionDecode(
         .LoadExtended(LoadExtended)
     );
     
+    Mux32Bit2To1 ForwardEMux(
+        .out(ForwardEOut),
+        .inA(ReadData1),
+        .inB(ForwardData),
+        .sel(ForwardE) 
+    );
+    
+    Mux32Bit2To1 ForwardFMux(
+        .out(ForwardFOut),
+        .inA(ReadData2),
+        .inB(ForwardData),
+        .sel(ForwardF)
+    );
+    
     BranchComparator Comparator(
-        .ReadData1(ReadData1),
-        .ReadData2(ReadData2),
+        .ReadData1(ForwardEOut),
+        .ReadData2(ForwardFOut),
         .OpCode(Instruction[31:26]),
         .Instruction_20_16(Instruction[20:16]),
         .Out(ComparatorOut)

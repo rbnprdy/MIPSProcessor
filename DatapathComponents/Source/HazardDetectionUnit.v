@@ -20,16 +20,22 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module HazardDetectionUnit(Rs_ID, Rt_ID, Rt_EX, Instruction_31_26, MemRead_EX, PCWrite, IF_ID_Write, FlushControl, RegWrite_Ex, Branch, MemRead_Mem, Rd_Mem, Rd_Ex);
+module HazardDetectionUnit(Rs_ID, Rt_ID, Rt_EX, Instruction_31_26, MemRead_EX, PCWrite, IF_ID_Write, FlushControl, RegWrite_Ex, MemRead_Mem, Rd_Mem, Rd_Ex, Branch_Ex, Jump_Ex);
     input [4:0] Rs_ID, Rt_ID, Rt_EX, Rd_Mem, Rd_Ex;
     input [5:0] Instruction_31_26;
-    input MemRead_EX, RegWrite_Ex, Branch, MemRead_Mem;
+    input MemRead_EX, RegWrite_Ex, MemRead_Mem, Branch_Ex, Jump_Ex;
     
     output reg PCWrite, IF_ID_Write, FlushControl;
     
     always@(*) begin
+        // Flush
+        if ((Branch_Ex == 1) || (Jump_Ex == 1)) begin
+            PCWrite <= 1;
+            IF_ID_Write <= 1;
+            FlushControl <= 1;
+        end
         // lw followed by r-type
-        if ((MemRead_EX == 1) && (Instruction_31_26 != 6'b101000) && (Instruction_31_26 != 6'b101001) && (Instruction_31_26 != 6'b101011) && (Instruction_31_26 != 6'b100000) && (Instruction_31_26 != 6'b100001) && (Instruction_31_26 != 6'b100011) && ((Rt_EX == Rs_ID) || (Rt_EX == Rt_ID))) begin
+        else if ((MemRead_EX == 1) && (Instruction_31_26 != 6'b101000) && (Instruction_31_26 != 6'b101001) && (Instruction_31_26 != 6'b101011) && (Instruction_31_26 != 6'b100000) && (Instruction_31_26 != 6'b100001) && (Instruction_31_26 != 6'b100011) && ((Rt_EX == Rs_ID) || (Rt_EX == Rt_ID))) begin
             PCWrite <= 0;
             IF_ID_Write <= 0;
             
@@ -40,29 +46,29 @@ module HazardDetectionUnit(Rs_ID, Rt_ID, Rt_EX, Instruction_31_26, MemRead_EX, P
             PCWrite <= 0;
             IF_ID_Write <= 0;
             FlushControl <= 1;
-        end
-        else begin
-            PCWrite <= 1;
-            IF_ID_Write <= 1;
-            FlushControl <= 0;
-        end
+        end 
         // bgez immediately after add
-        if ((RegWrite_Ex == 1) && (Branch == 1) && ((Rs_ID == Rd_Ex) || (Rt_ID == Rd_Ex))) begin
+        else if (((Instruction_31_26 == 6'b000001) || (Instruction_31_26 == 6'b000010) || (Instruction_31_26 == 6'b000011) || (Instruction_31_26 == 6'b000100) || (Instruction_31_26 == 6'b000101) || (Instruction_31_26 == 6'b000110) || (Instruction_31_26 == 6'b000111)) && (RegWrite_Ex == 1) && ((Rs_ID == Rd_Ex) || (Rt_ID == Rd_Ex))) begin
             PCWrite <= 0;
             IF_ID_Write <= 0;
             FlushControl <= 1;
         end
         // bgez immediately after lw
-        if ((MemRead_EX == 1) && (Branch == 1) && ((Rs_ID == Rd_Ex) || (Rt_ID == Rd_Ex))) begin
+        else if (((Instruction_31_26 == 6'b000001) || (Instruction_31_26 == 6'b000010) || (Instruction_31_26 == 6'b000011) || (Instruction_31_26 == 6'b000100) || (Instruction_31_26 == 6'b000101) || (Instruction_31_26 == 6'b000110) || (Instruction_31_26 == 6'b000111)) && (MemRead_EX == 1) && ((Rs_ID == Rd_Ex) || (Rt_ID == Rd_Ex))) begin
             PCWrite <= 0;
             IF_ID_Write <= 0;
             FlushControl <= 1;
         end
         // bgez after lw with one stall cycle
-        if ((MemRead_Mem == 1) && (Branch == 1) && ((Rs_ID == Rd_Mem) || (Rt_ID == Rd_Mem))) begin
+        else if (((Instruction_31_26 == 6'b000001) || (Instruction_31_26 == 6'b000010) || (Instruction_31_26 == 6'b000011) || (Instruction_31_26 == 6'b000100) || (Instruction_31_26 == 6'b000101) || (Instruction_31_26 == 6'b000110) || (Instruction_31_26 == 6'b000111)) && (MemRead_Mem == 1) && ((Rs_ID == Rd_Mem) || (Rt_ID == Rd_Mem))) begin
             PCWrite <= 0;
             IF_ID_Write <= 0;
             FlushControl <= 1;
+        end
+        else begin
+            PCWrite <= 1;
+            IF_ID_Write <= 1;
+            FlushControl <= 0;
         end
     end
 endmodule

@@ -43,31 +43,37 @@ module BranchComparator(ReadData1, ReadData2, OpCode, Instruction_20_16, Out);
         end
         // blez
         else if (OpCode == 6'b000110) begin
-            if (ReadData1 <= 6'd0)
+            if ($signed(ReadData1) <= $signed(32'd0))
                 Out <= 1;
             else
                 Out <= 0;
         end
         // bgtz
         else if (OpCode == 6'b000111) begin
-            if (ReadData1 > 6'd0)
+            if ($signed(ReadData1) > $signed(32'd0))
                 Out <= 1;
             else
                 Out <= 0;
         end
-        // bltz
-        else if ((OpCode == 6'b000001) && (Instruction_20_16 == 5'd0)) begin
-            if (ReadData1 < 6'd0)
-                Out <= 1;
-            else
+        // bltz or bgez
+        else if (OpCode == 6'b000001) begin
+            // bltz
+            if (Instruction_20_16 == 5'd0) begin
+                if ($signed(ReadData1) < $signed(32'd0))
+                    Out <= 1;
+                else
+                    Out <= 0;
+            end
+            // bgez
+            else if (Instruction_20_16 == 5'b00001) begin
+                if ($signed(ReadData1) >= $signed(32'd0))
+                    Out <= 1;
+                else
+                    Out <= 0;
+            end
+            else begin
                 Out <= 0;
-        end
-        // bgez
-        else if ((OpCode == 6'b000001) && (Instruction_20_16 == 5'b00001)) begin
-            if (ReadData1 >= 6'd0)
-                Out <= 1;
-            else
-                Out <= 0;
+            end
         end
         // default
         else
