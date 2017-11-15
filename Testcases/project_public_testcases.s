@@ -82,33 +82,37 @@ lw $t2, 4($t1)				#[t2] = 0x64
 #branch  cases 8,9,10
 la      $a0, asize1			#
 j       start               # jump to jump1.
-    addi    $a0, $zero, -1      # if $a0 == -1, jump failed.
-    addi    $a0, $zero, -1      # if $a0 == -1, jump failed.
-    start:
-    lw      $s0, 4($a0)	# [s0] = 0x320
-    sw      $s0, 0($a0)
+# stall
+addi    $a0, $zero, -1      # if $a0 == -1, jump failed.
+addi    $a0, $zero, -1      # if $a0 == -1, jump failed.
+start:
+lw      $s0, 4($a0)	# [s0] = 0x320
+sw      $s0, 0($a0)
 
-	branch1:
-    bgez    $s0, branch2 	# taken
-    addi    $s0, $s0, 1
-    bgez    $s0, branch1    
-    j       error         
+branch1:
+# stall
+bgez    $s0, branch2 	# taken
+# stall
+addi    $s0, $s0, 1
+bgez    $s0, branch1    
+j       error         
 
-    branch2:
-    addi    $s0, $zero, -1  # [s0] = -1
-    bltz    $s0, branch3    # taken
-    addi    $s0, $zero, 1   
-    bgtz    $s0, branch2    
-    j       error           
+branch2:
+addi    $s0, $zero, -1  # [s0] = -1
+# stall
+bltz    $s0, branch3    # taken
+addi    $s0, $zero, 1   
+bgtz    $s0, branch2    
+j       error           
 
-    branch3:
-    bltz    $s0, done		# taken
-    addi    $s0, $zero, -1  # should be flushed
-    bltz    $s0, branch3    
-    j       error 
+branch3:
+bltz    $s0, done		# taken
+addi    $s0, $zero, -1  # should be flushed
+bltz    $s0, branch3    
+j       error 
 	
-	done:
-	j done
-	error:
-	j error
+done:
+j done
+error:
+j error
 	          
