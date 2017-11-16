@@ -145,7 +145,6 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     
     ID_EX ID_EX_Reg(
         .Clk(Clk),
-        .PCAddIn(PCAdd_IF_ID),
         .RD1In(ReadData1_ID),
         .RD2In(ReadData2_ID),
         .InstructionIn(Instruction_ID),
@@ -167,7 +166,6 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ALUSrcIn(ALUSrc_ID),
         .LbIn(Lb_ID),
         .LoadExtendedIn(LoadExtended_ID),
-        .PCAddOut(PCAddResult_In_EX),
         .RD1Out(ReadData1_EX),
         .RD2Out(ReadData2_EX),
         .InstructionOut(Instruction_EX),
@@ -200,7 +198,6 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ReadData2(ReadData2_EX),
         .Instruction(Instruction_EX),
         .Instruction_15_0_Extended(Instruction_15_0_Extended_EX),
-        .PCAddResult(PCAddResult_In_EX),
         // Controller Inputs
         .ALUSrc(ALUSrc_EX), 
         .RegDst(RegDst_EX),
@@ -216,7 +213,6 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         // Outputs
         .ReadDataHi(HiData),
         .ReadDataLo(LoData),
-        .PCAddResultOut(PCAddResult_Out_EX),
         .ALUResult(ALUResult_EX),
         .Zero(Zero_EX),
         .WriteRegister(WriteRegister_EX)
@@ -234,7 +230,6 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .MemReadIn(MemRead_EX),
         .RHiIn(HiData),
         .RLoIn(LoData),
-        .AddResultIn(PCAddResult_Out_EX),
         .ZeroIn(Zero_EX),
         .ALUResultIn(ALUResult_EX),
         .RD2In(ReadData2_EX),
@@ -251,7 +246,6 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .MemReadOut(MemRead_MEM),
         .RHiOut(ReadHi_MEM),
         .RLoOut(ReadLo_MEM),
-        .AddResultOut(AddResult_MEM),
         .ZeroOut(Zero_MEM),
         .ALUResultOut(ALUResult_MEM),
         .RD2Out(ReadData2_MEM),

@@ -20,12 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module EX_MEM(Clk, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, MemReadIn, RHiIn, RLoIn, AddResultIn, ZeroIn, ALUResultIn, RD2In, WriteAddressIn, LbIn, LoadExtendedIn, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, MemReadOut, RHiOut, RLoOut, AddResultOut, ZeroOut, ALUResultOut, RD2Out, WriteAddressOut, LbOut, LoadExtendedOut);
-    input [31:0] RHiIn, RLoIn, AddResultIn, ALUResultIn, RD2In;
+module EX_MEM(Clk, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, MemReadIn, RHiIn, RLoIn, ZeroIn, ALUResultIn, RD2In, WriteAddressIn, LbIn, LoadExtendedIn, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, MemReadOut, RHiOut, RLoOut, ZeroOut, ALUResultOut, RD2Out, WriteAddressOut, LbOut, LoadExtendedOut);
+    input [31:0] RHiIn, RLoIn, ALUResultIn, RD2In;
     input [4:0] WriteAddressIn;
     input Clk, ZeroIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, MemReadIn, LbIn, LoadExtendedIn;
     
-    output reg [31:0] RHiOut, RLoOut, AddResultOut, ALUResultOut, RD2Out;
+    output reg [31:0] RHiOut, RLoOut, ALUResultOut, RD2Out;
     output reg ZeroOut;
     output reg [4:0] WriteAddressOut;
     output reg RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, MemReadOut, LbOut, LoadExtendedOut;
@@ -33,7 +33,6 @@ module EX_MEM(Clk, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, 
     always @(negedge Clk) begin
         RHiOut <= RHiIn;
         RLoOut <= RLoIn;
-        AddResultOut <= AddResultIn;
         ZeroOut <= ZeroIn;
         ALUResultOut <= ALUResultIn;
         RD2Out <= RD2In;

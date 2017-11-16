@@ -27,7 +27,6 @@ module Execute(
         ReadData2,
         Instruction,
         Instruction_15_0_Extended,
-        PCAddResult,
         // Controller Inputs
         ALUSrc, 
         RegDst,
@@ -42,17 +41,16 @@ module Execute(
         ForwardData_Wb,
         // Outputs
         ReadDataHi,
-        ReadDataLo,
-        PCAddResultOut,
+        ReadDataLo,,
         ALUResult,
         Zero,
         WriteRegister
 );
-    input [31:0] ReadData1, ReadData2, Instruction, Instruction_15_0_Extended, PCAddResult, ForwardData_Mem, ForwardData_Wb;
+    input [31:0] ReadData1, ReadData2, Instruction, Instruction_15_0_Extended, ForwardData_Mem, ForwardData_Wb;
     input [1:0] ForwardA, ForwardB;
     input Clk, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub;
     
-    output [31:0] ReadDataHi, ReadDataLo, PCAddResultOut, ALUResult;
+    output [31:0] ReadDataHi, ReadDataLo, ALUResult;
     output [4:0] WriteRegister;
     output Zero;
     
@@ -103,17 +101,6 @@ module Execute(
         .ALUResult(ALUResult),
         .HiResult(ALUHiResult),
         .Zero(Zero)
-    );
-    
-    ShiftLeft2 Sl2(
-        .in(Instruction_15_0_Extended),
-        .out(Instruction_15_0_Shifted)
-    );
-    
-    Adder32Bit2Input AddPC(
-        .A(PCAddResult),
-        .B(Instruction_15_0_Shifted),
-        .O(PCAddResultOut)
     );
     
     HiLoRegisterFile HiLoReg(

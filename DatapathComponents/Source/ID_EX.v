@@ -20,15 +20,14 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ID_EX(Clk, PCAddIn, RD1In, RD2In, InstructionIn, SignExtendIn, MsubIn, MaddIn, HiWriteIn, LoWriteIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RegDestIn, ALUSrcIn, LbIn, LoadExtendedIn, PCAddOut, RD1Out, RD2Out, InstructionOut, SignExtendOut, MsubOut, MaddOut, HiWriteOut, LoWriteOut, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RegDestOut, ALUSrcOut, LbOut, LoadExtendedOut, JumpIn, JumpOut);
-    input [31:0] PCAddIn, RD1In, RD2In, InstructionIn, SignExtendIn;
+module ID_EX(Clk, RD1In, RD2In, InstructionIn, SignExtendIn, MsubIn, MaddIn, HiWriteIn, LoWriteIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RegDestIn, ALUSrcIn, LbIn, LoadExtendedIn, RD1Out, RD2Out, InstructionOut, SignExtendOut, MsubOut, MaddOut, HiWriteOut, LoWriteOut, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RegDestOut, ALUSrcOut, LbOut, LoadExtendedOut, JumpIn, JumpOut);
+    input [31:0] RD1In, RD2In, InstructionIn, SignExtendIn;
     input MsubIn, MaddIn, HiWriteIn, LoWriteIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RegDestIn, ALUSrcIn, LbIn, LoadExtendedIn, Clk, JumpIn;
     
-    output reg [31:0] PCAddOut, RD1Out, RD2Out, InstructionOut, SignExtendOut;
+    output reg [31:0] RD1Out, RD2Out, InstructionOut, SignExtendOut;
     output reg MsubOut, MaddOut, HiWriteOut, LoWriteOut, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RegDestOut, ALUSrcOut, LbOut, LoadExtendedOut, JumpOut;
 
     always @(negedge Clk) begin
-        PCAddOut <= PCAddIn;
         RD1Out <= RD1In;
         RD2Out <= RD2In;
         InstructionOut <= InstructionIn;
