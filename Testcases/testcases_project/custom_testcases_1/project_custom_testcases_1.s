@@ -70,7 +70,7 @@ bgez $s2, error         # Don't Branch
 addi $s5, $zero, 5      #[s5] = 5
 
 # branch after unrelated after r-type 2
-addi $s6, $zero, $s5    #[s6] = 5
+add $s6, $zero, $s5    #[s6] = 5
 addi $s4, $zero, 3      #[s4] = 3
 beq $s5, $s6, branch1   # taken
 addi $s5, $zero, -1234
