@@ -52,7 +52,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     wire ALUSrc_EX, RegDst_EX, HiWrite_EX, LoWrite_EX, Madd_EX, Msub_EX;
     wire [31:0] Instruction_EX;
     // Execute Outputs
-    wire [31:0] PCAddResult_Out_EX, ALUResult_EX;
+    wire [31:0] PCAddResult_Out_EX, ALUResult_EX, MemWriteData_EX;
     wire Zero_EX;
     wire [4:0] WriteRegister_EX;
     
@@ -62,7 +62,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     wire Zero_MEM, RegWrite_MEM, MoveOnNotZero_MEM, DontMove_MEM, HiOrLo_MEM, MemToReg_MEM, HiLoToReg_MEM, MemWrite_MEM, MemRead_MEM, Lb_MEM, LoadExtended_MEM;
     
     //MEM Outputs
-    wire [31:0] ReadData_MEM;
+    wire [31:0] ReadData_MEM, ForwardingOut_MEM;
     
     //MEM_WB Outputs
     wire [31:0] ReadHi_WB, ReadLo_WB, ALUResult_WB, ReadData_WB;
@@ -71,8 +71,8 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     
     wire Branch_Forwarding;
     // Forwarding Outputs
-    wire [1:0] ForwardA, ForwardB;
-    wire ForwardC, ForwardD, ForwardE, ForwardF;
+    wire [1:0] ForwardA, ForwardB, ForwardE, ForwardF;
+    wire ForwardC, ForwardD;
     
     wire Jump_Hazard;
     // Hazard Detection Outputs
@@ -208,14 +208,16 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         // Forwarding Inputs
         .ForwardA(ForwardA),
         .ForwardB(ForwardB),
-        .ForwardData_Mem(ALUResult_MEM),
+        .ForwardC(ForwardC),
+        .ForwardData_Mem(ForwardingOut_MEM),
         .ForwardData_Wb(WriteData),
         // Outputs
         .ReadDataHi(HiData),
         .ReadDataLo(LoData),
         .ALUResult(ALUResult_EX),
         .Zero(Zero_EX),
-        .WriteRegister(WriteRegister_EX)
+        .WriteRegister(WriteRegister_EX),
+        .WriteData(MemWriteData_EX)
     );
     
     EX_MEM EX_MEM_Reg(
@@ -232,7 +234,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .RLoIn(LoData),
         .ZeroIn(Zero_EX),
         .ALUResultIn(ALUResult_EX),
-        .RD2In(ReadData2_EX),
+        .RD2In(MemWriteData_EX),
         .WriteAddressIn(WriteRegister_EX),
         .LbIn(Lb_EX),
         .LoadExtendedIn(LoadExtended_EX),
@@ -259,14 +261,19 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .Zero(Zero_MEM),
         .MemoryAddress(ALUResult_MEM),
         .MemoryWriteData(ReadData2_MEM),
+        .Hi(ReadHi_MEM),
+        .Lo(ReadLo_MEM),
         // Forwarding Signals
         .ForwardD(ForwardD),  
         .WriteDataD(WriteData),
         // Control Signals
         .MemWrite(MemWrite_MEM), 
-        .MemRead(MemRead_MEM), 
+        .MemRead(MemRead_MEM),
+        .HiOrLo(HiOrLo_MEM),
+        .HiToReg(HiLoToReg_MEM), 
         // Outputs
-        .MemoryReadData(ReadData_MEM)
+        .MemoryReadData(ReadData_MEM),
+        .ForwardingOut(ForwardingOut_MEM)
     );
     
     MEM_WB MEM_WB_Reg(
@@ -325,8 +332,10 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     
     ForwardingUnit FU(
         // Inputs
-        .Rs(Instruction_EX[25:21]),
-        .Rt(Instruction_EX[20:16]),
+        .Rs_Id(Instruction_ID[25:21]),
+        .Rt_Id(Instruction_ID[20:16]),
+        .Rs_Ex(Instruction_EX[25:21]),
+        .Rt_Ex(Instruction_EX[20:16]),
         .Rd_Mem(WriteAddress_MEM),
         .Rd_Wb(WriteRegister_ID),
         .ALUSrc(ALUSrc_EX),

@@ -25,19 +25,24 @@ module Memory(
         Zero,
         MemoryAddress,
         MemoryWriteData,
+        Hi, 
+        Lo,
         // Forwarding Signals
         ForwardD,
         WriteDataD,
         // Control Signals
         MemWrite, 
         MemRead, 
+        HiOrLo,
+        HiToReg,
         // Outputs
-        MemoryReadData
+        MemoryReadData,
+        ForwardingOut
 );
-    input Clk, Zero, ForwardD, MemWrite, MemRead;
-    input [31:0] MemoryAddress, MemoryWriteData, WriteDataD;
+    input Clk, Zero, ForwardD, MemWrite, MemRead, HiOrLo, HiToReg;
+    input [31:0] MemoryAddress, MemoryWriteData, Hi, Lo, WriteDataD;
     
-    output [31:0] MemoryReadData;
+    output [31:0] MemoryReadData, ForwardingOut;
     
     wire [31:0] ForwardDMuxOut;
     
@@ -55,6 +60,14 @@ module Memory(
         .MemWrite(MemWrite),
         .MemRead(MemRead),
         .ReadData(MemoryReadData)
+    );
+    
+    Mux32Bit3To1 HiLoForwardingMux(
+        .out(ForwardingOut),
+        .inA(MemoryAddress),
+        .inB(Lo),
+        .inC(Hi),
+        .sel({HiOrLo, HiToReg})
     );
     
 endmodule

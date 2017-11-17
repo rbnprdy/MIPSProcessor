@@ -37,7 +37,7 @@
 
 module DataMemory(Address, WriteData, Clk, MemWrite, MemRead, ReadData); 
 
-    localparam MEMORY_SIZE = 10; // MEMORY_SIZE of 30 => memory is [0:2**30], Indexed using Address[31:2]
+    //localparam MEMORY_SIZE = 10; // MEMORY_SIZE of 30 => memory is [0:2**30], Indexed using Address[31:2]
     
     input [31:0] Address; 	// Input Address 
     input [31:0] WriteData; // Data that needs to be written into the address 
@@ -52,12 +52,6 @@ module DataMemory(Address, WriteData, Clk, MemWrite, MemRead, ReadData);
     
     // setup initial memory
     initial begin
-//        memory[0] = 32'd0;
-//        memory[1] = 32'd1;
-//        memory[2] = 32'd2;
-//        memory[3] = 32'd3;
-//        memory[4] = 32'd4;
-//        memory[5] = -32'd1;
         memory[0] = 32'd100;
         memory[1] = 32'd200;
         memory[2] = 32'd300;

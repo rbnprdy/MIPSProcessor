@@ -37,20 +37,22 @@ module Execute(
         // Forwarding Inputs
         ForwardA,
         ForwardB,
+        ForwardC,
         ForwardData_Mem,
         ForwardData_Wb,
         // Outputs
         ReadDataHi,
-        ReadDataLo,,
+        ReadDataLo,
         ALUResult,
         Zero,
-        WriteRegister
+        WriteRegister,
+        WriteData
 );
     input [31:0] ReadData1, ReadData2, Instruction, Instruction_15_0_Extended, ForwardData_Mem, ForwardData_Wb;
     input [1:0] ForwardA, ForwardB;
-    input Clk, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub;
+    input Clk, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, ForwardC;
     
-    output [31:0] ReadDataHi, ReadDataLo, ALUResult;
+    output [31:0] ReadDataHi, ReadDataLo, ALUResult, WriteData;
     output [4:0] WriteRegister;
     output Zero;
     
@@ -113,6 +115,13 @@ module Execute(
         .Msub(Msub),
         .WriteEnHi(HiWrite),
         .WriteEnLo(LoWrite)
+    );
+    
+    Mux32Bit2To1 ForwardCMux(
+        .out(WriteData),
+        .inA(ReadData2),
+        .inB(ForwardData_Wb),
+        .sel(ForwardC)
     );
         
 endmodule

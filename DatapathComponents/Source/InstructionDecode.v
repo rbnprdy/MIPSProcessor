@@ -64,7 +64,8 @@ module InstructionDecode(
         ForwardF,
         ForwardData
 );
-    input Clk, RegWriteIn, Move, FlushControl, ForwardE, ForwardF;
+    input Clk, RegWriteIn, Move, FlushControl;
+    input [1:0] ForwardE, ForwardF;
     input [31:0] Instruction, PCResult, WriteData, ForwardData;
     input [4:0] WriteRegister;
     
@@ -162,17 +163,19 @@ module InstructionDecode(
         .LoadExtended(LoadExtended)
     );
     
-    Mux32Bit2To1 ForwardEMux(
+    Mux32Bit3To1 ForwardEMux(
         .out(ForwardEOut),
         .inA(ReadData1),
         .inB(ForwardData),
+        .inC(WriteData),
         .sel(ForwardE) 
     );
     
-    Mux32Bit2To1 ForwardFMux(
+    Mux32Bit3To1 ForwardFMux(
         .out(ForwardFOut),
         .inA(ReadData2),
         .inB(ForwardData),
+        .inC(WriteData),
         .sel(ForwardF)
     );
     
