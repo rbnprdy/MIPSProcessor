@@ -34,7 +34,7 @@ ae330000 ->			sw	$s3, 0($s1)
 20140004 ->			addi	$s4, $zero, 4
 0641001c ->			bgez	$s2, error
 20150005 ->			addi	$s5, $zero, 5
-00000000 ->			nop
+0015b020 ->			nop
 20140003 ->			addi	$s4, $zero, 3
 12b60001 ->			beq	$s5, $s6, branch1
 2015fb2e ->			addi	$s5, $zero, -1234
