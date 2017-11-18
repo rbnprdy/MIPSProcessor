@@ -20,12 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ID_EX(Clk, RD1In, RD2In, InstructionIn, SignExtendIn, MsubIn, MaddIn, HiWriteIn, LoWriteIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RegDestIn, ALUSrcIn, LbIn, LoadExtendedIn, RD1Out, RD2Out, InstructionOut, SignExtendOut, MsubOut, MaddOut, HiWriteOut, LoWriteOut, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RegDestOut, ALUSrcOut, LbOut, LoadExtendedOut, JumpIn, JumpOut);
-    input [31:0] RD1In, RD2In, InstructionIn, SignExtendIn;
-    input MsubIn, MaddIn, HiWriteIn, LoWriteIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RegDestIn, ALUSrcIn, LbIn, LoadExtendedIn, Clk, JumpIn;
+module ID_EX(Clk, RD1In, RD2In, InstructionIn, SignExtendIn, MsubIn, MaddIn, HiWriteIn, LoWriteIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RegDestIn, ALUSrcIn, LbIn, LoadExtendedIn, RD1Out, RD2Out, InstructionOut, SignExtendOut, MsubOut, MaddOut, HiWriteOut, LoWriteOut, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RegDestOut, ALUSrcOut, LbOut, LoadExtendedOut, JumpIn, JumpOut, JalIn, JalOut, RaIn, RaOut);
+    input [31:0] RD1In, RD2In, InstructionIn, SignExtendIn, RaIn;
+    input MsubIn, MaddIn, HiWriteIn, LoWriteIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, MemWriteIn, BranchIn, MemReadIn, RegDestIn, ALUSrcIn, LbIn, LoadExtendedIn, Clk, JumpIn, JalIn;
     
-    output reg [31:0] RD1Out, RD2Out, InstructionOut, SignExtendOut;
-    output reg MsubOut, MaddOut, HiWriteOut, LoWriteOut, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RegDestOut, ALUSrcOut, LbOut, LoadExtendedOut, JumpOut;
+    output reg [31:0] RD1Out, RD2Out, InstructionOut, SignExtendOut, RaOut;
+    output reg MsubOut, MaddOut, HiWriteOut, LoWriteOut, RegWriteOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, MemWriteOut, BranchOut, MemReadOut, RegDestOut, ALUSrcOut, LbOut, LoadExtendedOut, JumpOut, JalOut;
 
     always @(negedge Clk) begin
         RD1Out <= RD1In;
@@ -50,6 +50,8 @@ module ID_EX(Clk, RD1In, RD2In, InstructionIn, SignExtendIn, MsubIn, MaddIn, HiW
         LbOut <= LbIn;
         LoadExtendedOut <= LoadExtendedIn;
         JumpOut <= JumpIn;
+        JalOut <= JalIn;
+        RaOut <= RaIn;
     end
 
 endmodule

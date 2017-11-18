@@ -55,17 +55,22 @@ module MEM_WB(
     LbOut,
     LoadExtendedOut,
     // Extra output for forwarding
-    MemReadOut
+    MemReadOut,
+    // Jal
+    JalIn,
+    JalOut,
+    RaIn,
+    RaOut
 );
     
     
-    input [31:0] RHiIn, RLoIn, ALUResultIn, ReadDataIn;
+    input [31:0] RHiIn, RLoIn, ALUResultIn, ReadDataIn, RaIn;
     input [4:0] WriteAddressIn;
-    input Clk, ZeroIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, LbIn, LoadExtendedIn, MemReadIn;
+    input Clk, ZeroIn, RegWriteIn, MoveNotZeroIn, DontMoveIn, HiOrLoIn, MemToRegIn, HiLoToRegIn, LbIn, LoadExtendedIn, MemReadIn, JalIn;
     
-    output reg [31:0] RHiOut, RLoOut, ALUResultOut, ReadDataOut;
+    output reg [31:0] RHiOut, RLoOut, ALUResultOut, ReadDataOut, RaOut;
     output reg [4:0] WriteAddressOut;
-    output reg RegWriteOut, ZeroOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, LbOut, LoadExtendedOut, MemReadOut;
+    output reg RegWriteOut, ZeroOut, MoveNotZeroOut, DontMoveOut, HiOrLoOut, MemToRegOut, HiLoToRegOut, LbOut, LoadExtendedOut, MemReadOut, JalOut;
     
     always @(negedge Clk) begin
         RHiOut <= RHiIn;
@@ -83,6 +88,8 @@ module MEM_WB(
         LbOut <= LbIn;
         LoadExtendedOut <= LoadExtendedIn;
         MemReadOut <= MemReadIn;
+        JalOut <= JalIn;
+        RaOut <= RaIn;
     end
 
 endmodule

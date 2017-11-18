@@ -58,6 +58,7 @@ main:
     beq     $s0, $zero, branch1 # don't branch
     add     $s1, $s0, $zero     # $s1 = 0x00000002
     beq     $s0, $s1, branch1   # taken
+    # flush
     j       error               # jump to error if the branch not taken.
 
     branch1:

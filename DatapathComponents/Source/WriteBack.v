@@ -22,11 +22,13 @@
 
 module WriteBack(
         // Inputs
+        WriteAddressIn,
         MemoryReadData,
         ALUResult,
         Zero,
         ReadDataHi,
         ReadDataLo,
+        Ra,
         // Control Signals
         MemToReg, 
         HiOrLo, 
@@ -35,19 +37,29 @@ module WriteBack(
         MoveOnNotZero,
         Lb,
         LoadExtended,
+        Jal,
         // Outputs
         WriteData,
+        WriteAddressOut,
         Move
 );
-    input [31:0] MemoryReadData, ALUResult, ReadDataHi, ReadDataLo;
-    input Zero, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Lb, LoadExtended;
+    input [31:0] MemoryReadData, ALUResult, ReadDataHi, ReadDataLo, Ra;
+    input [4:0] WriteAddressIn;
+    input Zero, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Lb, LoadExtended, Jal;
     
     output [31:0] WriteData;
+    output [4:0] WriteAddressOut;
     output Move;
     
-    wire [31:0] MemToRegOut, HiOrLoOut, HiToRegOut, SignExtendByteHalfOut;
+    wire [31:0] MemToRegOut, HiOrLoOut, HiToRegOut, SignExtendByteHalfOut, LoadExtendedOut;
     wire NotZeroOut, MoveOnZeroOut, MoveOnNotZeroOut;
     
+    Mux5Bit2To1 WriteAddressMux(
+        .out(WriteAddressOut),
+        .inA(WriteAddressIn),
+        .inB(5'd31),
+        .sel(Jal)
+    );
     
     Mux32Bit2To1 MemToRegMux(
         .out(MemToRegOut),
@@ -77,10 +89,17 @@ module WriteBack(
     );
     
     Mux32Bit2To1 LoadExtendedMux(
-        .out(WriteData),
+        .out(LoadExtendedOut),
         .inA(HiToRegOut),
         .inB(SignExtendByteHalfOut),
         .sel(LoadExtended)
+    );
+    
+    Mux32Bit2To1 JalMux(
+        .out(WriteData),
+        .inA(LoadExtendedOut),
+        .inB(Ra),
+        .sel(Jal)
     );
     
     OrGate1Bit2In MoveOnZeroOr(

@@ -40,12 +40,13 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     wire [31:0] Instruction_ID, JumpAddress_ID;
     wire [4:0] WriteRegister_ID;
     // InstructionDecode Outputs
-    wire [31:0] ReadData1_ID, ReadData2_ID, Instruction_15_0_Extended_ID;
-    wire RegWrite_ID, ALUSrc_ID, RegDst_ID, HiWrite_ID, LoWrite_ID, Madd_ID, Msub_ID, MemWrite_ID, MemRead_ID, MemToReg_ID, HiOrLo_ID, HiToReg_ID, DontMove_ID, MoveOnNotZero_ID, Jump_ID, JumpAndLink_ID, Lb_ID, LoadExtended_ID;
+    wire [31:0] ReadData1_ID, ReadData2_ID, Instruction_15_0_Extended_ID, Ra_ID;
+    wire RegWrite_ID, ALUSrc_ID, RegDst_ID, HiWrite_ID, LoWrite_ID, Madd_ID, Msub_ID, MemWrite_ID, MemRead_ID, MemToReg_ID, HiOrLo_ID, HiToReg_ID, DontMove_ID, MoveOnNotZero_ID, Jump_ID, JumpAndLink_ID, Lb_ID, LoadExtended_ID, Jal_ID;
     //wire [31:0] InstructionToALU_ID;
     
     // ID_EX Outputs
-    wire RegWrite_EX, MoveOnNotZero_EX, DontMove_EX, HiOrLo_EX, MemToReg_EX, MemWrite_EX, MemRead_EX, HiToReg_EX, Branch_EX, Lb_EX, LoadExtended_EX; 
+    wire RegWrite_EX, MoveOnNotZero_EX, DontMove_EX, HiOrLo_EX, MemToReg_EX, MemWrite_EX, MemRead_EX, HiToReg_EX, Branch_EX, Lb_EX, LoadExtended_EX, Jal_EX; 
+    wire [31:0] Ra_EX;
     
     // Execute Inputs
     wire [31:0] ReadData1_EX, ReadData2_EX, PCAddResult_In_EX, Instruction_15_0_Extended_EX;
@@ -57,17 +58,17 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     wire [4:0] WriteRegister_EX;
     
     //EX_MEM Outputs
-    wire [31:0] ReadHi_MEM, ReadLo_MEM, AddResult_MEM, ALUResult_MEM, ReadData2_MEM;
+    wire [31:0] ReadHi_MEM, ReadLo_MEM, AddResult_MEM, ALUResult_MEM, ReadData2_MEM, Ra_MEM;
     wire [4:0] WriteAddress_MEM;
-    wire Zero_MEM, RegWrite_MEM, MoveOnNotZero_MEM, DontMove_MEM, HiOrLo_MEM, MemToReg_MEM, HiLoToReg_MEM, MemWrite_MEM, MemRead_MEM, Lb_MEM, LoadExtended_MEM;
+    wire Zero_MEM, RegWrite_MEM, MoveOnNotZero_MEM, DontMove_MEM, HiOrLo_MEM, MemToReg_MEM, HiLoToReg_MEM, MemWrite_MEM, MemRead_MEM, Lb_MEM, LoadExtended_MEM, Jal_MEM;
     
     //MEM Outputs
     wire [31:0] ReadData_MEM, ForwardingOut_MEM;
     
     //MEM_WB Outputs
-    wire [31:0] ReadHi_WB, ReadLo_WB, ALUResult_WB, ReadData_WB;
+    wire [31:0] ReadHi_WB, ReadLo_WB, ALUResult_WB, ReadData_WB, Ra_WB;
     wire [4:0] WriteAddress_WB;
-    wire Zero_WB, RegWrite_WB, MoveOnNotZero_WB, HiOrLo_WB, DontMove_WB, MemToReg_WB, HiLoToReg_WB, Lb_WB, LoadExtended_WB, MemRead_WB;
+    wire Zero_WB, RegWrite_WB, MoveOnNotZero_WB, HiOrLo_WB, DontMove_WB, MemToReg_WB, HiLoToReg_WB, Lb_WB, LoadExtended_WB, MemRead_WB, Jal_WB;
     
     wire Branch_Forwarding;
     // Forwarding Outputs
@@ -132,11 +133,15 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .DontMove(DontMove_ID), 
         .MoveOnNotZero(MoveOnNotZero_ID),
         .Jump(Jump_ID),
+        .Jal(Jal_ID),
         .Lb(Lb_ID),
         .LoadExtended(LoadExtended_ID),
         .Branch(Branch_Forwarding),
+        // Branch Outputs
         .BranchOut(Branch_IF),
         .BranchAddress(BranchAddress_IF),
+        // Jump and Link Output
+        .Ra(Ra_ID),
         // Forwarding
         .ForwardE(ForwardE),
         .ForwardF(ForwardF),
@@ -188,7 +193,11 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .LbOut(Lb_EX),
         .LoadExtendedOut(LoadExtended_EX),
         .JumpIn(Jump_ID),
-        .JumpOut(Jump_Hazard)
+        .JumpOut(Jump_Hazard),
+        .JalIn(Jal_ID),
+        .JalOut(Jal_EX),
+        .RaIn(Ra_ID),
+        .RaOut(Ra_EX)
     );
     
     Execute EX(
@@ -253,7 +262,11 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .RD2Out(ReadData2_MEM),
         .WriteAddressOut(WriteAddress_MEM),
         .LbOut(Lb_MEM),
-        .LoadExtendedOut(LoadExtended_MEM)
+        .LoadExtendedOut(LoadExtended_MEM),
+        .JalIn(Jal_EX),
+        .JalOut(Jal_MEM),
+        .RaIn(Ra_EX),
+        .RaOut(Ra_MEM)
     );
     
     Memory MEM(
@@ -303,20 +316,26 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .RLoOut(ReadLo_WB),
         .ZeroOut(Zero_WB),
         .ALUResultOut(ALUResult_WB),
-        .WriteAddressOut(WriteRegister_ID),
+        .WriteAddressOut(WriteAddress_WB),
         .ReadDataOut(ReadData_WB),
         .LbOut(Lb_WB),
         .LoadExtendedOut(LoadExtended_WB),
-        .MemReadOut(MemRead_WB)
+        .MemReadOut(MemRead_WB),
+        .JalIn(Jal_MEM),
+        .JalOut(Jal_WB),
+        .RaIn(Ra_MEM),
+        .RaOut(Ra_WB)
     );
     
     WriteBack WB(
         // Inputs
+        .WriteAddressIn(WriteAddress_WB),
         .MemoryReadData(ReadData_WB),
         .ALUResult(ALUResult_WB),
         .Zero(Zero_WB),
         .ReadDataHi(ReadHi_WB),
         .ReadDataLo(ReadLo_WB),
+        .Ra(Ra_WB),
         // Control Signals
         .MemToReg(MemToReg_WB), 
         .HiOrLo(HiOrLo_WB), 
@@ -325,8 +344,10 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .MoveOnNotZero(MoveOnNotZero_WB),
         .Lb(Lb_WB),
         .LoadExtended(LoadExtended_WB),
+        .Jal(Jal_MEM),
         // Outputs
         .WriteData(WriteData),
+        .WriteAddressOut(WriteRegister_ID),
         .Move(Move_ID)
     );
     
