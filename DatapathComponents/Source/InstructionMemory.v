@@ -45,16 +45,7 @@ module InstructionMemory(Address, Instruction);
     reg [31:0] memory [0:395]; // memory is an array with 9 32 bit numbers ([lsb:msb] is convention for words)
     
     initial begin
-        //$readmemh("C:/Users/Ruben Purdy/Documents/ECE369/processor/Instruction_memory_custom_testcases_jump.txt", memory); // place "Instruction_memory.txt" in PROJECT_NAME.sim\sim_1\behav\xsim  
-        memory[0] = 32'b00100000000010000000000000000101; // addi $t0, $zero, 5
-        memory[1] = 32'b00001100000000000000000000000101; // jal 5
-        memory[2] = 32'b00100000000010000000000000000101; // addi $t0, $zero, 6
-        memory[3] = 32'b00100000000010000000000000000111; // addi $t0, $zero, 7
-        memory[4] = 32'b00100000000010000000000000001000; // addi $t0, $zero, 8
-        memory[5] = 32'b00100000000010000000000000001001; // addi $t0, $zero, 9
-        memory[6] = 32'b00100000000010000000000000001010; // addi $t0, $zero, 10
-        memory[7] = 32'b00000011111000000000000000001000; // jr $ra
-        memory[8] = 32'b00100000000010000000000000001011; // addi $t0, $zero, 11
+        $readmemh("C:/Users/Ruben Purdy/Documents/ECE369/processor/Instruction_memory_custom_testcases_jump.txt", memory); // place "Instruction_memory.txt" in PROJECT_NAME.sim\sim_1\behav\xsim  
     end
     
     always @(Address) begin

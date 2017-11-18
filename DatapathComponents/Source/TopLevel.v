@@ -72,7 +72,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
     
     wire Branch_Forwarding;
     // Forwarding Outputs
-    wire [1:0] ForwardA, ForwardB, ForwardE, ForwardF;
+    wire [1:0] ForwardA, ForwardB, ForwardE, ForwardF, ForwardG;
     wire ForwardC, ForwardD;
     
     wire Jump_Hazard;
@@ -145,7 +145,9 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         // Forwarding
         .ForwardE(ForwardE),
         .ForwardF(ForwardF),
-        .ForwardData(ALUResult_MEM)
+        .ForwardG(ForwardG),
+        .ForwardData(ALUResult_MEM),
+        .Ra_Mem(Ra_MEM)
     );
     
     ID_EX ID_EX_Reg(
@@ -360,11 +362,15 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .Rd_Mem(WriteAddress_MEM),
         .Rd_Wb(WriteRegister_ID),
         .ALUSrc(ALUSrc_EX),
+        .Opcode_Id(Instruction_ID[31:26]),
+        .Instruction_5_0_Id(Instruction_ID[5:0]),
         .MemWrite_Ex(MemWrite_EX),
         .RegWrite_Mem(RegWrite_MEM),
         .MemWrite_Mem(MemWrite_MEM),
+        .Jal_Mem(Jal_MEM),
         .MemRead_Wb(MemRead_WB),
         .RegWrite_Wb(RegWrite_In_ID),
+        .Jal_Wb(Jal_WB),
         // Outputs
         .ForwardA(ForwardA),
         .ForwardB(ForwardB),
@@ -372,6 +378,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ForwardD(ForwardD),
         .ForwardE(ForwardE),
         .ForwardF(ForwardF),
+        .ForwardG(ForwardG),
         .Branch(Branch_Forwarding)
     );
     
@@ -381,6 +388,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .Rt_ID(Instruction_ID[20:16]),
         .Rt_EX(Instruction_EX[20:16]),
         .Instruction_31_26(Instruction_ID[31:26]),
+        .Instruction_5_0(Instruction_ID[5:0]),
         .MemRead_EX(MemRead_EX),
         .PCWrite(PCWrite),
         .IF_ID_Write(IF_ID_Write),

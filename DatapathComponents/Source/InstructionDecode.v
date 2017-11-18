@@ -65,17 +65,19 @@ module InstructionDecode(
         // Forwarding
         ForwardE,
         ForwardF,
-        ForwardData
+        ForwardG,
+        ForwardData,
+        Ra_Mem
 );
     input Clk, RegWriteIn, Move, FlushControl;
-    input [1:0] ForwardE, ForwardF;
-    input [31:0] Instruction, PCResult, WriteData, ForwardData;
+    input [1:0] ForwardE, ForwardF, ForwardG;
+    input [31:0] Instruction, PCResult, WriteData, ForwardData, Ra_Mem;
     input [4:0] WriteRegister;
     
     output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended, JumpAddress, BranchAddress, Ra;
     output RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Jump, Jal, Lb, LoadExtended, Branch, BranchOut;
     
-    wire [31:0] FlushControllerOut, ShiftLeftOut, ForwardEOut, ForwardFOut;
+    wire [31:0] FlushControllerOut, ShiftLeftOut, ForwardEOut, ForwardFOut, JumpForwardingMuxOut;
     wire [15:0] Instruction_15_0;
     wire AndOut, ComparatorOut;
     
@@ -102,10 +104,19 @@ module InstructionDecode(
         .ReadData2(ReadData2)
     );
     
+    Mux32Bit4To1 JumpForwardingMux(
+        .out(JumpForwardingMuxOut),
+        .inA(ReadData1),
+        .inB(Ra_Mem),
+        .inC(ForwardData),
+        .inD(WriteData),
+        .sel(ForwardG)
+    );
+    
     JumpController JControl(
         .Instruction(Instruction),
         .PCResult(PCResult[31:28]),
-        .JumpRegister(ReadData1),
+        .JumpRegister(JumpForwardingMuxOut),
         .JumpAddress(JumpAddress)
     );
     

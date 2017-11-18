@@ -20,11 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ForwardingUnit(Rs_Id, Rt_Id, Rs_Ex, Rt_Ex, Rd_Mem, Rd_Wb, ALUSrc, MemWrite_Ex, RegWrite_Mem, MemWrite_Mem, MemRead_Wb, RegWrite_Wb, ForwardA, ForwardB, ForwardC, ForwardD, ForwardE, ForwardF, Branch);
+module ForwardingUnit(Rs_Id, Rt_Id, Rs_Ex, Rt_Ex, Rd_Mem, Rd_Wb, ALUSrc, Opcode_Id, Instruction_5_0_Id, MemWrite_Ex, RegWrite_Mem, MemWrite_Mem, Jal_Mem, MemRead_Wb, RegWrite_Wb, Jal_Wb, ForwardA, ForwardB, ForwardC, ForwardD, ForwardE, ForwardF, ForwardG, Branch);
+    input [5:0] Opcode_Id, Instruction_5_0_Id;
     input [4:0] Rs_Id, Rt_Id, Rs_Ex, Rt_Ex, Rd_Mem, Rd_Wb;
-    input ALUSrc, MemWrite_Ex, RegWrite_Mem, MemWrite_Mem, MemRead_Wb, RegWrite_Wb, Branch;
+    input ALUSrc, MemWrite_Ex, RegWrite_Mem, MemWrite_Mem, Jal_Mem, MemRead_Wb, RegWrite_Wb, Jal_Wb, Branch;
     
-    output reg [1:0] ForwardA, ForwardB, ForwardE, ForwardF;
+    output reg [1:0] ForwardA, ForwardB, ForwardE, ForwardF, ForwardG;
     output reg ForwardC, ForwardD;
     
     always@(*) begin
@@ -74,5 +75,22 @@ module ForwardingUnit(Rs_Id, Rt_Id, Rs_Ex, Rt_Ex, Rd_Mem, Rd_Wb, ALUSrc, MemWrit
             ForwardF <= 2'b10;
         else
             ForwardF <= 2'b00;
+            
+        // Forwarding from Mem Ra to Id Jr
+        if ((Opcode_Id == 6'b000000) && (Instruction_5_0_Id == 6'b001000) && (Rs_Id == 5'b11111) && (Jal_Mem == 1))
+            ForwardG <= 2'd1;
+        // Forwarding from Mem Rd to Id Jr
+        else if ((Opcode_Id == 6'b000000) && (Instruction_5_0_Id == 6'b001000) && (Rs_Id == Rd_Mem) && (RegWrite_Mem == 1))
+            ForwardG <= 2'd2;
+        // Forwarding from Wb Ra to Id Jr
+        else if ((Opcode_Id == 6'b000000) && (Instruction_5_0_Id == 6'b001000) && (Rs_Id == 5'b11111) && (Jal_Wb == 1))
+            ForwardG <= 2'd3;
+        // Forwarding from Wb Wd to Id Jr
+        else if ((Opcode_Id == 6'b000000) && (Instruction_5_0_Id == 6'b001000) && (Rs_Id == Rd_Wb) && (RegWrite_Wb == 1))
+            ForwardG <= 2'd3;
+        else
+            ForwardG <= 2'd0;
+        
+        
     end
 endmodule
