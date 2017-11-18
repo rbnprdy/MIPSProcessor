@@ -344,7 +344,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .MoveOnNotZero(MoveOnNotZero_WB),
         .Lb(Lb_WB),
         .LoadExtended(LoadExtended_WB),
-        .Jal(Jal_MEM),
+        .Jal(Jal_WB),
         // Outputs
         .WriteData(WriteData),
         .WriteAddressOut(WriteRegister_ID),

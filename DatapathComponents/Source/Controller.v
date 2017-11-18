@@ -356,7 +356,6 @@ module Controller(
                 
                 6'b000011, // jal
                 6'b000010 : begin // j
-                    RegWrite <= 0;
                     ALUSrc <= 0;
                     RegDst <= 0;
                     HiWrite <= 0;
@@ -369,15 +368,20 @@ module Controller(
                     MemToReg <= 0;
                     HiOrLo <= 0;
                     HiToReg <= 0;
-                    DontMove <= 0;
                     MoveOnNotZero <= 0;
                     Jump <= 1;
                     Lb <= 0;
                     LoadExtended <= 0;
-                    if (Instruction[31:26] == 6'b000010) // j
+                    if (Instruction[31:26] == 6'b000010) begin// j
+                        DontMove <= 0;
                         JumpAndLink <= 0;
-                    else // jal
+                        RegWrite <= 0;
+                    end
+                    else begin // jal
+                        DontMove <= 1;
                         JumpAndLink <= 1;
+                        RegWrite <= 1;
+                    end
                 end
                 default : begin
                     RegWrite <= 0;

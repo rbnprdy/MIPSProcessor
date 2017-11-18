@@ -123,7 +123,7 @@ module ALU32Bit(ALUControl, A, B, ShiftAmount, ALUResult, HiResult, Zero);
                 else
                     ALUResult <= 1;
             end
-            default : ALUResult <= 1; // Default
+            default : ALUResult <= 0; // Default
         endcase
     end
     
