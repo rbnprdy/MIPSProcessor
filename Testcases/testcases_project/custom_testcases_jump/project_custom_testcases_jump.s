@@ -56,7 +56,7 @@ addi $s3, $s3, 3	# [s3] = 6
 jal jump2
 addi $s3, $s3, 4    
 # flush
-addi $s3, $s3, 5	# [s3] = 13
+addi $s3, $s3, 5	# [s3] = 14
 j done
 
 jump1:
@@ -65,7 +65,7 @@ jr $ra
 
 jump2:
 # flush
-addi $s3, $s3, 3    # [s3] = 8
+addi $s3, $s3, 3    # [s3] = 9
 jr $ra
 
 done:
