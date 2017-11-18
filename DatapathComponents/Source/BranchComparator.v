@@ -36,7 +36,7 @@ module BranchComparator(ReadData1, ReadData2, OpCode, Instruction_20_16, Out);
         end
         // bne
         else if (OpCode == 6'b000101) begin
-            if (ReadData1 == ReadData2)
+            if (ReadData1 != ReadData2)
                 Out <= 1;
             else
                 Out <= 0;

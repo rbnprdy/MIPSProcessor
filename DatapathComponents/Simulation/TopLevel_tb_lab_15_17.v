@@ -69,96 +69,133 @@ module TopLevel_tb_lab_15_17();
         // j       start               
         @(negedge Clk);
         
+        // Flush
+        @(negedge Clk);
+        
         // start:
         
         // lw      $s0, 4($a0)         
         @(negedge Clk);
-        
-        // lw      $s0, 8($a0)         
-        @(negedge Clk);
-        
-        // sw      $s0, 0($a0)         
-        @(negedge Clk);
         tests = tests + 1; // Test #1
-        #5 if (WriteData == 32'h00000002)
+        #5 if (WriteData == 32'h00000001)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #1: sw      $s0, 0($a0). Exceptect WriteData: 32'h00000002.. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #1: lw      $s0, 4($a0). Exceptect WriteData: 00000001. Actual WriteData: %h", $time, WriteData);
         
-        // sw      $s0, 12($a0)        
+        // lw      $s0, 8($a0)         
         @(negedge Clk);
         tests = tests + 1; // Test #2
         #5 if (WriteData == 32'h00000002)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #2: sw      $s0, 12($a0). Exceptect WriteData: 32'h00000002.. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #2: lw      $s0, 8($a0). Exceptect WriteData: 00000002. Actual WriteData: %h", $time, WriteData);
+        
+        // sw      $s0, 0($a0)         
+        @(negedge Clk);
+        
+        // sw      $s0, 12($a0)        
+        @(negedge Clk);
         
         // lw      $s1, 0($a0)         
         @(negedge Clk);
+        tests = tests + 1; // Test #3
+        #5 if (WriteData == 32'h00000002)
+            passed = passed + 1;
+        else
+            $display("Time: %0d. Failed Test #3: lw      $s1, 0($a0). Exceptect WriteData: 00000002. Actual WriteData: %h", $time, WriteData);
         
         // lw      $s2, 12($a0)        
         @(negedge Clk);
+        tests = tests + 1; // Test #4
+        #5 if (WriteData == 32'h00000002)
+            passed = passed + 1;
+        else
+            $display("Time: %0d. Failed Test #4: lw      $s2, 12($a0). Exceptect WriteData: 00000002. Actual WriteData: %h", $time, WriteData);
         
         // beq     $s0, $zero, branch1 
         @(negedge Clk);
         
         // add     $s1, $s0, $zero     
         @(negedge Clk);
-        tests = tests + 1; // Test #3
+        tests = tests + 1; // Test #5
         #5 if (WriteData == 32'h00000002)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #3: add     $s1, $s0, $zero. Exceptect WriteData: 32'h00000002.. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #5: add     $s1, $s0, $zero. Exceptect WriteData: 00000002. Actual WriteData: %h", $time, WriteData);
+        
+        // Stall
+        @(negedge Clk);
         
         // beq     $s0, $s1, branch1   
         @(negedge Clk);
         
+        // Flush
+        @(negedge Clk);
+        
         // branch1:
         
-        // addi    $s0, $zero, -1        
+        // addi    $s0, $zero, -1    
         @(negedge Clk);
-        tests = tests + 1; // Test #4
+        tests = tests + 1; // Test #6
         #5 if (WriteData == -32'd1)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #4: addi    $s0, $zero, -1. Exceptect WriteData: -1. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #6: addi    $s0, $zero, -1. Exceptect WriteData: -1. Actual WriteData: %d", $time, WriteData);
+        
+        // Stall
+        @(negedge Clk);
         
         // bgez    $s0, start          
         @(negedge Clk);
         
         // addi    $s0, $s0, 1         
         @(negedge Clk);
-        tests = tests + 1; // Test #5
+        tests = tests + 1; // Test #7
         #5 if (WriteData == 32'd0)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #5: addi    $s0, $s0, 1. Exceptect WriteData: 0.. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #7: addi    $s0, $s0, 1. Exceptect WriteData: 0. Actual WriteData: %d", $time, WriteData);
+        
+        // Stall
+        @(negedge Clk);
         
         // bgez    $s0, branch2        
+        @(negedge Clk);
+        
+        // Flush
         @(negedge Clk);
         
         // branch2:
         
         // addi    $s0, $zero, -1      
         @(negedge Clk);
-        tests = tests + 1; // Test #6
+        tests = tests + 1; // Test #8
         #5 if (WriteData == -32'd1)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #6: addi    $s0, $zero, -1. Exceptect WriteData: -1.. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #8: addi    $s0, $zero, -1. Exceptect WriteData: -1. Actual WriteData: %d", $time, WriteData);
+        
+        // Stall
+        @(negedge Clk);
         
         // bgtz    $s0, branch3        
         @(negedge Clk);
         
         // addi    $s0, $zero, 1       
         @(negedge Clk);
-        tests = tests + 1; // Test #7
+        tests = tests + 1; // Test #9
         #5 if (WriteData == 32'd1)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #7: addi    $s0, $zero, 1. Exceptect WriteData: 1.. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #9: addi    $s0, $zero, 1. Exceptect WriteData: 1. Actual WriteData: %d", $time, WriteData);
+        
+        // Stall
+        @(negedge Clk);
         
         // bgtz    $s0, branch3        
+        @(negedge Clk);
+        
+        // Flush
         @(negedge Clk);
         
         // branch3:
@@ -168,24 +205,33 @@ module TopLevel_tb_lab_15_17();
         
         // addi    $s0, $zero, -1      
         @(negedge Clk);
-        tests = tests + 1; // Test #8
+        tests = tests + 1; // Test #10
         #5 if (WriteData == -32'd1)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #8: addi    $s0, $zero, -1. Exceptect WriteData: -1.. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #10: addi    $s0, $zero, -1. Exceptect WriteData: -1. Actual WriteData: %d", $time, WriteData);
+        
+        // Stall
+        @(negedge Clk);
         
         // bltz    $s0, branch4        
+        @(negedge Clk);
+        
+        // Flush
         @(negedge Clk);
         
         // branch4:
         
         // addi    $s1, $zero, -1      
         @(negedge Clk);
-        tests = tests + 1; // Test #9
+        tests = tests + 1; // Test #11
         #5 if (WriteData == -32'd1)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #9: addi    $s1, $zero, -1. Exceptect WriteData: -1.. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #11: addi    $s1, $zero, -1. Exceptect WriteData: -1. Actual WriteData: %d", $time, WriteData);
+        
+        // Stall
+        @(negedge Clk);
         
         // bne     $s0, $s1, branch5   
         @(negedge Clk);
@@ -193,79 +239,108 @@ module TopLevel_tb_lab_15_17();
         // bne     $s0, $zero, branch5 
         @(negedge Clk);
         
+        // Flush
+        @(negedge Clk);
+        
         // branch5:
         
         // addi $s0, $zero, 128        
         @(negedge Clk);
-        tests = tests + 1; // Test #10
+        tests = tests + 1; // Test #12
         #5 if (WriteData == 32'h80)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #10: addi $s0, $zero, 128. Exceptect WriteData: 80. Actual WriteData: %h", $time, WriteData);
+            $display("Time: %0d. Failed Test #12: addi $s0, $zero, 128. Exceptect WriteData: 80. Actual WriteData: %h", $time, WriteData);
         
-        // sb   $s0, 0($a0)            # Memory[0][7:0] = 0x80
+        // sb   $s0, 0($a0)            
+        @(negedge Clk);
         
         // lb   $s0, 0($a0)            
         @(negedge Clk);
-        tests = tests + 1; // Test #11
+        tests = tests + 1; // Test #13
         #5 if (WriteData == 32'hffffff80)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #11: lb   $s0, 0($a0). Exceptect WriteData: ffffff80. Actual WriteData: %h", $time, WriteData);
+            $display("Time: %0d. Failed Test #13: lb   $s0, 0($a0). Exceptect WriteData: ffffff80. Actual WriteData: %h", $time, WriteData);
+        
+        // Stall
+        @(negedge Clk);
+        
+        // Stall
+        @(negedge Clk);
         
         // blez $s0, branch6           
+        @(negedge Clk);
+        
+        // Flush
         @(negedge Clk);
         
         // branch6:
         
         // addi $s0, $zero, -1         
         @(negedge Clk);
-        tests = tests + 1; // Test #12
+        tests = tests + 1; // Test #14
         #5 if (WriteData == -32'd1)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #12: addi $s0, $zero, -1. Exceptect WriteData: -1. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #14: addi $s0, $zero, -1. Exceptect WriteData: -1. Actual WriteData: %d", $time, WriteData);
         
-        // sh   $s0, 0($a0)            # Memory[0][15:0] = -1
+        // sh   $s0, 0($a0)            
+        @(negedge Clk);
         
         // addi $s0, $zero, 0            
         @(negedge Clk);
-        tests = tests + 1; // Test #13
+        tests = tests + 1; // Test #15
         #5 if (WriteData == 32'h0)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #13: addi $s0, $zero, 0. Exceptect WriteData: 0. Actual WriteData: %h", $time, WriteData);
+            $display("Time: %0d. Failed Test #15: addi $s0, $zero, 0. Exceptect WriteData: 0. Actual WriteData: %h", $time, WriteData);
         
         // lh   $s0, 0($a0)            
         @(negedge Clk);
-        tests = tests + 1; // Test #14
+        tests = tests + 1; // Test #16
         #5 if (WriteData == 32'hffffffff)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #14: lh   $s0, 0($a0). Exceptect WriteData: ffffffff. Actual WriteData: %h", $time, WriteData);
+            $display("Time: %0d. Failed Test #16: lh   $s0, 0($a0). Exceptect WriteData: ffffffff. Actual WriteData: %h", $time, WriteData);
+        
+        // Stall
+        @(negedge Clk);
+        
+        // Stall
+        @(negedge Clk);
         
         // blez $s0, branch7           
+        @(negedge Clk);
+        
+        // Flush
         @(negedge Clk);
         
         // branch7:
         
         // addi $s0, $zero, -1         
         @(negedge Clk);
-        tests = tests + 1; // Test #15
+        tests = tests + 1; // Test #17
         #5 if (WriteData == -32'd1)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #15: addi $s0, $zero, -1. Exceptect WriteData: -1. Actual WriteData: %d", $time, WriteData);
+            $display("Time: %0d. Failed Test #17: addi $s0, $zero, -1. Exceptect WriteData: -1. Actual WriteData: %d", $time, WriteData);
         
         // lui $s0, 1                  
         @(negedge Clk);
-        tests = tests + 1; // Test #16
+        tests = tests + 1; // Test #18
         #5 if (WriteData == 32'h10000)
             passed = passed + 1;
         else
-            $display("Time: %0d. Failed Test #16: lui $s0, 1. Exceptect WriteData: 10000. Actual WriteData: %h", $time, WriteData);
+            $display("Time: %0d. Failed Test #18: lui $s0, 1. Exceptect WriteData: 10000. Actual WriteData: %h", $time, WriteData);
+        
+        // Stall
+        @(negedge Clk);
         
         // bgez $s0, branch8           
+        @(negedge Clk);
+        
+        // Flush
         @(negedge Clk);
         
         // branch8:

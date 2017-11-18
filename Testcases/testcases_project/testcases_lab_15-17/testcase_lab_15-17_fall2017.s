@@ -49,53 +49,53 @@ main:
     addi    $a0, $zero, 10      # if $a0 == 10, jump failed.
     addi    $a0, $zero, 10      # if $a0 == 10, jump failed.
     start:
-    lw      $s0, 4($a0)         # $s0 = Memory[1] = 32'h00000001.
-    lw      $s0, 8($a0)         # $s0 = Memory[2] = 32'h00000002.
-    sw      $s0, 0($a0)         # Memory[0] = 32'h00000002.
-    sw      $s0, 12($a0)        # Memory[2] = 32'h00000002.
-    lw      $s1, 0($a0)         # $s1 = Memory[0] = 32'h00000002.
-    lw      $s2, 12($a0)        # $s2 = Memory[1] = 32'h00000002.
-    beq     $s0, $zero, branch1 # $s0 != 0, don't branch
-    add     $s1, $s0, $zero     # $s1 = 32'h00000002.
+    lw      $s0, 4($a0)         # $s0 = 0x00000001
+    lw      $s0, 8($a0)         # $s0 = 0x00000002
+    sw      $s0, 0($a0)         # 
+    sw      $s0, 12($a0)        # 
+    lw      $s1, 0($a0)         # $s1 = 0x00000002
+    lw      $s2, 12($a0)        # $s2 = 0x00000002
+    beq     $s0, $zero, branch1 # don't branch
+    add     $s1, $s0, $zero     # $s1 = 0x00000002
     beq     $s0, $s1, branch1   # taken
     j       error               # jump to error if the branch not taken.
 
     branch1:
-	addi    $s0, $zero, -1		# $s0 = -1
+	addi    $s0, $zero, -1	# $s0 = -1
     bgez    $s0, start          # don't branch
-    addi    $s0, $s0, 1         # $s0 = 0.
+    addi    $s0, $s0, 1         # $s0 = 0
     bgez    $s0, branch2        # taken
     j       error               # jump to error if the branch is not taken.
 
     branch2:
-    addi    $s0, $zero, -1      # $s0 = -1.
+    addi    $s0, $zero, -1      # $s0 = -1
     bgtz    $s0, branch3        # don't branch
-    addi    $s0, $zero, 1       # $s0 = 1.
+    addi    $s0, $zero, 1       # $s0 = 1
     bgtz    $s0, branch3        # taken
     j       error               # jump to error if the branch is not taken.
 
     branch3:
     bltz    $s0, branch4        # don't branch
-    addi    $s0, $zero, -1      # $s0 = -1.
+    addi    $s0, $zero, -1      # $s0 = -1
     bltz    $s0, branch4        # taken
     j       error               # jump to error if the branch is not taken.
 
     branch4:
-    addi    $s1, $zero, -1      # $s1 = -1.
+    addi    $s1, $zero, -1      # $s1 = -1
     bne     $s0, $s1, branch5   # don't branch
     bne     $s0, $zero, branch5 # taken
     j       error               # jump to error if the branch is not taken.
 
     branch5:
 	addi $s0, $zero, 128        # $s0 = 0x80
-	sb   $s0, 0($a0)		    # Memory[0][7:0] = 0x80
+	sb   $s0, 0($a0)		    # 
 	lb   $s0, 0($a0)		    # $s0 = 0xffffff80
     blez $s0, branch6           # taken
 	j       error               # jump to error if the branch is not taken.
 	
 	branch6:
 	addi $s0, $zero, -1         # $s0 = -1
-	sh   $s0, 0($a0)	        # Memory[0][15:0] = -1
+	sh   $s0, 0($a0)	        # 
 	addi $s0, $zero, 0		    #$s0 = 0x0
 	lh   $s0, 0($a0)	        # $s0 = 0xffffffff
     blez $s0, branch7           # taken

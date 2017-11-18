@@ -53,6 +53,7 @@ module InstructionDecode(
         DontMove, 
         MoveOnNotZero,
         Jump,
+        Jal,
         Lb,
         LoadExtended,
         Branch,
@@ -70,32 +71,11 @@ module InstructionDecode(
     input [4:0] WriteRegister;
     
     output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended, JumpAddress, BranchAddress;
-    output RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Jump, Lb, LoadExtended, Branch, BranchOut;
+    output RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Jump, Jal, Lb, LoadExtended, Branch, BranchOut;
     
-    wire [31:0] PCAddResult, WriteDataMuxOut, FlushControllerOut, ShiftLeftOut, ForwardEOut, ForwardFOut;
+    wire [31:0] FlushControllerOut, ShiftLeftOut, ForwardEOut, ForwardFOut;
     wire [15:0] Instruction_15_0;
-    wire [4:0] WriteRegisterMuxOut;
-    wire AndOut, OrOut, JumpAndLink, ComparatorOut;
-    
-    PCAdder PCAdderJump(
-        .PCResult(PCResult),
-        .WriteEn(1'b1),
-        .PCAddResult(PCAddResult)
-    );
-    
-    Mux32Bit2To1 WriteDataMux(
-        .out(WriteDataMuxOut),
-        .inA(WriteData),
-        .inB(PCAddResult),
-        .sel(JumpAndLink)
-    );
-    
-    Mux5Bit2To1 WriteRegisterMux(
-        .out(WriteRegisterMuxOut),
-        .inA(WriteRegister),
-        .inB(5'd31),
-        .sel(JumpAndLink)
-    );
+    wire AndOut, ComparatorOut;
     
     AndGate1Bit RegWriteAnd(
         .A(RegWriteIn),
@@ -103,18 +83,12 @@ module InstructionDecode(
         .O(AndOut)
     );
     
-    OrGate1Bit2In RegWriteOr(
-        .A(JumpAndLink),
-        .B(AndOut),
-        .O(OrOut)
-    );
-    
     RegisterFile RegFile(
         .ReadRegister1(Instruction[25:21]),
         .ReadRegister2(Instruction[20:16]),
-        .WriteRegister(WriteRegisterMuxOut),
-        .WriteData(WriteDataMuxOut),
-        .RegWrite(OrOut),
+        .WriteRegister(WriteRegister),
+        .WriteData(WriteData),
+        .RegWrite(AndOut),
         .Clk(Clk),
         .ReadData1(ReadData1),
         .ReadData2(ReadData2)
@@ -158,7 +132,7 @@ module InstructionDecode(
         .DontMove(DontMove), 
         .MoveOnNotZero(MoveOnNotZero),
         .Jump(Jump),
-        .JumpAndLink(JumpAndLink),
+        .JumpAndLink(Jal),
         .Lb(Lb),
         .LoadExtended(LoadExtended)
     );
