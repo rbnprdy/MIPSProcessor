@@ -36,5 +36,7 @@ module Mux32Bit4To1(out, inA, inB, inC, inD, sel);
             out <= inC;
         else if (sel == 2'd3)
             out <= inD;
+        else
+            out <= inA;
     end
 endmodule

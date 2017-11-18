@@ -53,7 +53,7 @@ module DataMemory(Address, WriteData, Clk, MemWrite, MemRead, ReadData);
     // setup initial memory
     initial begin
     
-        // Public Project Testcases Memory
+/*        // Public Project Testcases Memory
         memory[0] = 32'd100;
         memory[1] = 32'd200;
         memory[2] = 32'd300;
@@ -66,15 +66,15 @@ module DataMemory(Address, WriteData, Clk, MemWrite, MemRead, ReadData);
         memory[9] = 32'd1000;
         memory[10] = 32'd1100;
         memory[11] = 32'd1200;
-        
+  */      
      
         // Lab 15-17 Testcase Memory
-   /*     memory[0] = 32'd0;
+        memory[0] = 32'd0;
         memory[1] = 32'd1;
         memory[2] = 32'd2;
         memory[3] = 32'd3;
         memory[4] = 32'd4;
-        memory[5] = -32'd1; */
+        memory[5] = -32'd1;
 
     end
 

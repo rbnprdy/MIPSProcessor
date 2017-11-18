@@ -146,7 +146,7 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ForwardE(ForwardE),
         .ForwardF(ForwardF),
         .ForwardG(ForwardG),
-        .ForwardData(ALUResult_MEM),
+        .ForwardData(ForwardingOut_MEM),
         .Ra_Mem(Ra_MEM)
     );
     
