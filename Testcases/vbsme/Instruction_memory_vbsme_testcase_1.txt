@@ -1,0 +1,133 @@
+34040000 ->	main:		ori	$a0, $zero, 0
+34050010 ->			ori	$a1, $zero, 16
+34060410 ->			ori	$a2, $zero, 1040
+0c000007 ->			jal	vbsme
+00000000 ->			nop
+08000006 ->			j	end
+08000006 ->	end:		j	end
+34020000 ->	vbsme:		ori	$v0, $zero, 0
+34030000 ->			ori	$v1, $zero, 0
+23bdfffc ->			addi	$sp, $sp, -4
+afbf0000 ->			sw	$ra, 0($sp)
+8c900000 ->			lw	$s0, 0($a0)
+8c910004 ->			lw	$s1, 4($a0)
+8c920008 ->			lw	$s2, 8($a0)
+8c93000c ->			lw	$s3, 12($a0)
+0000a020 ->			add	$s4, $zero, $zero
+0212a822 ->			sub	$s5, $s0, $s2
+0000b020 ->			add	$s6, $zero, $zero
+0233b822 ->			sub	$s7, $s1, $s3
+200800ff ->			addi	$t0, $zero, 255
+01120018 ->			mult	$t0, $s2
+00004012 ->			mflo	$t0
+01130018 ->			mult	$t0, $s3
+00004012 ->			mflo	$t0
+34090000 ->			ori	$t1, $zero, 0
+02b4082a ->	mainLoop:	slt	$at, $s5, $s4
+14200047 ->			bne	$at, $zero, exit
+02f6082a ->			slt	$at, $s7, $s6
+14200045 ->			bne	$at, $zero, exit
+11200014 ->			beq	$t1, $zero, right
+200a0001 ->			addi	$t2, $zero, 1
+112a0022 ->			beq	$t1, $t2, down
+214a0001 ->			addi	$t2, $t2, 1
+112a0030 ->			beq	$t1, $t2, left
+00155020 ->	up:		add	$t2, $zero, $s5
+0154082a ->	loopUp:		slt	$at, $t2, $s4
+1420000a ->			bne	$at, $zero, exitUp
+000a5820 ->			add	$t3, $zero, $t2
+00166020 ->			add	$t4, $zero, $s6
+0c000065 ->			jal	sad
+0328082a ->			slt	$at, $t9, $t0
+10200003 ->			beq	$at, $zero, skipUp
+03204020 ->			add	$t0, $t9, $zero
+01401020 ->			add	$v0, $t2, $zero
+02c01820 ->			add	$v1, $s6, $zero
+214affff ->	skipUp:		addi	$t2, $t2, -1
+08000023 ->			j	loopUp
+22d60001 ->	exitUp:		addi	$s6, $s6, 1
+20090000 ->			addi	$t1, $zero, 0
+08000019 ->			j	mainLoop
+00165020 ->	right:		add	$t2, $zero, $s6
+02ea082a ->	loopRight:	slt	$at, $s7, $t2
+1420000a ->			bne	$at, $zero, exitRight
+00145820 ->			add	$t3, $zero, $s4
+000a6020 ->			add	$t4, $zero, $t2
+0c000065 ->			jal	sad
+0328082a ->			slt	$at, $t9, $t0
+10200003 ->			beq	$at, $zero, skipRight
+03204020 ->			add	$t0, $t9, $zero
+02801020 ->			add	$v0, $s4, $zero
+01401820 ->			add	$v1, $t2, $zero
+214a0001 ->	skipRight:	addi	$t2, $t2, 1
+08000033 ->			j	loopRight
+22940001 ->	exitRight:	addi	$s4, $s4, 1
+20090001 ->			addi	$t1, $zero, 1
+08000019 ->			j	mainLoop
+00145020 ->	down:		add	$t2, $zero, $s4
+02aa082a ->	loopDown:	slt	$at, $s5, $t2
+1420000a ->			bne	$at, $zero, exitDown
+000a5820 ->			add	$t3, $zero, $t2
+00176020 ->			add	$t4, $zero, $s7
+0c000065 ->			jal	sad
+0328082a ->			slt	$at, $t9, $t0
+10200003 ->			beq	$at, $zero, skipDown
+03204020 ->			add	$t0, $t9, $zero
+01401020 ->			add	$v0, $t2, $zero
+02e01820 ->			add	$v1, $s7, $zero
+214a0001 ->	skipDown:	addi	$t2, $t2, 1
+08000043 ->			j	loopDown
+22f7ffff ->	exitDown:	addi	$s7, $s7, -1
+20090002 ->			addi	$t1, $zero, 2
+08000019 ->			j	mainLoop
+00175020 ->	left:		add	$t2, $zero, $s7
+0156082a ->	loopLeft:	slt	$at, $t2, $s6
+1420000a ->			bne	$at, $zero, exitLeft
+00155820 ->			add	$t3, $zero, $s5
+000a6020 ->			add	$t4, $zero, $t2
+0c000065 ->			jal	sad
+0328082a ->			slt	$at, $t9, $t0
+10200003 ->			beq	$at, $zero, skipLeft
+03204020 ->			add	$t0, $t9, $zero
+02a01020 ->			add	$v0, $s5, $zero
+01401820 ->			add	$v1, $t2, $zero
+214affff ->	skipLeft:	addi	$t2, $t2, -1
+08000053 ->			j	loopLeft
+22b5ffff ->	exitLeft:	addi	$s5, $s5, -1
+20090003 ->			addi	$t1, $zero, 3
+08000019 ->			j	mainLoop
+8fbf0000 ->	exit:		lw	$ra, 0($sp)
+23bd0004 ->			addi	$sp, $sp, 4
+03e00008 ->			jr	$ra
+000b5880 ->	sad:		sll	$t3, $t3, 2
+000c6080 ->			sll	$t4, $t4, 2
+34090000 ->			ori	$t1, $zero, 0
+71716802 ->			mul	$t5, $t3, $s1
+01ac6820 ->			add	$t5, $t5, $t4
+01a56820 ->			add	$t5, $t5, $a1
+00c07020 ->			add	$t6, $a2, $zero
+340b0000 ->			ori	$t3, $zero, 0
+0172782a ->	loopi:		slt	$t7, $t3, $s2
+11e00014 ->			beq	$t7, $zero, exiti
+340c0000 ->			ori	$t4, $zero, 0
+0193782a ->	loopj:		slt	$t7, $t4, $s3
+11e0000c ->			beq	$t7, $zero, exitj
+8db80000 ->			lw	$t8, 0($t5)
+8dd90000 ->			lw	$t9, 0($t6)
+0319082a ->			slt	$at, $t8, $t9
+10200002 ->			beq	$at, $zero, absV
+0338c022 ->			sub	$t8, $t9, $t8
+08000079 ->			j	endAbs
+0319c022 ->	absV:		sub	$t8, $t8, $t9
+01384820 ->	endAbs:		add	$t1, $t1, $t8
+21ad0004 ->			addi	$t5, $t5, 4
+21ce0004 ->			addi	$t6, $t6, 4
+218c0001 ->			addi	$t4, $t4, 1
+08000070 ->			j	loopj
+02337822 ->	exitj:		sub	$t7, $s1, $s3
+000f7880 ->			sll	$t7, $t7, 2
+01af6820 ->			add	$t5, $t5, $t7
+216b0001 ->			addi	$t3, $t3, 1
+0800006d ->			j	loopi
+0120c820 ->	exiti:		add	$t9, $t1, $zero
+03e00008 ->			jr	$ra
