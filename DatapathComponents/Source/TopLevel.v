@@ -20,11 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
+module TopLevel(Clk, Rst, PCValue, v0, v1);
     input Clk, Rst;
     
-    output [31:0] WriteData, PCValue, HiData, LoData;
+    output [31:0] PCValue, v0, v1;
     
+    wire [31:0] WriteData, HiData, LoData;
     // InstructionFetch Inputs
     wire Branch_IF; 
     wire [31:0] BranchAddress_IF;
@@ -147,7 +148,9 @@ module TopLevel(Clk, Rst, WriteData, PCValue, HiData, LoData);
         .ForwardF(ForwardF),
         .ForwardG(ForwardG),
         .ForwardData(ForwardingOut_MEM),
-        .Ra_Mem(Ra_MEM)
+        .Ra_Mem(Ra_MEM),
+        .v0(v0),
+        .v1(v1)
     );
     
     ID_EX ID_EX_Reg(

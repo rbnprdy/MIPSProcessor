@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 10/16/2017 07:37:29 PM
+// Create Date: 11/20/2017 12:54:44 PM
 // Design Name: 
-// Module Name: TopLevelWithDisplay
+// Module Name: TopLevel_tb_vbsme
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,28 +20,29 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module TopLevelWithDisplay(Clk, Rst, out7, en_out);
+module TopLevel_tb_vbsme();
+    reg Clk, Rst;
     
-    input Clk, Rst;
-    output [6:0] out7;
-    output [7:0] en_out;
+    wire [31:0] PCValue, v0, v1;
     
-    wire [31:0] v0, v1, PCValue;
-    
-    TopLevel tl(
+    TopLevel m0(
         .Clk(Clk),
         .Rst(Rst),
         .PCValue(PCValue),
         .v0(v0),
         .v1(v1)
     );
+      
+    initial begin
+        Clk <= 1'b0;
+        forever #100 Clk <= ~Clk;
+    end
     
-    Two4DigitDisplay display(
-        .Clk(Clk),
-        .NumberA(v0[7:0]),
-        .NumberB(v1[7:0]),
-        .out7(out7),
-        .en_out(en_out)
-    );
-    
+    initial begin
+        Rst <= 1;
+        
+        @(negedge Clk);
+        @(negedge Clk);
+        Rst <= 0;
+    end
 endmodule
