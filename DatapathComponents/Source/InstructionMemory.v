@@ -38,14 +38,14 @@
 
 module InstructionMemory(Address, Instruction); 
 
-    input [31:0] Address;        // Input Address 
+    input [31:0] Address;  // Input Address 
 
     output reg [31:0] Instruction;    // Instruction at memory location Address
     
     reg [31:0] memory [0:395]; // memory is an array with 9 32 bit numbers ([lsb:msb] is convention for words)
     
     initial begin
-        $readmemh("C:/Users/Ruben Purdy/Documents/ECE369/processor/Instruction_memory_testcases_lab_15-17.txt", memory); // place "Instruction_memory.txt" in PROJECT_NAME.sim\sim_1\behav\xsim  
+        $readmemh("C:/Users/Ruben Purdy/Documents/ECE369/processor/Instruction_memory_custom_testcases_1.txt", memory); // place "Instruction_memory.txt" in PROJECT_NAME.sim\sim_1\behav\xsim  
     end
     
     always @(Address) begin

@@ -116,6 +116,7 @@ addi $s2, $zero, -5678
 j error
 
 branch3:
+# flush
 addi $s2, $zero, 1      #[s2] = 1
 
 done:
