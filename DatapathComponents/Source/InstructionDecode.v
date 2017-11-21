@@ -60,8 +60,6 @@ module InstructionDecode(
         // BranchOutput
         BranchOut,
         BranchAddress,
-        // Jump and Link Output
-        Ra,
         // Forwarding
         ForwardE,
         ForwardF,
@@ -77,18 +75,12 @@ module InstructionDecode(
     input [31:0] Instruction, PCResult, WriteData, ForwardData, Ra_Mem;
     input [4:0] WriteRegister;
     
-    output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended, JumpAddress, BranchAddress, Ra, v0, v1;
+    output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended, JumpAddress, BranchAddress, v0, v1;
     output RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Jump, Jal, Lb, LoadExtended, Branch, BranchOut;
     
     wire [31:0] FlushControllerOut, ShiftLeftOut, ForwardEOut, ForwardFOut, JumpForwardingMuxOut, v0, v1;
     wire [15:0] Instruction_15_0;
     wire AndOut, ComparatorOut;
-    
-    PCAdder RaAdder(
-        .PCResult(PCResult),
-        .WriteEn(1'b1),
-        .PCAddResult(Ra)
-    );
     
     AndGate1Bit RegWriteAnd(
         .A(RegWriteIn),

@@ -141,8 +141,6 @@ module TopLevel(Clk, Rst, PCValue, v0, v1);
         // Branch Outputs
         .BranchOut(Branch_IF),
         .BranchAddress(BranchAddress_IF),
-        // Jump and Link Output
-        .Ra(Ra_ID),
         // Forwarding
         .ForwardE(ForwardE),
         .ForwardF(ForwardF),
@@ -201,7 +199,7 @@ module TopLevel(Clk, Rst, PCValue, v0, v1);
         .JumpOut(Jump_Hazard),
         .JalIn(Jal_ID),
         .JalOut(Jal_EX),
-        .RaIn(Ra_ID),
+        .RaIn(PCAdd_IF_ID),
         .RaOut(Ra_EX)
     );
     
