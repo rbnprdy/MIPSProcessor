@@ -20,12 +20,10 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ClkDiv(Clk, Rst, ClkOut);
+module ClkDiv #(parameter DivVal = 2)(Clk, Rst, ClkOut);
     input Clk, Rst;
     
     output reg ClkOut;
-    
-    parameter DivVal = 5;
     
     reg [2:0] DivCnt;
     reg ClkInt;
