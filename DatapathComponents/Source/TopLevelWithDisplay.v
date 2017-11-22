@@ -27,13 +27,20 @@ module TopLevelWithDisplay(Clk, Rst, out7, en_out);
     output [7:0] en_out;
     
     wire [31:0] v0, v1, PCValue;
+    wire ClkOut;
     
     TopLevel tl(
-        .Clk(Clk),
+        .Clk(ClkOut),
         .Rst(Rst),
         .PCValue(PCValue),
         .v0(v0),
         .v1(v1)
+    );
+    
+    ClkDiv Clock(
+        .Clk(Clk),
+        .Rst(Rst),
+        .ClkOut(ClkOut)
     );
     
     Two4DigitDisplay display(

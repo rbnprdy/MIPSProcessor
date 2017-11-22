@@ -53,7 +53,7 @@ module DataMemory(Address, WriteData, Clk, MemWrite, MemRead, ReadData);
     
     // setup initial memory
     initial begin
-        
+        //test 8
         memory[0] = 32'd16;
         memory[1] = 32'd16;
         memory[2] = 32'd4;
