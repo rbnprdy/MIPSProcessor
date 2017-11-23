@@ -66,6 +66,8 @@ module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegW
 	   for(i = 0; i < 32; i = i + 1) begin
 	       registers[i] <= 32'd0;
 	   end
+	   // Initialize stack pointer
+	   registers[29] <= 32'd4119;
 	end
 	
 	// Write on the posedge of the Clk

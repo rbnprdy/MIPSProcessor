@@ -22,7 +22,7 @@
 
 module TopLevelWithDisplay_tb();
 
-    reg Clk, Rst;
+    reg Clk, Rst, Rst_Clk;
         
     wire [6:0] out7; 
     wire [7:0] en_out;
@@ -30,6 +30,7 @@ module TopLevelWithDisplay_tb();
     TopLevelWithDisplay m0(
         .Clk(Clk), 
         .Rst(Rst), 
+        .Rst_Clk(Rst_Clk),
         .out7(out7), 
         .en_out(en_out)
     );
@@ -41,6 +42,12 @@ module TopLevelWithDisplay_tb();
     
     initial begin
         Rst <= 1'b1;
+        Rst_Clk <= 1'b1;
+        @(negedge Clk);
+        @(negedge Clk);
+        Rst_Clk <= 1'b0;
+        @(negedge Clk);
+        @(negedge Clk);
         @(negedge Clk);
         @(negedge Clk);
         Rst <= 1'b0;

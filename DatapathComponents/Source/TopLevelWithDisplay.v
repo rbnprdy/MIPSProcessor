@@ -20,9 +20,9 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module TopLevelWithDisplay(Clk, Rst, out7, en_out);
+module TopLevelWithDisplay(Clk, Rst, Rst_Clk, out7, en_out);
     
-    input Clk, Rst;
+    input Clk, Rst, Rst_Clk;
     output [6:0] out7;
     output [7:0] en_out;
     
@@ -30,7 +30,7 @@ module TopLevelWithDisplay(Clk, Rst, out7, en_out);
     wire ClkTL, ClkDisplay;
     
     TopLevel tl(
-        .Clk(Clk),
+        .Clk(ClkTL),
         .Rst(Rst),
         .PCValue(PCValue),
         .v0(v0),
@@ -39,18 +39,18 @@ module TopLevelWithDisplay(Clk, Rst, out7, en_out);
     
     ClkDiv ClockTL(
         .Clk(Clk),
-        .Rst(Rst),
+        .Rst(Rst_Clk),
         .ClkOut(ClkTL)
     );
     
     ClkDiv #(.DivVal(1000))ClockDisplay(
         .Clk(Clk),
-        .Rst(Rst),
+        .Rst(Rst_Clk),
         .ClkOut(ClkDisplay)
     );
     
     Two4DigitDisplay display(
-        .Clk(Clk),
+        .Clk(ClkDisplay),
         .NumberA(v0[7:0]),
         .NumberB(v1[7:0]),
         .out7(out7),

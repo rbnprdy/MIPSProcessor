@@ -33,8 +33,13 @@ module Two4DigitDisplay(Clk, NumberA, NumberB, out7, en_out);
     SevenSegment m1(in4, out7);
     //--------- --------- --------- --------- //
          
+  
     //-- divider counter for ~95.3Hz refresh rate (with 100MHz main clock)
     reg  [19:0] cnt;
+    // I ADDED THIS TO INITIALIZE COUNT
+//    initial begin
+//        cnt <= 0;
+//    end
     always @(posedge Clk) begin
         cnt <= cnt + 1;
     end

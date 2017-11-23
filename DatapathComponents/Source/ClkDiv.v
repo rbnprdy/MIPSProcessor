@@ -25,7 +25,7 @@ module ClkDiv #(parameter DivVal = 2)(Clk, Rst, ClkOut);
     
     output reg ClkOut;
     
-    reg [2:0] DivCnt;
+    reg [9:0] DivCnt;
     reg ClkInt;
     
     always @(posedge Clk) begin
