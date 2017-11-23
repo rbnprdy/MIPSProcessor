@@ -65,20 +65,17 @@ module InstructionDecode(
         ForwardF,
         ForwardG,
         ForwardData,
-        Ra_Mem,
-        // v0, v1
-        v0,
-        v1
+        Ra_Mem
 );
     input Clk, RegWriteIn, Move, FlushControl;
     input [1:0] ForwardE, ForwardF, ForwardG;
     input [31:0] Instruction, PCResult, WriteData, ForwardData, Ra_Mem;
     input [4:0] WriteRegister;
     
-    output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended, JumpAddress, BranchAddress, v0, v1;
+    output [31:0] ReadData1, ReadData2, Instruction_15_0_Extended, JumpAddress, BranchAddress;
     output RegWrite, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, MemWrite, MemRead, MemToReg, HiOrLo, HiToReg, DontMove, MoveOnNotZero, Jump, Jal, Lb, LoadExtended, Branch, BranchOut;
     
-    wire [31:0] FlushControllerOut, ShiftLeftOut, ForwardEOut, ForwardFOut, JumpForwardingMuxOut, v0, v1;
+    wire [31:0] FlushControllerOut, ShiftLeftOut, ForwardEOut, ForwardFOut, JumpForwardingMuxOut;
     wire [15:0] Instruction_15_0;
     wire AndOut, ComparatorOut;
     
@@ -96,9 +93,7 @@ module InstructionDecode(
         .RegWrite(AndOut),
         .Clk(Clk),
         .ReadData1(ReadData1),
-        .ReadData2(ReadData2),
-        .v0(v0),
-        .v1(v1)
+        .ReadData2(ReadData2)
     );
     
     Mux32Bit4To1 JumpForwardingMux(

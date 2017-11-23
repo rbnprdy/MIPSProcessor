@@ -20,10 +20,10 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module TopLevel(Clk, Rst, PCValue, v0, v1);
+module TopLevel(Clk, Rst, PCValue, WriteData, HiReg, LoReg);
     input Clk, Rst;
     
-    output [31:0] PCValue, v0, v1;
+    output [31:0] PCValue, WriteData, HiReg, LoReg;
     
     wire [31:0] WriteData, HiData, LoData;
     // InstructionFetch Inputs
@@ -146,9 +146,7 @@ module TopLevel(Clk, Rst, PCValue, v0, v1);
         .ForwardF(ForwardF),
         .ForwardG(ForwardG),
         .ForwardData(ForwardingOut_MEM),
-        .Ra_Mem(Ra_MEM),
-        .v0(v0),
-        .v1(v1)
+        .Ra_Mem(Ra_MEM)
     );
     
     ID_EX ID_EX_Reg(
@@ -229,7 +227,9 @@ module TopLevel(Clk, Rst, PCValue, v0, v1);
         .ALUResult(ALUResult_EX),
         .Zero(Zero_EX),
         .WriteRegister(WriteRegister_EX),
-        .WriteData(MemWriteData_EX)
+        .WriteData(MemWriteData_EX),
+        .HiReg(HiReg),
+        .LoReg(LoReg)
     );
     
     EX_MEM EX_MEM_Reg(

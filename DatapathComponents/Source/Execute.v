@@ -46,13 +46,16 @@ module Execute(
         ALUResult,
         Zero,
         WriteRegister,
-        WriteData
+        WriteData,
+        // Outputs for phase1
+        HiReg,
+        LoReg
 );
     input [31:0] ReadData1, ReadData2, Instruction, Instruction_15_0_Extended, ForwardData_Mem, ForwardData_Wb;
     input [1:0] ForwardA, ForwardB;
     input Clk, ALUSrc, RegDst, HiWrite, LoWrite, Madd, Msub, ForwardC;
     
-    output [31:0] ReadDataHi, ReadDataLo, ALUResult, WriteData;
+    output [31:0] ReadDataHi, ReadDataLo, ALUResult, WriteData, HiReg, LoReg;
     output [4:0] WriteRegister;
     output Zero;
     
@@ -114,7 +117,9 @@ module Execute(
         .Madd(Madd),
         .Msub(Msub),
         .WriteEnHi(HiWrite),
-        .WriteEnLo(LoWrite)
+        .WriteEnLo(LoWrite),
+        .HiRegOut(HiReg),
+        .LoRegOut(LoReg)
     );
     
     Mux32Bit2To1 ForwardCMux(

@@ -29,7 +29,9 @@ module HiLoRegisterFile(
     Madd,
     Msub,
     WriteEnHi,
-    WriteEnLo
+    WriteEnLo,
+    HiRegOut,
+    LoRegOut
 );
     input Clk, Madd, Msub, WriteEnHi, WriteEnLo;
     input signed [31:0] WriteHiData;
@@ -44,6 +46,8 @@ module HiLoRegisterFile(
     output reg signed [31:0] ReadHi;
     output reg signed [31:0] ReadLo;
     
+    output reg [31:0] HiRegOut, LoRegOut;
+    
     initial begin
         HiReg <= 32'd0;
         LoReg <= 32'd0;
@@ -56,11 +60,9 @@ module HiLoRegisterFile(
         if (WriteEnLo)
             LoReg <= WriteLoData;
         if(Madd) begin
-            //TempReg = {HiReg, LoReg} + {WriteHiData, WriteLoData};
             HiReg <= MaddReg[63:32];
             LoReg <= MaddReg[31:0];
         end else if(Msub) begin
-            //TempReg = {HiReg, LoReg} - {WriteHiData, WriteLoData};
             HiReg <= MsubReg[63:32];
             LoReg <= MsubReg[31:0];
         end
@@ -69,6 +71,11 @@ module HiLoRegisterFile(
     always @(negedge Clk) begin
         ReadHi <= HiReg;
         ReadLo <= LoReg;
+    end
+    
+    always @(*) begin
+        HiRegOut <= HiReg;
+        LoRegOut <= LoReg;
     end
 
 endmodule

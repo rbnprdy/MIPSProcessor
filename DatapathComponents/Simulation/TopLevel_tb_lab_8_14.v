@@ -24,7 +24,7 @@ module TopLevel_tb_lab_8_14();
 
     reg Clk, Rst;
         
-    wire [31:0] WriteData, PCValue, HiData, LoData;
+    wire [31:0] WriteData, PCValue, HiReg, LoReg;
     
     integer tests, passed;
     
@@ -33,8 +33,8 @@ module TopLevel_tb_lab_8_14();
         .Rst(Rst),
         .WriteData(WriteData),
         .PCValue(PCValue),
-        .HiData(HiData),
-        .LoData(LoData)
+        .HiReg(HiReg),
+        .LoReg(LoReg)
     );
           
     initial begin
