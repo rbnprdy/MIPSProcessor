@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Team Members: Ruben Purdy and Kray Althuas 
+// Percent Effort: 50/50
 // 
 // Create Date: 10/16/2017 03:32:01 PM
 // Design Name: 
