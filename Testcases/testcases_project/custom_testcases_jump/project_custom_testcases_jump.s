@@ -48,15 +48,15 @@ addi $s3, $zero, 3
 
 # forward jal in mem to jr
 jal jump1
-addi $s3, $s3, 2     
 # flush
-addi $s3, $s3, 3	# [s3] = 6
+addi $s3, $s3, 2 # [s3] = 5     
+addi $s3, $s3, 3	# [s3] = 8
 
 # forward jal in wb to jr
 jal jump2
-addi $s3, $s3, 4    
+addi $s3, $s3, 4  # [s3] = 15  
 # flush
-addi $s3, $s3, 5	# [s3] = 14
+addi $s3, $s3, 5	# [s3] = 20
 j done
 
 jump1:
@@ -65,7 +65,7 @@ jr $ra
 
 jump2:
 # flush
-addi $s3, $s3, 3    # [s3] = 9
+addi $s3, $s3, 3    # [s3] = 11
 jr $ra
 
 done:
